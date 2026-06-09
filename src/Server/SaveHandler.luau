@@ -25,12 +25,19 @@ local TEMPLATE: ProfileData = {
 local Store = ProfileStore.New("PlayerData", TEMPLATE)
 
 local Profiles: { [Player]: PlayerProfile } = {}
+local loading: { [Player]: boolean } = {}
 
 local SaveHandler = {}
 
 local initialized = false
 
 local function onPlayerAdded(player: Player)
+	local existing: PlayerProfile? = Profiles[player]
+	if existing ~= nil or loading[player] then
+		return
+	end
+	loading[player] = true
+
 	local profile = Store:StartSessionAsync(
 		"Player_" .. player.UserId,
 		{
@@ -39,6 +46,8 @@ local function onPlayerAdded(player: Player)
 			end,
 		} :: any
 	)
+
+	loading[player] = nil
 
 	if profile == nil then
 		player:Kick("Failed to load your data. Please rejoin.")
