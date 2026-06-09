@@ -41,15 +41,15 @@ function RoundObject.new(): RoundObject
 	}, RoundObject)
 end
 
-function RoundObject.GetState(self: RoundObject): RoundState
+function RoundObject:GetState(): RoundState
 	return self.State
 end
 
-function RoundObject.CanTransition(self: RoundObject, target: RoundState): boolean
+function RoundObject:CanTransition(target: RoundState): boolean
 	return TRANSITIONS[self.State][target] == true
 end
 
-function RoundObject.Transition(self: RoundObject, target: RoundState): boolean
+function RoundObject:Transition(target: RoundState): boolean
 	if not self:CanTransition(target) then
 		return false
 	end
@@ -57,7 +57,7 @@ function RoundObject.Transition(self: RoundObject, target: RoundState): boolean
 	return true
 end
 
-function RoundObject.AddPlayer(self: RoundObject, player: Player, team: number): boolean
+function RoundObject:AddPlayer(player: Player, team: number): boolean
 	if typeof(player) ~= "Instance" or not player:IsA("Player") then
 		return false
 	end
@@ -81,7 +81,7 @@ function RoundObject.AddPlayer(self: RoundObject, player: Player, team: number):
 	return true
 end
 
-function RoundObject.RemovePlayer(self: RoundObject, player: Player): boolean
+function RoundObject:RemovePlayer(player: Player): boolean
 	if not (self.Team1[player] or self.Team2[player]) then
 		return false
 	end
@@ -96,11 +96,11 @@ function RoundObject.RemovePlayer(self: RoundObject, player: Player): boolean
 	return true
 end
 
-function RoundObject.GetPlayerInfo(self: RoundObject, player: Player): PlayerInfoObject?
+function RoundObject:GetPlayerInfo(player: Player): PlayerInfoObject?
 	return self.Team1[player] or self.Team2[player]
 end
 
-function RoundObject.LogPlayerInfo(self: RoundObject, player: Player, info: PlayerInfoObject): boolean
+function RoundObject:LogPlayerInfo(player: Player, info: PlayerInfoObject): boolean
 	local entry = self.Team1[player] or self.Team2[player]
 	if not entry then
 		return false
