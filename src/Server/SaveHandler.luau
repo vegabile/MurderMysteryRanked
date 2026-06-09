@@ -10,32 +10,19 @@ local ProfileStore = require(ServerPackages:WaitForChild("ProfileStore"))
 local Glicko2 =
 	require(ReplicatedStorage:WaitForChild("ReplicatedModules"):WaitForChild("DataModules"):WaitForChild("Glicko2"))
 
+local PlayerProfile = require(ServerScriptService:WaitForChild("PlayerProfile"))
+
 export type ProfileData = {
 	Elo: number,
 }
+
+export type PlayerProfile = PlayerProfile.PlayerProfile
 
 local TEMPLATE: ProfileData = {
 	Elo = Glicko2.DefaultRating,
 }
 
 local Store = ProfileStore.New("PlayerData", TEMPLATE)
-
-local PlayerProfile = {}
-PlayerProfile.__index = PlayerProfile
-
-export type PlayerProfile = typeof(setmetatable({} :: { _profile: any }, PlayerProfile))
-
-function PlayerProfile.new(profile: any): PlayerProfile
-	return setmetatable({ _profile = profile }, PlayerProfile)
-end
-
-function PlayerProfile.getElo(self: PlayerProfile): number
-	return self._profile.Data.Elo
-end
-
-function PlayerProfile.setElo(self: PlayerProfile, value: number)
-	self._profile.Data.Elo = value
-end
 
 local Profiles: { [Player]: PlayerProfile } = {}
 
