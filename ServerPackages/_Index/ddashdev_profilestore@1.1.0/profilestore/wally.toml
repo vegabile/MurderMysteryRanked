@@ -1,0 +1,8 @@
+[package]
+name = "ddashdev/profilestore"
+description = "A loleris's ProfileStore fork with new type solver support."
+version = "1.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "server"
+
+[dependencies]
