@@ -31,7 +31,14 @@ local SaveHandler = {}
 local initialized = false
 
 local function onPlayerAdded(player: Player)
-	local profile = Store:StartSessionAsync("Player_" .. player.UserId, {})
+	local profile = Store:StartSessionAsync(
+		"Player_" .. player.UserId,
+		{
+			Cancel = function()
+				return player.Parent ~= Players
+			end,
+		} :: any
+	)
 
 	if profile == nil then
 		player:Kick("Failed to load your data. Please rejoin.")
