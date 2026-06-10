@@ -176,6 +176,7 @@ end
 function RoundObject:GetPlayerInfo(player: Player): PlayerInfoObject?
 	local index = findTeamIndex(self, player)
 	if not index then
+		warn("RoundObject:GetPlayerInfo asked for a player who is not in the round")
 		return nil
 	end
 	local info = self.Teams[index][player]
@@ -283,7 +284,12 @@ function RoundObject:AwardPoint(teamIndex: number): boolean
 end
 
 function RoundObject:GetPoints(teamIndex: number): number?
-	return self.Points[teamIndex]
+	local points = self.Points[teamIndex]
+	if points == nil then
+		warn("RoundObject:GetPoints received a team index outside the valid range")
+		return nil
+	end
+	return points
 end
 
 function RoundObject:GetWinner(): number?
