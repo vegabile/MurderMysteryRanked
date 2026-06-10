@@ -104,6 +104,10 @@ t.describe("RoundObject.FindWinner", function()
 	t.it("returns the lowest index when several reached the score", function()
 		t.expect(RoundObject.FindWinner({ 5, 5 }, 5)).toBe(1)
 	end)
+
+	t.it("returns nil for a non-positive winning score", function()
+		t.expect(RoundObject.FindWinner({ 0, 0 }, 0)).toBeFalsy()
+	end)
 end)
 
 t.describe("RoundObject match scoring", function()

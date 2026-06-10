@@ -407,6 +407,10 @@ function RoundObject.DecideOutcome(teamStates: { TeamState }): RoundOutcome
 end
 
 function RoundObject.FindWinner(points: { number }, winningScore: number): number?
+	if not isPositiveInteger(winningScore) then
+		warn("RoundObject.FindWinner received a winningScore that was not a positive integer")
+		return nil
+	end
 	for index = 1, #points do
 		if points[index] >= winningScore then
 			return index
