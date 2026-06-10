@@ -29,6 +29,9 @@ local function seatPlayer(player: Player)
 end
 
 Players.PlayerAdded:Connect(seatPlayer)
+Players.PlayerRemoving:Connect(function(player)
+	round:RemovePlayer(player)
+end)
 for _, player in Players:GetPlayers() do
 	task.spawn(seatPlayer, player)
 end
