@@ -37,10 +37,10 @@ function MatchTeleport.teleportMatch(snapshot: MatchData.Snapshot, mode: string,
 	end
 
 	local reserved, accessCode = pcall(function()
-		return TeleportService:ReserveServer(Config.GameServerPlaceId)
+		return TeleportService:ReserveServerAsync(Config.GameServerPlaceId)
 	end)
 	if not reserved then
-		warn(`MatchTeleport: ReserveServer failed for {mode}: {accessCode}`)
+		warn(`MatchTeleport: ReserveServerAsync failed for {mode}: {accessCode}`)
 		return false
 	end
 
