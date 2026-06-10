@@ -50,8 +50,8 @@ end
 local function clearSlot(loadout: Loadout, slot: Slot)
 	local existing = loadout[slot]
 	if existing ~= nil then
-		existing:Destroy()
 		loadout[slot] = nil
+		existing:Destroy()
 	end
 end
 
