@@ -56,7 +56,11 @@ local function clearSlot(loadout: Loadout, slot: Slot)
 end
 
 function WeaponInventory.Get(player: Player): Loadout?
-	return inventories[player]
+	local loadout = inventories[player]
+	if loadout == nil then
+		return nil
+	end
+	return table.clone(loadout)
 end
 
 function WeaponInventory.Has(player: Player, slot: Slot): boolean
