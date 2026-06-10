@@ -296,23 +296,34 @@ function RoundObject:BeginGame(loadMap: (() -> boolean)?, timeout: number?): boo
 	end
 
 	if RoundObject.MapLoadGateEnabled and loadMap ~= nil then
+		local loader = loadMap
 		local resolvedTimeout = RoundObject.DefaultMapLoadTimeout
 		if isPositiveNumber(timeout) then
 			resolvedTimeout = timeout :: number
+		elseif timeout ~= nil then
+			warn("RoundObject:BeginGame ignored a timeout that was not a positive number; using the default")
 		end
 
-		local loaded = false
+		local finished = false
+		local succeeded = false
 		task.spawn(function()
-			loaded = loadMap() == true
+			local ok, result = pcall(loader)
+			if not ok then
+				warn("RoundObject:BeginGame map loader raised an error: " .. tostring(result))
+			end
+			succeeded = ok and result == true
+			finished = true
 		end)
 
-		local deadline = os.clock() + resolvedTimeout
-		while not loaded and os.clock() < deadline do
-			task.wait()
+		local elapsed = 0
+		while not finished and elapsed < resolvedTimeout do
+			elapsed += task.wait()
 		end
 
-		if not loaded then
+		if not finished then
 			warn("RoundObject:BeginGame proceeding to GAME after the map load timeout elapsed")
+		elseif not succeeded then
+			warn("RoundObject:BeginGame proceeding to GAME after the map failed to load")
 		end
 	end
 

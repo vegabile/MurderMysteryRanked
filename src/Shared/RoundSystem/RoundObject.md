@@ -97,9 +97,10 @@ round:BeginGame(loadMap: (() -> boolean)?, timeout: number?): boolean
 
 - `BeginGame` only starts from `PRE_GAME`.
 - When `MapLoadGateEnabled` is true and a `loadMap` callback is supplied, it runs the
-  callback in a task, then waits until it reports success or `timeout` seconds pass
-  (whichever comes first). On timeout it `warn`s and proceeds anyway — the game starts on
-  loaded-or-timeout, never blocking forever.
+  callback in a protected task and waits (accumulating real elapsed time) until the load
+  finishes or `timeout` seconds pass. It always proceeds to `GAME` afterwards — never
+  blocking forever — and `warn`s the specific reason if it timed out, if the loader
+  errored, or if the loader reported failure.
 - When disabled (the default) or with no callback, it just transitions to `GAME`.
 
 The `loadMap` callback is injected, so `RoundObject` stays decoupled from real map assets.
