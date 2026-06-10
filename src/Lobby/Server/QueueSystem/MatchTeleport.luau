@@ -10,6 +10,10 @@ local MatchData = require(Shared:WaitForChild("MatchData"))
 
 local MatchTeleport = {}
 
+TeleportService.TeleportInitFailed:Connect(function(player, result, message)
+	warn(`MatchTeleport: teleport init failed for {player.Name} ({result.Name}): {message}`)
+end)
+
 local function presentPlayers(snapshot: MatchData.Snapshot): { Player }
 	local players: { Player } = {}
 	for _, player in snapshot.side1 do
