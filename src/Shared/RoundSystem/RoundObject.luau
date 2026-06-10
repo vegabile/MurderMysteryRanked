@@ -5,18 +5,42 @@ export type PlayerInfoObject = {
 	Kills: number,
 	Deaths: number,
 	isAlive: boolean,
+	DeathOrder: number?,
 }
 
 export type RoundState = "PRE_GAME" | "GAME" | "IN_BETWEEN" | "POST_GAME"
 
+export type Mode = "1v1" | "2v2" | "3v3" | "4v4" | "FFA"
+
+export type RoundStatus = "Ongoing" | "Awarded"
+
+export type RoundOutcome = {
+	Status: RoundStatus,
+	TeamIndex: number?,
+}
+
+type TeamState = {
+	Eliminated: boolean,
+	EliminationOrder: number?,
+}
+
+type Team = { [Player]: PlayerInfoObject }
+
 type RoundFields = {
-	Team1: { [Player]: PlayerInfoObject },
-	Team2: { [Player]: PlayerInfoObject },
+	Teams: { Team },
+	Points: { number },
 	RoundUpdated: { Player },
 	State: RoundState,
+	WinningScore: number,
+	DeathCounter: number,
 }
 
 export type RoundObject = typeof(setmetatable({} :: RoundFields, RoundObject))
+
+RoundObject.DefaultTeamCount = 2
+RoundObject.DefaultWinningScore = 5
+RoundObject.DefaultMapLoadTimeout = 10
+RoundObject.MapLoadGateEnabled = false
 
 RoundObject.States = {
 	PRE_GAME = "PRE_GAME" :: RoundState,
@@ -32,17 +56,65 @@ local TRANSITIONS: { [RoundState]: { [RoundState]: boolean } } = {
 	POST_GAME = { PRE_GAME = true },
 }
 
-function RoundObject.new(): RoundObject
+local function isPositiveInteger(value: any): boolean
+	return type(value) == "number" and value > 0 and value % 1 == 0
+end
+
+local function isPositiveNumber(value: any): boolean
+	return type(value) == "number" and value > 0 and value == value and value ~= math.huge
+end
+
+local function findTeamIndex(self: RoundObject, player: Player): number?
+	for index, team in self.Teams do
+		if team[player] then
+			return index
+		end
+	end
+	return nil
+end
+
+function RoundObject.new(teamCount: number?, winningScore: number?): RoundObject
+	local resolvedTeamCount = RoundObject.DefaultTeamCount
+	if teamCount ~= nil then
+		if isPositiveInteger(teamCount) and teamCount >= 2 then
+			resolvedTeamCount = teamCount
+		else
+			warn("RoundObject.new ignored a teamCount that was not an integer >= 2; using the default of two")
+		end
+	end
+
+	local resolvedWinningScore = RoundObject.DefaultWinningScore
+	if winningScore ~= nil then
+		if isPositiveInteger(winningScore) then
+			resolvedWinningScore = winningScore
+		else
+			warn("RoundObject.new ignored a winningScore that was not a positive integer; using the default")
+		end
+	end
+
+	local teams: { Team } = {}
+	local points: { number } = {}
+	for index = 1, resolvedTeamCount do
+		teams[index] = {}
+		points[index] = 0
+	end
+
 	return setmetatable({
-		Team1 = {},
-		Team2 = {},
+		Teams = teams,
+		Points = points,
 		RoundUpdated = {},
 		State = "PRE_GAME" :: RoundState,
+		WinningScore = resolvedWinningScore,
+		DeathCounter = 0,
 	}, RoundObject)
 end
 
 function RoundObject:GetState(): RoundState
 	return self.State
+end
+
+function RoundObject:GetTeamCount(): number
+	return #self.Teams
 end
 
 function RoundObject:CanTransition(target: RoundState): boolean
@@ -59,37 +131,37 @@ end
 
 function RoundObject:AddPlayer(player: Player, team: number): boolean
 	if typeof(player) ~= "Instance" or not player:IsA("Player") then
+		warn("RoundObject:AddPlayer received a value that is not a Player")
 		return false
 	end
-	if team ~= 1 and team ~= 2 then
+	if not isPositiveInteger(team) or team > #self.Teams then
+		warn("RoundObject:AddPlayer received a team index outside the valid range")
 		return false
 	end
-	if self.Team1[player] or self.Team2[player] then
+	if findTeamIndex(self, player) then
+		warn("RoundObject:AddPlayer ignored a player who is already in the round")
 		return false
 	end
-	local info: PlayerInfoObject = {
+	self.Teams[team][player] = {
 		Kills = 0,
 		Deaths = 0,
 		isAlive = true,
+		DeathOrder = nil,
 	}
-	if team == 1 then
-		self.Team1[player] = info
-	else
-		self.Team2[player] = info
-	end
 	table.insert(self.RoundUpdated, player)
 	return true
 end
 
 function RoundObject:RemovePlayer(player: Player): boolean
-	if not (self.Team1[player] or self.Team2[player]) then
+	local index = findTeamIndex(self, player)
+	if not index then
+		warn("RoundObject:RemovePlayer ignored a player who is not in the round")
 		return false
 	end
-	self.Team1[player] = nil
-	self.Team2[player] = nil
-	for index, rosterPlayer in self.RoundUpdated do
+	self.Teams[index][player] = nil
+	for rosterIndex, rosterPlayer in self.RoundUpdated do
 		if rosterPlayer == player then
-			table.remove(self.RoundUpdated, index)
+			table.remove(self.RoundUpdated, rosterIndex)
 			break
 		end
 	end
@@ -97,24 +169,239 @@ function RoundObject:RemovePlayer(player: Player): boolean
 end
 
 function RoundObject:GetPlayerInfo(player: Player): PlayerInfoObject?
-	return self.Team1[player] or self.Team2[player]
+	local index = findTeamIndex(self, player)
+	if not index then
+		return nil
+	end
+	return self.Teams[index][player]
 end
 
 function RoundObject:LogPlayerInfo(player: Player, info: PlayerInfoObject): boolean
-	local entry = self.Team1[player] or self.Team2[player]
-	if not entry then
+	local index = findTeamIndex(self, player)
+	if not index then
+		warn("RoundObject:LogPlayerInfo ignored a player who is not in the round")
 		return false
 	end
 	if type(info) ~= "table" then
+		warn("RoundObject:LogPlayerInfo received info that was not a table")
 		return false
 	end
-	if type(info.Kills) ~= "number" or type(info.Deaths) ~= "number" or type(info.isAlive) ~= "boolean" then
+	if type(info.Kills) ~= "number" or type(info.Deaths) ~= "number" then
+		warn("RoundObject:LogPlayerInfo received info with malformed Kills or Deaths")
 		return false
 	end
+	local entry = self.Teams[index][player]
 	entry.Kills = info.Kills
 	entry.Deaths = info.Deaths
-	entry.isAlive = info.isAlive
 	return true
+end
+
+function RoundObject:MarkDead(player: Player): boolean
+	local index = findTeamIndex(self, player)
+	if not index then
+		warn("RoundObject:MarkDead ignored a player who is not in the round")
+		return false
+	end
+	local info = self.Teams[index][player]
+	if not info.isAlive then
+		warn("RoundObject:MarkDead ignored a player who is already dead")
+		return false
+	end
+	info.isAlive = false
+	self.DeathCounter += 1
+	info.DeathOrder = self.DeathCounter
+	return true
+end
+
+function RoundObject:ResetRound()
+	for _, team in self.Teams do
+		for _, info in team do
+			info.isAlive = true
+			info.DeathOrder = nil
+		end
+	end
+	self.DeathCounter = 0
+end
+
+function RoundObject:IsTeamEliminated(teamIndex: number): boolean
+	local team = self.Teams[teamIndex]
+	if not team then
+		warn("RoundObject:IsTeamEliminated received a team index outside the valid range")
+		return false
+	end
+	for _, info in team do
+		if info.isAlive then
+			return false
+		end
+	end
+	return true
+end
+
+function RoundObject:GetLivingTeams(): { number }
+	local living: { number } = {}
+	for index = 1, #self.Teams do
+		if not self:IsTeamEliminated(index) then
+			table.insert(living, index)
+		end
+	end
+	return living
+end
+
+function RoundObject:GetRoundOutcome(): RoundOutcome
+	local teamStates: { TeamState } = {}
+	for index = 1, #self.Teams do
+		local eliminated = self:IsTeamEliminated(index)
+		local eliminationOrder: number? = nil
+		if eliminated then
+			for _, info in self.Teams[index] do
+				local order = info.DeathOrder
+				if order ~= nil and (eliminationOrder == nil or order > eliminationOrder) then
+					eliminationOrder = order
+				end
+			end
+		end
+		teamStates[index] = {
+			Eliminated = eliminated,
+			EliminationOrder = eliminationOrder,
+		}
+	end
+	return RoundObject.DecideOutcome(teamStates)
+end
+
+function RoundObject:AwardPoint(teamIndex: number): boolean
+	if self.Points[teamIndex] == nil then
+		warn("RoundObject:AwardPoint received a team index outside the valid range")
+		return false
+	end
+	self.Points[teamIndex] += 1
+	return true
+end
+
+function RoundObject:GetPoints(teamIndex: number): number?
+	return self.Points[teamIndex]
+end
+
+function RoundObject:GetWinner(): number?
+	return RoundObject.FindWinner(self.Points, self.WinningScore)
+end
+
+function RoundObject:IsOver(): boolean
+	return self:GetWinner() ~= nil
+end
+
+function RoundObject:BeginGame(loadMap: (() -> boolean)?, timeout: number?): boolean
+	if not self:CanTransition("GAME") then
+		warn("RoundObject:BeginGame can only start the game from PRE_GAME")
+		return false
+	end
+
+	if RoundObject.MapLoadGateEnabled and loadMap ~= nil then
+		local resolvedTimeout = RoundObject.DefaultMapLoadTimeout
+		if isPositiveNumber(timeout) then
+			resolvedTimeout = timeout :: number
+		end
+
+		local loaded = false
+		task.spawn(function()
+			loaded = loadMap() == true
+		end)
+
+		local deadline = os.clock() + resolvedTimeout
+		while not loaded and os.clock() < deadline do
+			task.wait()
+		end
+
+		if not loaded then
+			warn("RoundObject:BeginGame proceeding to GAME after the map load timeout elapsed")
+		end
+	end
+
+	return self:Transition("GAME")
+end
+
+function RoundObject.ClassifyMode(teamSizes: { number }): Mode?
+	local teamCount = #teamSizes
+
+	if teamCount == 2 and teamSizes[1] == teamSizes[2] then
+		local size = teamSizes[1]
+		if size == 1 then
+			return "1v1"
+		elseif size == 2 then
+			return "2v2"
+		elseif size == 3 then
+			return "3v3"
+		elseif size == 4 then
+			return "4v4"
+		end
+	end
+
+	if teamCount >= 3 then
+		local allSolo = true
+		for index = 1, teamCount do
+			if teamSizes[index] ~= 1 then
+				allSolo = false
+				break
+			end
+		end
+		if allSolo then
+			return "FFA"
+		end
+	end
+
+	warn("RoundObject.ClassifyMode could not classify the given team sizes")
+	return nil
+end
+
+function RoundObject.DecideOutcome(teamStates: { TeamState }): RoundOutcome
+	local living: { number } = {}
+	for index = 1, #teamStates do
+		if not teamStates[index].Eliminated then
+			table.insert(living, index)
+		end
+	end
+
+	if #living >= 2 then
+		return { Status = "Ongoing" :: RoundStatus }
+	end
+	if #living == 1 then
+		return { Status = "Awarded" :: RoundStatus, TeamIndex = living[1] }
+	end
+
+	local bestIndex: number? = nil
+	local bestOrder: number? = nil
+	local tied = false
+	for index = 1, #teamStates do
+		local order = teamStates[index].EliminationOrder
+		if order ~= nil then
+			if bestOrder == nil or order > bestOrder then
+				bestOrder = order
+				bestIndex = index
+				tied = false
+			elseif order == bestOrder then
+				tied = true
+			end
+		end
+	end
+
+	if bestIndex == nil then
+		warn("RoundObject.DecideOutcome received a fully eliminated match with no death ordering; awarding team one")
+		return { Status = "Awarded" :: RoundStatus, TeamIndex = 1 }
+	end
+
+	if tied then
+		warn("RoundObject.DecideOutcome found tied elimination ordering; awarding the lowest team index")
+	end
+
+	return { Status = "Awarded" :: RoundStatus, TeamIndex = bestIndex }
+end
+
+function RoundObject.FindWinner(points: { number }, winningScore: number): number?
+	for index = 1, #points do
+		if points[index] >= winningScore then
+			return index
+		end
+	end
+	return nil
 end
 
 return RoundObject
