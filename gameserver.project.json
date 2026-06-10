@@ -1,5 +1,8 @@
 {
-  "name": "MMR",
+  "name": "GameServer",
+  "servePort": 8001,
+  "servePlaceIds": [87032497790232],
+  "globIgnorePaths": ["**/.gitkeep"],
   "tree": {
     "$className": "DataModel",
     "ReplicatedStorage": {
@@ -9,14 +12,14 @@
       }
     },
     "ServerScriptService": {
-      "$path": "src/Server",
+      "$path": "src/GameServer/Server",
       "ServerPackages": {
         "$path": "ServerPackages"
       }
     },
     "StarterPlayer": {
       "StarterPlayerScripts": {
-        "$path": "src/Client"
+        "$path": "src/GameServer/Client"
       }
     }
   }

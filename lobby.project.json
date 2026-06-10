@@ -1,0 +1,26 @@
+{
+  "name": "Lobby",
+  "servePort": 8000,
+  "servePlaceIds": [96463089590097],
+  "globIgnorePaths": ["**/.gitkeep"],
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$path": "src/Shared",
+      "Packages": {
+        "$path": "Packages"
+      }
+    },
+    "ServerScriptService": {
+      "$path": "src/Lobby/Server",
+      "ServerPackages": {
+        "$path": "ServerPackages"
+      }
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "$path": "src/Lobby/Client"
+      }
+    }
+  }
+}
