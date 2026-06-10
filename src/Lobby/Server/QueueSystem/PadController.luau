@@ -52,6 +52,15 @@ local function thumbnailFor(player: Player): string?
 	return image
 end
 
+local function allPresent(players: { Player }, present: { [Player]: boolean }): boolean
+	for _, player in players do
+		if not present[player] then
+			return false
+		end
+	end
+	return true
+end
+
 function PadController.new(options: Options): PadController
 	local self = setmetatable({
 		_model = options.model,
@@ -189,6 +198,25 @@ function PadController._cancelCountdown(self: PadController)
 end
 
 function PadController._pop(self: PadController)
+	local on1 = self:_playersOn(self._pad1Part)
+	local on2 = self:_playersOn(self._pad2Part)
+	if not (allPresent(self._pad.Side1, on1) and allPresent(self._pad.Side2, on2)) then
+		warn(`PadController: {self._mode} roster left the pad before pop, reopening`)
+		for _, player in table.clone(self._pad.Side1) do
+			if not on1[player] then
+				self._pad:removePlayer(player)
+			end
+		end
+		for _, player in table.clone(self._pad.Side2) do
+			if not on2[player] then
+				self._pad:removePlayer(player)
+			end
+		end
+		self:_cancelCountdown()
+		self:_render()
+		return
+	end
+
 	local snapshot = self._pad:Pop()
 	self:_showCountdown(false)
 
