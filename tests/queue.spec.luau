@@ -79,6 +79,14 @@ t.describe("MatchData.isValid", function()
 	t.it("rejects non-number team entries", function()
 		t.expect(MatchData.isValid({ mode = "1v1", team1 = { "a" }, team2 = { 2 } })).toBeFalsy()
 	end)
+
+	t.it("rejects an empty team", function()
+		t.expect(MatchData.isValid({ mode = "1v1", team1 = {}, team2 = { 2 } })).toBeFalsy()
+	end)
+
+	t.it("rejects duplicate user ids across teams", function()
+		t.expect(MatchData.isValid({ mode = "2v2", team1 = { 1, 2 }, team2 = { 2, 3 } })).toBeFalsy()
+	end)
 end)
 
 t.describe("MatchData.teamOf", function()

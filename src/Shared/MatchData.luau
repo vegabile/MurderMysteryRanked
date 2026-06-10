@@ -39,14 +39,33 @@ function MatchData.build(snapshot: Snapshot, mode: string): MatchData
 	return { mode = mode, team1 = team1, team2 = team2 }
 end
 
-local function isNumberArray(value: any): boolean
+local function isNonEmptyNumberArray(value: any): boolean
 	if type(value) ~= "table" then
 		return false
 	end
+	local count = 0
 	for index, item in value :: { [any]: any } do
 		if type(index) ~= "number" or type(item) ~= "number" then
 			return false
 		end
+		count += 1
+	end
+	return count > 0
+end
+
+local function hasDistinctIds(team1: { number }, team2: { number }): boolean
+	local seen: { [number]: boolean } = {}
+	for _, id in team1 do
+		if seen[id] then
+			return false
+		end
+		seen[id] = true
+	end
+	for _, id in team2 do
+		if seen[id] then
+			return false
+		end
+		seen[id] = true
 	end
 	return true
 end
@@ -59,7 +78,10 @@ function MatchData.isValid(value: any): boolean
 	if type(candidate.mode) ~= "string" then
 		return false
 	end
-	return isNumberArray(candidate.team1) and isNumberArray(candidate.team2)
+	if not (isNonEmptyNumberArray(candidate.team1) and isNonEmptyNumberArray(candidate.team2)) then
+		return false
+	end
+	return hasDistinctIds(candidate.team1, candidate.team2)
 end
 
 function MatchData.teamOf(data: MatchData, userId: number): number?
