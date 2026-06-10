@@ -6,7 +6,12 @@
   "tree": {
     "$className": "DataModel",
     "ReplicatedStorage": {
-      "$path": "src/Shared",
+      "Shared": {
+        "$path": "src/Shared"
+      },
+      "Lobby": {
+        "$path": "src/Lobby/ReplicatedStorage"
+      },
       "Packages": {
         "$path": "Packages"
       }

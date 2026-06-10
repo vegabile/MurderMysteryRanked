@@ -8,7 +8,7 @@ local ServerPackages = ServerScriptService:WaitForChild("ServerPackages")
 local ProfileStore = require(ServerPackages:WaitForChild("ProfileStore"))
 
 local Glicko2 =
-	require(ReplicatedStorage:WaitForChild("ReplicatedModules"):WaitForChild("DataModules"):WaitForChild("Glicko2"))
+	require(ReplicatedStorage:WaitForChild("Lobby"):WaitForChild("ReplicatedModules"):WaitForChild("DataModules"):WaitForChild("Glicko2"))
 
 local PlayerProfile = require(ServerScriptService:WaitForChild("PlayerProfile"))
 

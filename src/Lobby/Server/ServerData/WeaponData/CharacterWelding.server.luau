@@ -4,10 +4,10 @@ local ServerStorage     = game:GetService("ServerStorage")
 local DataStoreService  = game:GetService("DataStoreService")
 local Debris            = game:GetService("Debris")
 
-local ReplicatedAssets = ReplicatedStorage:WaitForChild("ReplicatedAssets")
+local ReplicatedAssets = ReplicatedStorage:WaitForChild("Lobby"):WaitForChild("ReplicatedAssets")
 local WeldTemplates    = ReplicatedAssets:WaitForChild("WeaponModels"):WaitForChild("Welds")
 
-local Remotes         = ReplicatedStorage:WaitForChild("Remotes")
+local Remotes         = ReplicatedStorage:WaitForChild("Lobby"):WaitForChild("Remotes")
 local RemoteEvents    = Remotes:WaitForChild("RemoteEvents")
 local RemoteFunctions = Remotes:WaitForChild("RemoteFunctions")
 local ApplyItem       = RemoteEvents:WaitForChild("ApplyInventoryItem")
@@ -15,7 +15,7 @@ local GetHandleData   = RemoteFunctions:WaitForChild("GetHandleData")
 
 local SkinAssets = ServerStorage:WaitForChild("ServerDatabase"):WaitForChild("SkinAssets")
 
-local Skins = require(ReplicatedStorage:WaitForChild("ReplicatedModules")
+local Skins = require(ReplicatedStorage:WaitForChild("Lobby"):WaitForChild("ReplicatedModules")
 	:WaitForChild("DataModules"):WaitForChild("Skins"))
 
 local KNIFE_OFFSET   = Vector3.new(-1.1, -0.6, 0.3)
