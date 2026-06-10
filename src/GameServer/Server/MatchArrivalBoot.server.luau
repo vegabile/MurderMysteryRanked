@@ -10,6 +10,11 @@ local RoundObject = require(Shared:WaitForChild("RoundSystem"):WaitForChild("Rou
 local round = RoundObject.new()
 
 local function seatPlayer(player: Player)
+	if player.Parent ~= Players then
+		warn(`MatchArrival: {player.Name} left before seating`)
+		return
+	end
+
 	local teleportData = player:GetJoinData().TeleportData
 	if not MatchData.isValid(teleportData) then
 		warn(`MatchArrival: {player.Name} arrived without valid match data`)
