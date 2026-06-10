@@ -81,6 +81,11 @@ t.describe("RoundObject.DecideOutcome", function()
 		t.expect(outcome.Status).toBe("Awarded")
 		t.expect(outcome.TeamIndex).toBe(2)
 	end)
+
+	t.it("stays Ongoing when all teams are eliminated with no recorded deaths", function()
+		local outcome = RoundObject.DecideOutcome({ state(true, nil), state(true, nil) })
+		t.expect(outcome.Status).toBe("Ongoing")
+	end)
 end)
 
 t.describe("RoundObject.FindWinner", function()

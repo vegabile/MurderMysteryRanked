@@ -390,8 +390,8 @@ function RoundObject.DecideOutcome(teamStates: { TeamState }): RoundOutcome
 	end
 
 	if bestIndex == nil then
-		warn("RoundObject.DecideOutcome received a fully eliminated match with no death ordering; awarding team one")
-		return { Status = "Awarded" :: RoundStatus, TeamIndex = 1 }
+		warn("RoundObject.DecideOutcome found no living teams and no recorded deaths; leaving the round ongoing")
+		return { Status = "Ongoing" :: RoundStatus }
 	end
 
 	if tied then

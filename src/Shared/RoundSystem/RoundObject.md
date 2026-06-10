@@ -64,7 +64,9 @@ Because alive state is derived from one signal and never duplicated, it cannot d
 - `GetRoundOutcome(): RoundOutcome` — a pure read (no mutation). It returns
   `{ Status = "Ongoing" }` while two or more teams are alive, `{ Status = "Awarded",
   TeamIndex = i }` when exactly one team remains, and on a double knockout (zero teams
-  alive) awards the team that died **last** by each team's recorded last-death order.
+  alive) awards the team that died **last** by each team's recorded last-death order. If
+  no team is alive and no deaths were recorded (e.g. an empty round) it stays `Ongoing`
+  rather than awarding anyone.
 
 Outcome detection is separated from scoring so it can be called freely (e.g. on every
 death) without committing a point. The runner commits the point itself:
