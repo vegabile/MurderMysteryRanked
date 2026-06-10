@@ -1,9 +1,8 @@
 # Multi-Place Setup (Lobby + GameServer)
 
 This repo builds **two Roblox places out of one codebase**: a **Lobby** and a **GameServer**.
-They share all common infrastructure (everything in `ReplicatedStorage` plus the Wally
-package folders) and differ only in their server/client code. You serve each place
-independently with Argon.
+They share a common `Shared` folder (plus the Wally package folders) and each has its own
+server, client, and replicated content. You serve each place independently with Argon.
 
 ## How it works
 
@@ -28,34 +27,41 @@ doesn't match (see [Place targeting](#place-targeting)).
 ```
 MMR/
 ├── src/
-│   ├── Shared/             ReplicatedStorage — used by BOTH places
-│   │   ├── ReplicatedModules/
-│   │   ├── Remotes/
-│   │   └── ReplicatedAssets/
+│   ├── Shared/                  → ReplicatedStorage.Shared (BOTH places; empty for now)
 │   ├── Lobby/
-│   │   ├── Server/         ServerScriptService (Lobby only)
-│   │   └── Client/         StarterPlayerScripts (Lobby only)
+│   │   ├── ReplicatedStorage/   → ReplicatedStorage.Lobby (Lobby-only replicated)
+│   │   │   ├── ReplicatedModules/
+│   │   │   ├── Remotes/
+│   │   │   └── ReplicatedAssets/
+│   │   ├── Server/              → ServerScriptService (Lobby only)
+│   │   └── Client/              → StarterPlayerScripts (Lobby only)
 │   └── GameServer/
-│       ├── Server/         ServerScriptService (GameServer only)
-│       └── Client/         StarterPlayerScripts (GameServer only)
-├── Packages/               Wally shared deps   — used by BOTH places
-├── ServerPackages/         Wally server deps   — used by BOTH places
+│       ├── ReplicatedStorage/   → ReplicatedStorage.GameServer (GameServer-only)
+│       ├── Server/              → ServerScriptService (GameServer only)
+│       └── Client/              → StarterPlayerScripts (GameServer only)
+├── Packages/                    Wally shared deps — used by BOTH places
+├── ServerPackages/              Wally server deps — used by BOTH places
 ├── lobby.project.json
 └── gameserver.project.json
 ```
 
-Both project files map `ReplicatedStorage → src/Shared`, `…/Packages → Packages`, and
-`ServerScriptService/ServerPackages → ServerPackages`. The only difference between them is
-which `Server`/`Client` folders feed `ServerScriptService` and `StarterPlayerScripts`.
+Each project mounts `ReplicatedStorage` from three sources, as named children: `Shared`
+(`src/Shared`, common to both places), the place's own folder (`Lobby` or `GameServer`, from
+`src/<Place>/ReplicatedStorage`), and `Packages`. `ServerScriptService` likewise maps each
+place's own `Server` folder, with the shared `ServerPackages` as a child. The places differ
+only in their own `ReplicatedStorage`/`Server`/`Client` folders. So in-game a script reaches
+shared content at `ReplicatedStorage.Shared.…` and place-specific replicated content at
+`ReplicatedStorage.Lobby.…` (or `.GameServer.…`). The empty mounted folders — `Shared`, and the
+GameServer's `ReplicatedStorage` — carry an `init.meta.json` declaring them a `Folder` so they
+exist in-game even while empty; Lobby's `ReplicatedStorage` materializes from its own content.
 
-> Requires in this codebase use **absolute service paths**
-> (`game:GetService("ServerScriptService"):WaitForChild("SaveHandler")`), not file paths. Moving
-> a folder **within the same service** — like `src/Server` → `src/Lobby/Server`, both under
-> `ServerScriptService` — leaves the instance tree unchanged, so no code changes. Moving a module
-> **between `Shared` and a place folder is different**: it crosses services
-> (`ReplicatedStorage` ↔ `ServerScriptService`/`StarterPlayerScripts`), which changes both its
-> `require` path and whether it replicates to clients — so that code, and anything requiring it,
-> must be updated.
+> Requires use **absolute instance paths**
+> (`ReplicatedStorage:WaitForChild("Lobby"):WaitForChild("ReplicatedModules")…`), not file
+> paths — so the folder a script lives in on disk doesn't matter, only where it lands in the
+> instance tree. A module's require path therefore includes its `ReplicatedStorage` sub-folder:
+> moving a module between `src/Shared` and a place's `src/<Place>/ReplicatedStorage` changes its
+> path from `ReplicatedStorage.Shared.X` to `ReplicatedStorage.<Place>.X` (and changes which
+> places can see it), so that code — and anything requiring it — must be updated.
 
 ## Serving a place
 
@@ -97,17 +103,17 @@ place uniquely.
 
 ## Adding code: shared vs place-specific
 
-- **Both places need it** (data modules, remotes, types, replicated assets, anything under
-  `ReplicatedStorage`) → put it in `src/Shared/…`. One file, both places.
-- **Only one place needs it** (lobby matchmaking, in-match combat) → put it under that place's
-  `src/Lobby/…` or `src/GameServer/…`.
+- **Both places need it** (shared data modules, types) → `src/Shared/…` → appears at
+  `ReplicatedStorage.Shared`. One file, both places.
+- **One place's replicated content** (its UI data, remotes, assets) →
+  `src/Lobby/ReplicatedStorage/…` or `src/GameServer/ReplicatedStorage/…` → appears at
+  `ReplicatedStorage.Lobby` / `.GameServer`.
+- **One place's server or client code** → `src/<Place>/Server/…` or `src/<Place>/Client/…`.
 
-The GameServer folders ship empty (each holds a `.gitkeep` so the empty folder survives a fresh
-clone; the `globIgnorePaths` entry in the project file keeps that marker out of the synced
-tree). To
-give the GameServer an entry point, drop a script in `src/GameServer/Server/`, e.g.
-`Bootstrap.server.luau`. Add client code under `src/GameServer/Client/`. The `.gitkeep` can
-stay or be deleted once a real file exists.
+Empty mounted folders keep an `init.meta.json` so they exist as `Folder`s while empty (today
+that's `Shared` and the GameServer's `ReplicatedStorage`); the empty `Server`/`Client`
+scaffolds keep a `.gitkeep` (ignored via `globIgnorePaths`). To give the GameServer an entry point, drop a script in
+`src/GameServer/Server/`, e.g. `Bootstrap.server.luau`.
 
 ## Static analysis (sourcemap)
 
@@ -120,4 +126,6 @@ rojo sourcemap lobby.project.json -o sourcemap.json
 ```
 
 `sourcemap.json` is git-ignored and regenerated on demand. When you start writing GameServer
-code, generate a second sourcemap from `gameserver.project.json` to analyse that tree.
+code, generate a second sourcemap from `gameserver.project.json` to analyse that tree. Empty
+folders (`Shared`, the GameServer `ReplicatedStorage`) are pruned from the sourcemap but still
+exist in the built/synced place.
