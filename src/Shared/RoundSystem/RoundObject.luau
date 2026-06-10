@@ -64,6 +64,10 @@ local function isPositiveNumber(value: any): boolean
 	return type(value) == "number" and value > 0 and value == value and value ~= math.huge
 end
 
+local function isNonNegativeInteger(value: any): boolean
+	return type(value) == "number" and value == value and value ~= math.huge and value >= 0 and value % 1 == 0
+end
+
 local function findTeamIndex(self: RoundObject, player: Player): number?
 	for index, team in self.Teams do
 		if team[player] then
@@ -192,8 +196,8 @@ function RoundObject:LogPlayerInfo(player: Player, info: { Kills: number, Deaths
 		warn("RoundObject:LogPlayerInfo received info that was not a table")
 		return false
 	end
-	if type(info.Kills) ~= "number" or type(info.Deaths) ~= "number" then
-		warn("RoundObject:LogPlayerInfo received info with malformed Kills or Deaths")
+	if not isNonNegativeInteger(info.Kills) or not isNonNegativeInteger(info.Deaths) then
+		warn("RoundObject:LogPlayerInfo received Kills or Deaths that were not non-negative integers")
 		return false
 	end
 	local entry = self.Teams[index][player]
