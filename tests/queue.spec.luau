@@ -87,6 +87,14 @@ t.describe("MatchData.isValid", function()
 	t.it("rejects duplicate user ids across teams", function()
 		t.expect(MatchData.isValid({ mode = "2v2", team1 = { 1, 2 }, team2 = { 2, 3 } })).toBeFalsy()
 	end)
+
+	t.it("rejects a roster that does not match the mode's per-side count", function()
+		t.expect(MatchData.isValid({ mode = "1v1", team1 = { 1, 2 }, team2 = { 3 } })).toBeFalsy()
+	end)
+
+	t.it("accepts a balanced 2v2 roster", function()
+		t.expect(MatchData.isValid({ mode = "2v2", team1 = { 1, 2 }, team2 = { 3, 4 } })).toBeTruthy()
+	end)
 end)
 
 t.describe("MatchData.teamOf", function()

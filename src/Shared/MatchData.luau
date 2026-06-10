@@ -14,6 +14,7 @@ export type Snapshot = {
 }
 
 local PAD_NAME_PATTERN = "^(%d+)v(%d+)Pad%d*$"
+local MODE_PATTERN = "^(%d+)v(%d+)$"
 
 function MatchData.fromPadName(name: string): (string?, number?)
 	local first, second = string.match(name, PAD_NAME_PATTERN)
@@ -39,18 +40,30 @@ function MatchData.build(snapshot: Snapshot, mode: string): MatchData
 	return { mode = mode, team1 = team1, team2 = team2 }
 end
 
-local function isNonEmptyNumberArray(value: any): boolean
+local function numberArrayCount(value: any): number?
 	if type(value) ~= "table" then
-		return false
+		return nil
 	end
 	local count = 0
 	for index, item in value :: { [any]: any } do
 		if type(index) ~= "number" or type(item) ~= "number" then
-			return false
+			return nil
 		end
 		count += 1
 	end
-	return count > 0
+	return count
+end
+
+local function perSideOfMode(mode: string): number?
+	local first, second = string.match(mode, MODE_PATTERN)
+	if first == nil or second == nil or first ~= second then
+		return nil
+	end
+	local perSide = tonumber(first)
+	if perSide == nil or perSide <= 0 then
+		return nil
+	end
+	return perSide
 end
 
 local function hasDistinctIds(team1: { number }, team2: { number }): boolean
@@ -78,7 +91,11 @@ function MatchData.isValid(value: any): boolean
 	if type(candidate.mode) ~= "string" then
 		return false
 	end
-	if not (isNonEmptyNumberArray(candidate.team1) and isNonEmptyNumberArray(candidate.team2)) then
+	local perSide = perSideOfMode(candidate.mode)
+	if perSide == nil then
+		return false
+	end
+	if numberArrayCount(candidate.team1) ~= perSide or numberArrayCount(candidate.team2) ~= perSide then
 		return false
 	end
 	return hasDistinctIds(candidate.team1, candidate.team2)
