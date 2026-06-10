@@ -118,6 +118,13 @@ round:BeginGame(loadMap: (() -> boolean)?, timeout: number?): boolean
   errored, or if the loader reported failure.
 - When disabled (the default) or with no callback, it just transitions to `GAME`.
 
+On a timeout `BeginGame` proceeds without reading the loader's late result, so a slow loader
+can never award a stale outcome. It cannot, however, abort the spawned thread — Luau has no
+safe way to kill an arbitrary running task — so a loader that keeps running after the timeout
+will keep doing whatever it does. The injected `loadMap` must therefore be cancellation-aware:
+it owns checking whether the round already left `PRE_GAME` before applying any map side
+effects, so a late finish does not mutate a round that has already started.
+
 The `loadMap` callback is injected, so `RoundObject` stays decoupled from real map assets.
 The vote winner is produced elsewhere (`MapVote:getWinner()`); wiring the vote result into a
 `loadMap` and flipping `MapLoadGateEnabled` is the activation step.
