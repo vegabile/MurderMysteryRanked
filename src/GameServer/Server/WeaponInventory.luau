@@ -74,10 +74,13 @@ function WeaponInventory.Give(player: Player, slot: Slot): boolean
 		return false
 	end
 	local loadout = getLoadout(player)
-	clearSlot(loadout, slot)
+	local previous = loadout[slot]
 	local clone = template:Clone()
-	clone.Parent = backpack
 	loadout[slot] = clone
+	clone.Parent = backpack
+	if previous ~= nil then
+		previous:Destroy()
+	end
 	return true
 end
 
@@ -99,10 +102,13 @@ function WeaponInventory.GiveAll(player: Player): boolean
 
 	local loadout = getLoadout(player)
 	for _, entry in pending do
-		clearSlot(loadout, entry.slot)
+		local previous = loadout[entry.slot]
 		local clone = entry.template:Clone()
-		clone.Parent = backpack
 		loadout[entry.slot] = clone
+		clone.Parent = backpack
+		if previous ~= nil then
+			previous:Destroy()
+		end
 	end
 	return true
 end
