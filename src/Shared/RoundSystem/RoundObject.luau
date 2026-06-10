@@ -5,7 +5,6 @@ export type PlayerInfoObject = {
 	Kills: number,
 	Deaths: number,
 	isAlive: boolean,
-	DeathOrder: number?,
 }
 
 export type RoundState = "PRE_GAME" | "GAME" | "IN_BETWEEN" | "POST_GAME"
@@ -33,6 +32,7 @@ type RoundFields = {
 	State: RoundState,
 	WinningScore: number,
 	DeathCounter: number,
+	LastDeathOrder: { number? },
 }
 
 export type RoundObject = typeof(setmetatable({} :: RoundFields, RoundObject))
@@ -106,6 +106,7 @@ function RoundObject.new(teamCount: number?, winningScore: number?): RoundObject
 		State = "PRE_GAME" :: RoundState,
 		WinningScore = resolvedWinningScore,
 		DeathCounter = 0,
+		LastDeathOrder = {},
 	}, RoundObject)
 end
 
@@ -146,7 +147,6 @@ function RoundObject:AddPlayer(player: Player, team: number): boolean
 		Kills = 0,
 		Deaths = 0,
 		isAlive = true,
-		DeathOrder = nil,
 	}
 	table.insert(self.RoundUpdated, player)
 	return true
@@ -209,7 +209,7 @@ function RoundObject:MarkDead(player: Player): boolean
 	end
 	info.isAlive = false
 	self.DeathCounter += 1
-	info.DeathOrder = self.DeathCounter
+	self.LastDeathOrder[index] = self.DeathCounter
 	return true
 end
 
@@ -217,10 +217,10 @@ function RoundObject:ResetRound()
 	for _, team in self.Teams do
 		for _, info in team do
 			info.isAlive = true
-			info.DeathOrder = nil
 		end
 	end
 	self.DeathCounter = 0
+	self.LastDeathOrder = {}
 end
 
 function RoundObject:IsTeamEliminated(teamIndex: number): boolean
@@ -253,12 +253,7 @@ function RoundObject:GetRoundOutcome(): RoundOutcome
 		local eliminated = self:IsTeamEliminated(index)
 		local eliminationOrder: number? = nil
 		if eliminated then
-			for _, info in self.Teams[index] do
-				local order = info.DeathOrder
-				if order ~= nil and (eliminationOrder == nil or order > eliminationOrder) then
-					eliminationOrder = order
-				end
-			end
+			eliminationOrder = self.LastDeathOrder[index]
 		end
 		teamStates[index] = {
 			Eliminated = eliminated,

@@ -46,11 +46,12 @@ signal. At runtime the round runner connects each character's `Humanoid.Died` to
 `round:MarkDead(player)`. `MarkDead` is the **only** writer of alive state and death
 ordering:
 
-- `MarkDead(player)` sets `isAlive = false` and stamps a strictly increasing `DeathOrder`
-  from an internal counter. It refuses (with a `warn`) to mark a player who is not in the
-  round or who is already dead, so the counter never double-counts.
-- `ResetRound()` re-arms everyone for the next round: `isAlive = true`, `DeathOrder = nil`,
-  and the death counter is reset to zero.
+- `MarkDead(player)` sets `isAlive = false` and records the death against the player's team
+  with a strictly increasing counter, so each team remembers the order of its most recent
+  death. It refuses (with a `warn`) to mark a player who is not in the round or who is
+  already dead, so the counter never double-counts.
+- `ResetRound()` re-arms everyone for the next round: `isAlive = true`, the per-team death
+  records are cleared, and the death counter is reset to zero.
 - `LogPlayerInfo` writes only `Kills` and `Deaths`; it does not touch alive state.
 
 Because alive state is derived from one signal and never duplicated, it cannot drift.
@@ -63,7 +64,7 @@ Because alive state is derived from one signal and never duplicated, it cannot d
 - `GetRoundOutcome(): RoundOutcome` — a pure read (no mutation). It returns
   `{ Status = "Ongoing" }` while two or more teams are alive, `{ Status = "Awarded",
   TeamIndex = i }` when exactly one team remains, and on a double knockout (zero teams
-  alive) awards the team that died **last** using `DeathOrder`.
+  alive) awards the team that died **last** by each team's recorded last-death order.
 
 Outcome detection is separated from scoring so it can be called freely (e.g. on every
 death) without committing a point. The runner commits the point itself:
@@ -79,10 +80,11 @@ A typical runner loop: on each death call `GetRoundOutcome`; if `Status == "Awar
 ## Double knockout ("who died first")
 
 If two teams are wiped in the same round, the point goes to whichever team's last death
-happened later — i.e. the team that survived a fraction longer. `DeathOrder` comes from a
-monotonic counter incremented once per death, so two deaths can never share an order and a
-true tie cannot occur in practice. If the data is ever malformed and orders do tie, the
-lowest team index is awarded and a `warn` is emitted.
+happened later — i.e. the team that survived a fraction longer. The order comes from a
+monotonic counter incremented once per death and recorded per team, so two deaths can never
+share an order and a true tie cannot occur in practice. Holding the order at the team level
+means it survives a dead player being removed from the round. If the data is ever malformed
+and orders do tie, the lowest team index is awarded and a `warn` is emitted.
 
 ## Map-load gate (infrastructure, feature-locked)
 
