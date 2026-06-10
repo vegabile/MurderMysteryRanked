@@ -173,10 +173,15 @@ function RoundObject:GetPlayerInfo(player: Player): PlayerInfoObject?
 	if not index then
 		return nil
 	end
-	return self.Teams[index][player]
+	local info = self.Teams[index][player]
+	return {
+		Kills = info.Kills,
+		Deaths = info.Deaths,
+		isAlive = info.isAlive,
+	}
 end
 
-function RoundObject:LogPlayerInfo(player: Player, info: PlayerInfoObject): boolean
+function RoundObject:LogPlayerInfo(player: Player, info: { Kills: number, Deaths: number }): boolean
 	local index = findTeamIndex(self, player)
 	if not index then
 		warn("RoundObject:LogPlayerInfo ignored a player who is not in the round")

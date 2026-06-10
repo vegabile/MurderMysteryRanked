@@ -52,7 +52,10 @@ ordering:
   already dead, so the counter never double-counts.
 - `ResetRound()` re-arms everyone for the next round: `isAlive = true`, the per-team death
   records are cleared, and the death counter is reset to zero.
-- `LogPlayerInfo` writes only `Kills` and `Deaths`; it does not touch alive state.
+- `LogPlayerInfo` accepts only `{ Kills, Deaths }` and writes only those; alive state has
+  no way in through it.
+- `GetPlayerInfo` returns a snapshot **copy**, so a caller cannot reach in and flip
+  `isAlive` behind `MarkDead`'s back.
 
 Because alive state is derived from one signal and never duplicated, it cannot drift.
 
