@@ -124,6 +124,7 @@ end
 
 function RoundObject:Transition(target: RoundState): boolean
 	if not self:CanTransition(target) then
+		warn("RoundObject:Transition refused an invalid transition from " .. self.State .. " to " .. tostring(target))
 		return false
 	end
 	self.State = target
