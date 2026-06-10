@@ -1,5 +1,5 @@
 local t = require("./framework")
-local Glicko2 = require("../src/Shared/ReplicatedModules/DataModules/Glicko2")
+local Glicko2 = require("../src/Lobby/ReplicatedStorage/ReplicatedModules/DataModules/Glicko2")
 
 local function makeRating(r: number, RD: number, sigma: number)
 	return { r = r, RD = RD, sigma = sigma }
