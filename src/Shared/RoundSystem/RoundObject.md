@@ -79,8 +79,16 @@ death) without committing a point. The runner commits the point itself:
 - `GetWinner(): number?` — the first team whose points reached `WinningScore`, else `nil`.
 - `IsOver(): boolean`
 
-A typical runner loop: on each death call `GetRoundOutcome`; if `Status == "Awarded"` call
-`AwardPoint`, then either end the match (`IsOver`) or `ResetRound` and start the next round.
+A typical runner loop: on each death, only resolve while the round is still in `GAME`
+(`GetState() == "GAME"`); call `GetRoundOutcome`, and if `Status == "Awarded"` call
+`AwardPoint`, then leave `GAME` — `Transition("POST_GAME")` when `IsOver`, otherwise
+`Transition("IN_BETWEEN")`, `ResetRound`, and `Transition("GAME")` for the next round.
+
+Gating on `GetState() == "GAME"` is what makes a same-tick double knockout safe. Two deaths
+from one exchange arrive as two separate `Humanoid.Died` callbacks; the first resolves the
+round and moves it out of `GAME`, so the second — even if it runs after the reset — sees a
+round no longer in `GAME` and is ignored rather than awarding a second, phantom point. The
+state machine is the resolve-once latch; the runner must not award without checking it.
 
 ## Double knockout ("who died first")
 
