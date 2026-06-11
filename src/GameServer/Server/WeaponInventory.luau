@@ -85,9 +85,13 @@ function WeaponInventory.Give(player: Player, slot: Slot): boolean
 	if template == nil then
 		return false
 	end
+	local clone: Instance? = template:Clone()
+	if clone == nil then
+		warn(`WeaponInventory: failed to clone template for {slot}`)
+		return false
+	end
 	local loadout = getLoadout(player)
 	local previous = loadout[slot]
-	local clone = template:Clone()
 	loadout[slot] = clone
 	clone.Parent = backpack
 	if previous ~= nil then
@@ -102,22 +106,32 @@ function WeaponInventory.GiveAll(player: Player): boolean
 		return false
 	end
 
-	local pending: { { slot: Slot, template: Instance } } = {}
+	local pending: { { slot: Slot, clone: Instance } } = {}
 	for i = 1, #SLOTS do
 		local slot: Slot = SLOTS[i]
 		local template = getTemplate(slot)
 		if template == nil then
+			for _, entry in pending do
+				entry.clone:Destroy()
+			end
 			return false
 		end
-		table.insert(pending, { slot = slot, template = template })
+		local clone: Instance? = template:Clone()
+		if clone == nil then
+			warn(`WeaponInventory: failed to clone template for {slot}`)
+			for _, entry in pending do
+				entry.clone:Destroy()
+			end
+			return false
+		end
+		table.insert(pending, { slot = slot, clone = clone })
 	end
 
 	local loadout = getLoadout(player)
 	for _, entry in pending do
 		local previous = loadout[entry.slot]
-		local clone = entry.template:Clone()
-		loadout[entry.slot] = clone
-		clone.Parent = backpack
+		loadout[entry.slot] = entry.clone
+		entry.clone.Parent = backpack
 		if previous ~= nil then
 			previous:Destroy()
 		end
