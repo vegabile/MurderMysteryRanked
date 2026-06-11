@@ -11,7 +11,8 @@ MapVote.__index = MapVote
 type Fields = {
 	Votes: { [number]: number },
 	Closed: boolean,
-	_promise: any,
+	_winner: number?,
+	_waiters: { (number) -> () },
 }
 
 export type VoteObject = typeof(setmetatable({} :: Fields, MapVote))
@@ -40,13 +41,17 @@ function MapVote.newVoteObject(duration: number): VoteObject?
 	local self = setmetatable({
 		Votes = {},
 		Closed = false,
+		_waiters = {},
 	}, MapVote)
 
-	self._promise = Promise.new(function(resolve)
-		task.delay(duration, function()
-			self.Closed = true
-			resolve(tally(self.Votes))
-		end)
+	task.delay(duration, function()
+		local winner = tally(self.Votes)
+		self._winner = winner
+		self.Closed = true
+		for _, resolve in self._waiters do
+			resolve(winner)
+		end
+		table.clear(self._waiters)
 	end)
 
 	return self
@@ -71,7 +76,12 @@ function MapVote:vote(player: Player, slot: number): boolean
 end
 
 function MapVote:getWinner(): any
-	return self._promise
+	if self.Closed then
+		return Promise.resolve(self._winner)
+	end
+	return Promise.new(function(resolve)
+		table.insert(self._waiters, resolve)
+	end)
 end
 
 return MapVote
