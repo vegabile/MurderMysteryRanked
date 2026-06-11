@@ -82,13 +82,19 @@ death) without committing a point. The runner commits the point itself:
 A typical runner loop: on each death, only resolve while the round is still in `GAME`
 (`GetState() == "GAME"`); call `GetRoundOutcome`, and if `Status == "Awarded"` call
 `AwardPoint`, then leave `GAME` — `Transition("POST_GAME")` when `IsOver`, otherwise
-`Transition("IN_BETWEEN")`, `ResetRound`, and `Transition("GAME")` for the next round.
+`Transition("IN_BETWEEN")` and `ResetRound`. Starting the next round
+(`Transition("GAME")`) must be deferred to a later tick (e.g. `task.defer`), never run
+inside the same death callback that resolved the round.
 
-Gating on `GetState() == "GAME"` is what makes a same-tick double knockout safe. Two deaths
-from one exchange arrive as two separate `Humanoid.Died` callbacks; the first resolves the
-round and moves it out of `GAME`, so the second — even if it runs after the reset — sees a
-round no longer in `GAME` and is ignored rather than awarding a second, phantom point. The
-state machine is the resolve-once latch; the runner must not award without checking it.
+Gating on `GetState() == "GAME"` makes a same-tick double knockout safe only while the round
+stays out of `GAME` until that next tick. Two deaths from one exchange arrive as two separate
+`Humanoid.Died` callbacks; the first resolves the round and moves it to `IN_BETWEEN`, so the
+second — even if it runs after `ResetRound` — sees a round no longer in `GAME` and is ignored
+rather than awarding a second, phantom point. If the runner instead re-entered `GAME`
+synchronously inside that first callback, the second callback would see a freshly re-armed
+`GAME` round and award a phantom point; deferring the re-entry (or having each death
+connection capture a round generation and ignore deaths from an older one) is what keeps the
+state machine a true resolve-once latch.
 
 ## Double knockout ("who died first")
 
