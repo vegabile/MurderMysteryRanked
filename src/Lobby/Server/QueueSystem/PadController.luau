@@ -111,6 +111,9 @@ function PadController._playersOn(self: PadController, part: BasePart): { [Playe
 end
 
 function PadController._tryAdd(self: PadController, player: Player, side: number): boolean
+	if MatchTeleport.isPending(player) then
+		return false
+	end
 	for _, existing in self:_sideList(side) do
 		if existing == player then
 			return false

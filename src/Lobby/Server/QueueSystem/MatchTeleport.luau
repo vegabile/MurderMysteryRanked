@@ -73,6 +73,10 @@ Players.PlayerRemoving:Connect(function(player)
 	pending[player] = nil
 end)
 
+function MatchTeleport.isPending(player: Player): boolean
+	return pending[player] ~= nil
+end
+
 function MatchTeleport.teleportMatch(snapshot: MatchData.Snapshot, mode: string, perSide: number): boolean
 	local players = presentPlayers(snapshot)
 	if #players ~= perSide * 2 then
