@@ -85,9 +85,9 @@ local PassCount = 0
 local function TestPass(test_txt: string, is_pass: boolean)
 	print(PREFIX .. test_txt .. ": " .. (if is_pass==  true then "PASS ✅" else "FAIL ❌"))
 	if is_pass==  true then
-		PassCount + = 1
+		PassCount +=1
 	else
-		FailCount + = 1
+		FailCount +=1
 	end
 end
 
@@ -122,7 +122,7 @@ local function MockUpdateAsync(mock_data_store: {}, store_name: string, profile_
 		end
 		
 		mock_entry.UpdatedTime = epoch_time
-		mock_entry.VersionId + = 1
+		mock_entry.VersionId +=1
 		mock_entry.Data = DeepCopyTable(transform)
 		
 		return DeepCopyTable(mock_entry.Data)
@@ -192,7 +192,7 @@ task.spawn(function()
 		profile:EndSession()
 
 		local payload = Store1:GetAsync(key)
-		payload.Data.Gold + = 10
+		payload.Data.Gold +=10
 		payload:SetAsync()
 
 		local query = Store1:VersionQuery(
@@ -250,7 +250,7 @@ task.spawn(function()
 		-- even in manual editing if you want to protect live in-game progress.
 
 		local payload = Store1:GetAsync(key)
-		payload.Data.Coins + = 1
+		payload.Data.Coins +=1
 		payload:AddUserId(50)
 
 		local message_received = false
@@ -317,7 +317,7 @@ task.spawn(function()
 		local active_messages = 0
 		
 		profile:MessageHandler(function()
-			active_messages + = 1
+			active_messages +=1
 		end)
 
 		local is_passed = profile.Data.Coins==  69
@@ -468,11 +468,11 @@ task.spawn(function()
 		local active_messages_get = 0
 
 		profile:MessageHandler(function()
-			active_messages + = 1
+			active_messages +=1
 		end)
 		
 		profile_get:MessageHandler(function()
-			active_messages_get + = 1
+			active_messages_get +=1
 		end)
 		
 		profile:EndSession()
@@ -492,7 +492,7 @@ task.spawn(function()
 		local active_messages_after_clear = 0
 		
 		payload:MessageHandler(function(message, is_processed_callback)
-			active_messages_after_clear + = 1
+			active_messages_after_clear +=1
 		end)
 		
 		profile:EndSession()

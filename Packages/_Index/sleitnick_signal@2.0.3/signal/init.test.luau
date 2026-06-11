@@ -155,14 +155,14 @@ return function(ctx: Test.TestContext)
 			local a = 0
 			local c
 			signal:Connect(function()
-				a + = 1
+				a +=1
 			end)
 			c = signal:Connect(function()
 				c:Disconnect()
-				a + = 1
+				a +=1
 			end)
 			signal:Connect(function()
-				a + = 1
+				a +=1
 			end)
 			signal:Fire()
 			ctx:Expect(a):ToBe(3)
@@ -172,14 +172,14 @@ return function(ctx: Test.TestContext)
 			local a = 0
 			local c
 			signal:Connect(function()
-				a + = 1
+				a +=1
 			end)
 			c = signal:Connect(function()
 				c:Disconnect()
-				a + = 1
+				a +=1
 			end)
 			signal:Connect(function()
-				a + = 1
+				a +=1
 			end)
 			signal:FireDeferred()
 			ctx:Expect(AwaitCondition(function()

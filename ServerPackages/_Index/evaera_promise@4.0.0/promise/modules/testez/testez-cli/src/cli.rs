@@ -54,7 +54,7 @@ impl FromStr for Target {
         match value {
             "roblox-cli" =  > Ok(Self::RobloxCli),
             "lemur" =  > Ok(Self::Lemur),
-            _ =  > Err(TargetConvertError(value.to_owned())),
+            _ = > Err(TargetConvertError(value.to_owned())),
         }
     }
 }

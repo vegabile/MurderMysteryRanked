@@ -5,8 +5,8 @@ type TestEntry = {
 	fn: () -> (),
 }
 
-local tests: { TestEntry } = {}
-local stack: { string } = {}
+local tests: { TestEntry }  = {}
+local stack: { string }  = {}
 
 local function describe(name: string, body: () -> ())
 	table.insert(stack, name)
@@ -94,10 +94,10 @@ local function run(): boolean
 	for _, entry in ipairs(tests) do
 		local ok, err = pcall(entry.fn)
 		if ok then
-			passed + = 1
+			passed += 1
 			print(string.format("PASS  %s", entry.name))
 		else
-			failed + = 1
+			failed +=1
 			print(string.format("FAIL  %s", entry.name))
 			print(string.format("        %s", tostring(err)))
 		end

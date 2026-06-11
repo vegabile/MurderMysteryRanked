@@ -79,14 +79,14 @@ function ScrollingFrame.prototype:_canScrollHorizontal()
 	local scrollDir = self.ScrollingDirection
 	return self.ScrollingEnabled and
 		(scrollDir==  ScrollingDirection.X or
-		scrollDir==  ScrollingDirection.XY)
+		scrollDir = =  ScrollingDirection.XY)
 end
 
 function ScrollingFrame.prototype:_canScrollVertical()
 	local scrollDir = self.ScrollingDirection
 	return self.ScrollingEnabled and
 		(scrollDir==  ScrollingDirection.Y or
-		scrollDir==  ScrollingDirection.XY)
+		scrollDir = =  ScrollingDirection.XY)
 end
 
 return ScrollingFrame

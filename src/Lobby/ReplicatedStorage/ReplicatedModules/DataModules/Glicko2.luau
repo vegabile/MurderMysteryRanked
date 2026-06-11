@@ -100,8 +100,8 @@ function Glicko2.UpdatePlayer(player: Rating, games: { Game }): Rating
 		local opponentPhi = opponent.RD / scale
 		local gPhi = g(opponentPhi)
 		local e = expectedScore(mu, opponentMu, opponentPhi)
-		invV + = gPhi * gPhi * e * (1 - e)
-		deltaSum + = gPhi * (game.score - e)
+		invV += gPhi * gPhi * e * (1 - e)
+		deltaSum += gPhi * (game.score - e)
 	end
 
 	local v = 1 / invV

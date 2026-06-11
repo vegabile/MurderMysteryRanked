@@ -308,7 +308,7 @@ local entry_count = 0
 
 while true do
 
-  entry_count + = 1
+  entry_count +=1
   local profile = query:NextAsync()
 
   if profile ~= nil then

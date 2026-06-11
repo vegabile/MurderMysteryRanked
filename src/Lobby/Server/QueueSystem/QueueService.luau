@@ -11,7 +11,7 @@ local PadController = require(script.Parent:WaitForChild("PadController"))
 
 local QueueService = {}
 
-local controllers: { PadController.PadController } = {}
+local controllers: { PadController.PadController }  = {}
 local initialized = false
 
 local function resolvePad(model: Model): PadController.Options?
@@ -33,7 +33,7 @@ local function resolvePad(model: Model): PadController.Options?
 		return nil
 	end
 
-	local holder: Instance? = nil
+	local holder: Instance?  = nil
 	local screen = model:FindFirstChild("Screen")
 	local surfaceGui = if screen then screen:FindFirstChildWhichIsA("SurfaceGui") else nil
 	if surfaceGui then

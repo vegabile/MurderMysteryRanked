@@ -263,7 +263,7 @@ do
 		setmetatable(connection, Connection)
 
 		self.head = connection
-		self.listener_count + = 1
+		self.listener_count +=1
 
 		return connection
 	end
@@ -342,7 +342,7 @@ local ActiveProfileSaveJobs = 0 -- Number of active threads that are saving prof
 local CriticalStateStart = 0 -- os.clock()
 
 local IsStudio = RunService:IsStudio()
-local DataStoreState: "NotReady" | "NoInternet" | "NoAccess" | "Access" = "NotReady"
+local DataStoreState: "NotReady" | "NoInternet" | "NoAccess" | "Access"  = "NotReady"
 
 local MockStore = {}
 local UserMockStore = {}
@@ -351,7 +351,7 @@ local MockFlag = false
 local OnError = Signal.New() -- (message, store_name, profile_key)
 local OnOverwrite = Signal.New() -- (store_name, profile_key)
 
-local UpdateQueue = 
+local UpdateQueue =  
 	{ -- For stability sake, we won't do UpdateAsync calls for the same key until all previous calls finish
 		--[[
 		[session_token] = {
@@ -504,7 +504,7 @@ local function MockUpdateAsync(mock_data_store, profile_store_name, key, transfo
 			mock_entry.Data = DeepCopyTable(transform)
 			mock_entry.UserIds = DeepCopyTable(user_ids or {})
 			mock_entry.MetaData = DeepCopyTable(roblox_meta_data or {})
-			mock_entry.VersionId + = 1
+			mock_entry.VersionId +=1
 			mock_entry.UpdatedTime = epoch_time
 		end
 
@@ -551,7 +551,7 @@ local function UpdateAsync(profile_store, profile_key, transform_params, is_user
 						transform_params.ExistingProfileHandle(latest_data)
 					end
 				elseif
-					latest_data.Data==  nil
+					latest_data.Data = =  nil
 					and latest_data.MetaData==  nil
 					and type(latest_data.GlobalUpdates)==  "table"
 				then
@@ -592,11 +592,11 @@ local function UpdateAsync(profile_store, profile_key, transform_params, is_user
 		end
 
 		if is_user_mock==  true then -- Used when the profile is accessed through ProfileStore.Mock
-			loaded_data, key_info = 
+			loaded_data, key_info =  
 				MockUpdateAsync(UserMockStore, profile_store.Name, profile_key, transform_function, is_get_call)
 			task.wait() -- Simulate API call yield
 		elseif DataStoreState ~= "Access" then -- Used when API access is disabled
-			loaded_data, key_info = 
+			loaded_data, key_info =  
 				MockUpdateAsync(MockStore, profile_store.Name, profile_key, transform_function, is_get_call)
 			task.wait() -- Simulate API call yield
 		else
@@ -607,7 +607,7 @@ local function UpdateAsync(profile_store, profile_key, transform_params, is_user
 					end)
 
 					if
-						success==  false
+						success = =  false
 						and type(error_message)==  "string"
 						and string.find(error_message, "not valid") ~= nil
 					then
@@ -757,7 +757,7 @@ local function SaveProfileAsync(profile, is_ending_session, is_overwriting, last
 							if locked_updates[update[1]]==  true then
 								table.remove(active_updates, i)
 							else
-								i + = 1
+								i +=1
 							end
 						end
 					end
@@ -1159,7 +1159,7 @@ function Profile:Save()
 	task.spawn(SaveProfileAsync, self)
 end
 
-local ProfileStore: ProfileStoreModule = {
+local ProfileStore: ProfileStoreModule  = {
 
 	IsClosing = false,
 	IsCriticalState = false,
@@ -1377,7 +1377,7 @@ function ProfileStore:StartSessionAsync(profile_key, params)
 		-- grab the DataStore return for the new call. The early call will return nil. This is supposed to retain
 		-- expected and efficient behavior in cases where a player would quickly rejoin the same server.
 
-		LoadIndex + = 1
+		LoadIndex +=1
 		local load_id = LoadIndex
 		local profile_load_jobs = is_mock==  true and self.mock_load_jobs or self.load_jobs
 		local profile_load_job = profile_load_jobs[profile_key] -- {load_id, {loaded_data, key_info} or nil}
@@ -1608,7 +1608,7 @@ function ProfileStore:MessageAsync(profile_key, message)
 				--	},
 				--},
 
-				global_updates[1] + = 1
+				global_updates[1] +=1
 				table.insert(update_list, { global_updates[1], message })
 
 				-- Clearing queue if above limit:
@@ -1910,7 +1910,7 @@ function ProfileVersionQuery:NextAsync()
 
 		-- Next page item:
 
-		self.query_index + = 1
+		self.query_index +=1
 		profile = self.profile_store:GetAsync(self.profile_key, next_item.Version)
 		is_finished = true
 	end
@@ -1980,7 +1980,7 @@ if IsStudio==  true then
 		end
 
 		if
-			status==  false
+			status = =  false
 			and (
 				string.find(message, "403", 1, true) ~= nil -- Cannot write to DataStore from studio if API access is not enabled
 				or string.find(message, "must publish", 1, true) ~= nil -- Game must be published to access live keys

@@ -37,7 +37,7 @@ local PROFILE_TEMPLATE = {
 local Players = game:GetService("Players")
 
 local PlayerStore = ProfileStore.New("PlayerStore", PROFILE_TEMPLATE)
-local Profiles: {[Player]: typeof(PlayerStore:StartSessionAsync())} = {}
+local Profiles: {[Player]: typeof(PlayerStore:StartSessionAsync())}  = {}
 
 local function PlayerAdded(player)
 
@@ -65,7 +65,7 @@ local function PlayerAdded(player)
          Profiles[player] = profile
          print(`Profile loaded for {player.DisplayName}!`)
          -- EXAMPLE: Grant the player 100 coins for joining:
-         profile.Data.Cash + = 100
+         profile.Data.Cash +=100
          -- You should set "Cash" in PROFILE_TEMPLATE and use "Profile:Reconcile()",
          -- otherwise you'll have to check whether "Data.Cash" is not nil
       else

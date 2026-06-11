@@ -10,7 +10,7 @@ local MatchData = require(Shared:WaitForChild("MatchData"))
 
 local MatchTeleport = {}
 
-local RETRYABLE_RESULTS: { [Enum.TeleportResult]: boolean } = {
+local RETRYABLE_RESULTS: { [Enum.TeleportResult]: boolean }  = {
 	[Enum.TeleportResult.Failure] = true,
 	[Enum.TeleportResult.Flooded] = true,
 }
@@ -20,7 +20,7 @@ type Pending = {
 	attempts: number,
 }
 
-local pending: { [Player]: Pending } = {}
+local pending: { [Player]: Pending }  = {}
 
 local function sendToReserved(players: { Player }, options: TeleportOptions): (boolean, string?)
 	local ok, err = pcall(function()
@@ -30,7 +30,7 @@ local function sendToReserved(players: { Player }, options: TeleportOptions): (b
 end
 
 local function presentPlayers(snapshot: MatchData.Snapshot): { Player }
-	local players: { Player } = {}
+	local players: { Player }  = {}
 	for _, player in snapshot.side1 do
 		if player.Parent==  Players then
 			table.insert(players, player)
@@ -56,7 +56,7 @@ TeleportService.TeleportInitFailed:Connect(function(player, result, message)
 		return
 	end
 
-	entry.attempts + = 1
+	entry.attempts += 1
 	task.wait(Config.TeleportRetryBackoff)
 	if pending[player] ~= entry or player.Parent ~= Players then
 		return

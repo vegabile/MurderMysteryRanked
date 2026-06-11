@@ -29,8 +29,8 @@ function MatchData.fromPadName(name: string): (string?, number?)
 end
 
 function MatchData.build(snapshot: Snapshot, mode: string): MatchData
-	local team1: { number } = {}
-	local team2: { number } = {}
+	local team1: { number }  = {}
+	local team2: { number }  = {}
 	for _, player in snapshot.side1 do
 		table.insert(team1, player.UserId)
 	end
@@ -49,7 +49,7 @@ local function numberArrayCount(value: any): number?
 		if type(index) ~= "number" or type(item) ~= "number" then
 			return nil
 		end
-		count + = 1
+		count += 1
 	end
 	return count
 end
@@ -67,7 +67,7 @@ local function perSideOfMode(mode: string): number?
 end
 
 local function hasDistinctIds(team1: { number }, team2: { number }): boolean
-	local seen: { [number]: boolean } = {}
+	local seen: { [number]: boolean }  = {}
 	for _, id in team1 do
 		if seen[id] then
 			return false

@@ -7,7 +7,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local ServerPackages = ServerScriptService:WaitForChild("ServerPackages")
 local ProfileStore = require(ServerPackages:WaitForChild("ProfileStore"))
 
-local Glicko2 = 
+local Glicko2 =  
 	require(ReplicatedStorage:WaitForChild("Lobby"):WaitForChild("ReplicatedModules"):WaitForChild("DataModules"):WaitForChild("Glicko2"))
 
 local PlayerProfile = require(ServerScriptService:WaitForChild("PlayerProfile"))
@@ -18,21 +18,21 @@ export type ProfileData = {
 
 export type PlayerProfile = PlayerProfile.PlayerProfile
 
-local TEMPLATE: ProfileData = {
+local TEMPLATE: ProfileData  = {
 	Elo = Glicko2.DefaultRating,
 }
 
 local Store = ProfileStore.New("PlayerData", TEMPLATE)
 
-local Profiles: { [Player]: PlayerProfile } = {}
-local loading: { [Player]: boolean } = {}
+local Profiles: { [Player]: PlayerProfile }  = {}
+local loading: { [Player]: boolean }  = {}
 
 local SaveHandler = {}
 
 local initialized = false
 
 local function onPlayerAdded(player: Player)
-	local existing: PlayerProfile? = Profiles[player]
+	local existing: PlayerProfile?  = Profiles[player]
 	if existing ~= nil or loading[player] then
 		return
 	end
@@ -70,7 +70,7 @@ local function onPlayerAdded(player: Player)
 end
 
 local function onPlayerRemoving(player: Player)
-	local playerProfile: PlayerProfile? = Profiles[player]
+	local playerProfile: PlayerProfile?  = Profiles[player]
 	if playerProfile ~= nil then
 		playerProfile._profile:EndSession()
 	end

@@ -2,13 +2,13 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local MapVote = require(script.Parent:WaitForChild("MapVote"))
 
-local RemoteFunctions = 
+local RemoteFunctions =  
 	ReplicatedStorage:WaitForChild("GameServer"):WaitForChild("Remotes"):WaitForChild("RemoteFunctions")
 local CastVote = RemoteFunctions:WaitForChild("CastVote")
 
 local MapVoteService = {}
 
-local currentVote: MapVote.VoteObject? = nil
+local currentVote: MapVote.VoteObject?  = nil
 
 function MapVoteService.start(duration: number): MapVote.VoteObject?
 	if currentVote and not currentVote.Closed then

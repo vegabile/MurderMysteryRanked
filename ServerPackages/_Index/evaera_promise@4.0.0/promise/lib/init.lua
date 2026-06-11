@@ -1164,7 +1164,7 @@ end
 	Promise.race({
 		Promise.delay(seconds):andThen(function()
 			return Promise.reject(
-				rejectionValue==  nil
+				rejectionValue = =  nil
 				and Promise.Error.new({ kind = Promise.Error.Kind.TimedOut })
 				or rejectionValue
 			)

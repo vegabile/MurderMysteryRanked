@@ -20,7 +20,7 @@ export type VoteObject = typeof(setmetatable({} :: Fields, MapVote))
 local function tally(votes: { [number]: number }): number
 	local counts = table.create(SLOTS, 0)
 	for _, slot in votes do
-		counts[slot] + = 1
+		counts[slot] += 1
 	end
 
 	local winner = 1

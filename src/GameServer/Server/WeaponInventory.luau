@@ -8,10 +8,10 @@ export type Slot = "Gun" | "Knife"
 
 type Loadout = { [Slot]: Instance? }
 
-local weaponsSource: Instance? = nil
+local weaponsSource: Instance?  = nil
 
-local SLOTS: { Slot } = { "Gun", "Knife" }
-local inventories: { [Player]: Loadout } = {}
+local SLOTS: { Slot }  = { "Gun", "Knife" }
+local inventories: { [Player]: Loadout }  = {}
 
 local initialized = false
 
@@ -85,7 +85,7 @@ function WeaponInventory.Give(player: Player, slot: Slot): boolean
 	if template==  nil then
 		return false
 	end
-	local clone: Instance? = template:Clone()
+	local clone: Instance?  = template:Clone()
 	if clone==  nil then
 		warn(`WeaponInventory: failed to clone template for {slot}`)
 		return false
@@ -107,9 +107,9 @@ function WeaponInventory.GiveAll(player: Player): boolean
 		return false
 	end
 
-	local pending: { { slot: Slot, clone: Instance } } = {}
+	local pending: { { slot: Slot, clone: Instance } }  = {}
 	for i = 1, #SLOTS do
-		local slot: Slot = SLOTS[i]
+		local slot: Slot  = SLOTS[i]
 		local template = getTemplate(slot)
 		if template==  nil then
 			for _, entry in pending do
@@ -117,7 +117,7 @@ function WeaponInventory.GiveAll(player: Player): boolean
 			end
 			return false
 		end
-		local clone: Instance? = template:Clone()
+		local clone: Instance?  = template:Clone()
 		if clone==  nil then
 			warn(`WeaponInventory: failed to clone template for {slot}`)
 			for _, entry in pending do

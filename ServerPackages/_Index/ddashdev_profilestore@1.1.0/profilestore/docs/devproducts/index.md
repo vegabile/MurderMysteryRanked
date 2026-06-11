@@ -12,7 +12,7 @@ observations on how [Roblox MarketplaceService API](https://create.roblox.com/do
 *(This is a Roblox official code example with alterations integrating ProfileStore)*
 
 ``` luau
-local Profiles: {[player]: typeof(PlayerStore:StartSessionAsync())} = {} -- See Tutorial > Basic Usage
+local Profiles: {[player]: typeof(PlayerStore:StartSessionAsync())}  = {} -- See Tutorial > Basic Usage
 
 local MarketplaceService = game:GetService("MarketplaceService")
 local Players = game:GetService("Players")
@@ -21,7 +21,7 @@ local productFunctions = {}
 
 -- Example: product ID 456456 awards 100 cash to the user
 productFunctions[456456] = function(receipt, player, profile)
-    profile.Data.Cash + = 100
+    profile.Data.Cash +=100
     -- We made changes to the player profile - perform an instant
     -- save to secure a player purchase against server crashes:
     profile:Save()
@@ -110,7 +110,7 @@ for the `MarketplaceService.ProcessReceipt` callback.
 This is how you could do it:
 
 ``` luau
-local Profiles: {[player]: typeof(PlayerStore:StartSessionAsync())} = {} -- See Tutorial > Basic Usage
+local Profiles: {[player]: typeof(PlayerStore:StartSessionAsync())}  = {} -- See Tutorial > Basic Usage
 
 local PURCHASE_ID_CACHE_SIZE = 100
 
@@ -120,7 +120,7 @@ local Players = game:GetService("Players")
 local ProductFunctions = {}
 
 ProductFunctions[456456] = function(receipt, player, profile)
-    profile.Data.Cash + = 100
+    profile.Data.Cash +=100
     -- No Profile:Save() is needed in here compared to the previous example
 end
 

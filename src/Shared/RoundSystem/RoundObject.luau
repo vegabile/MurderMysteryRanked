@@ -49,7 +49,7 @@ RoundObject.States = {
 	POST_GAME = "POST_GAME" :: RoundState,
 }
 
-local TRANSITIONS: { [RoundState]: { [RoundState]: boolean } } = {
+local TRANSITIONS: { [RoundState]: { [RoundState]: boolean } }  = {
 	PRE_GAME = { GAME = true },
 	GAME = { IN_BETWEEN = true, POST_GAME = true },
 	IN_BETWEEN = { GAME = true, POST_GAME = true },
@@ -96,8 +96,8 @@ function RoundObject.new(teamCount: number?, winningScore: number?): RoundObject
 		end
 	end
 
-	local teams: { Team } = {}
-	local points: { number } = {}
+	local teams: { Team }  = {}
+	local points: { number }  = {}
 	for index = 1, resolvedTeamCount do
 		teams[index] = {}
 		points[index] = 0
@@ -145,7 +145,7 @@ function RoundObject:AddPlayer(player: Player, team: number): boolean
 	if self.Team1[player] or self.Team2[player] then
 		return false
 	end
-	local info: PlayerInfoObject = {
+	local info: PlayerInfoObject  = {
 		Kills = 0,
 		Deaths = 0,
 		isAlive = true,
@@ -174,7 +174,7 @@ function RoundObject:RemovePlayer(player: Player): boolean
 		end
 	end
 	if wasAlive and self:IsTeamEliminated(index) then
-		self.DeathCounter + = 1
+		self.DeathCounter +=1
 		self.LastDeathOrder[index] = self.DeathCounter
 	end
 	return true
@@ -226,7 +226,7 @@ function RoundObject:MarkDead(player: Player): boolean
 		return false
 	end
 	info.isAlive = false
-	self.DeathCounter + = 1
+	self.DeathCounter +=1
 	self.LastDeathOrder[index] = self.DeathCounter
 	return true
 end
@@ -256,7 +256,7 @@ function RoundObject:IsTeamEliminated(teamIndex: number): boolean
 end
 
 function RoundObject:GetLivingTeams(): { number }
-	local living: { number } = {}
+	local living: { number }  = {}
 	for index = 1, #self.Teams do
 		if not self:IsTeamEliminated(index) then
 			table.insert(living, index)
@@ -266,10 +266,10 @@ function RoundObject:GetLivingTeams(): { number }
 end
 
 function RoundObject:GetRoundOutcome(): RoundOutcome
-	local teamStates: { TeamState } = {}
+	local teamStates: { TeamState }  = {}
 	for index = 1, #self.Teams do
 		local eliminated = self:IsTeamEliminated(index)
-		local eliminationOrder: number? = nil
+		local eliminationOrder: number?  = nil
 		if eliminated then
 			eliminationOrder = self.LastDeathOrder[index]
 		end
@@ -286,7 +286,7 @@ function RoundObject:AwardPoint(teamIndex: number): boolean
 		warn("RoundObject:AwardPoint received a team index outside the valid range")
 		return false
 	end
-	self.Points[teamIndex] + = 1
+	self.Points[teamIndex] +=1
 	return true
 end
 
@@ -335,7 +335,7 @@ function RoundObject:BeginGame(loadMap: (() -> boolean)?, timeout: number?): boo
 
 		local elapsed = 0
 		while not finished and elapsed < resolvedTimeout do
-			elapsed + = task.wait()
+			elapsed +=task.wait()
 		end
 
 		if not finished then
@@ -382,7 +382,7 @@ function RoundObject.ClassifyMode(teamSizes: { number }): Mode?
 end
 
 function RoundObject.DecideOutcome(teamStates: { TeamState }): RoundOutcome
-	local living: { number } = {}
+	local living: { number }  = {}
 	for index = 1, #teamStates do
 		if not teamStates[index].Eliminated then
 			table.insert(living, index)
@@ -396,8 +396,8 @@ function RoundObject.DecideOutcome(teamStates: { TeamState }): RoundOutcome
 		return { Status = "Awarded" :: RoundStatus, TeamIndex = living[1] }
 	end
 
-	local bestIndex: number? = nil
-	local bestOrder: number? = nil
+	local bestIndex: number?  = nil
+	local bestOrder: number?  = nil
 	local tied = false
 	for index = 1, #teamStates do
 		local order = teamStates[index].EliminationOrder

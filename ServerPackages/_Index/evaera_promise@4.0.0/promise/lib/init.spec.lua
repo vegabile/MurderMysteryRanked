@@ -44,7 +44,7 @@ return function()
 			local callCount = 0
 
 			local function callback(promise, rejectionA, rejectionB)
-				callCount + = 1
+				callCount +=1
 
 				expect(promise).to.equal(badPromise)
 				expect(rejectionA).to.equal(1)
@@ -222,10 +222,10 @@ return function()
 		itSKIP("should close the thread after resolve", function()
 			local count = 0
 			Promise.new(function(resolve)
-				count + = 1
+				count +=1
 				resolve()
 				Promise.delay(1):await()
-				count + = 1
+				count +=1
 			end)
 
 			task.wait(1)
@@ -553,12 +553,12 @@ return function()
 			end)
 
 			root:andThen(function()
-				count + = 1
+				count +=1
 			end)
 
 			root
 				:andThen(function()
-					count + = 1
+					count +=1
 				end)
 				:cancel()
 
@@ -668,9 +668,9 @@ return function()
 		it("should close the promise thread", function()
 			local count = 0
 			local promise = Promise.new(function()
-				count + = 1
+				count +=1
 				Promise.delay(1):await()
-				count + = 1
+				count +=1
 			end)
 
 			promise:cancel()

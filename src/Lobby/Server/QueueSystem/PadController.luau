@@ -97,7 +97,7 @@ function PadController._playersOn(self: PadController, part: BasePart): { [Playe
 	params.FilterType = Enum.RaycastFilterType.Exclude
 	params.FilterDescendantsInstances = { self._model }
 
-	local present: { [Player]: boolean } = {}
+	local present: { [Player]: boolean }  = {}
 	for _, hit in Workspace:GetPartBoundsInBox(center, volume, params) do
 		local character = hit:FindFirstAncestorOfClass("Model")
 		if character then
@@ -161,7 +161,7 @@ end
 function PadController._startPolling(self: PadController)
 	local accumulator = 0
 	self._polling = RunService.Heartbeat:Connect(function(delta)
-		accumulator + = delta
+		accumulator +=delta
 		if accumulator >= Config.OccupancyPollInterval then
 			accumulator = 0
 			self:_poll()
@@ -179,7 +179,7 @@ function PadController._onRosterChanged(self: PadController)
 end
 
 function PadController._startCountdown(self: PadController)
-	self._countdownId + = 1
+	self._countdownId +=1
 	local id = self._countdownId
 	self:_showCountdown(true)
 	task.spawn(function()
@@ -187,7 +187,7 @@ function PadController._startCountdown(self: PadController)
 		while remaining > 0 and self._countdownId==  id do
 			self:_setCountdownText(remaining)
 			task.wait(1)
-			remaining - = 1
+			remaining -= 1
 		end
 		if self._countdownId==  id then
 			self:_pop()
@@ -196,7 +196,7 @@ function PadController._startCountdown(self: PadController)
 end
 
 function PadController._cancelCountdown(self: PadController)
-	self._countdownId + = 1
+	self._countdownId +=1
 	self:_showCountdown(false)
 end
 
@@ -310,7 +310,7 @@ function PadController.destroy(self: PadController)
 		self._polling:Disconnect()
 		self._polling = nil
 	end
-	self._countdownId + = 1
+	self._countdownId +=1
 end
 
 return PadController
