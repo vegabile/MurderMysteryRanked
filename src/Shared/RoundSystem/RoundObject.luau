@@ -137,22 +137,24 @@ end
 
 function RoundObject:AddPlayer(player: Player, team: number): boolean
 	if typeof(player) ~= "Instance" or not player:IsA("Player") then
-		warn("RoundObject:AddPlayer received a value that is not a Player")
 		return false
 	end
-	if not isPositiveInteger(team) or team > #self.Teams then
-		warn("RoundObject:AddPlayer received a team index outside the valid range")
+	if team ~= 1 and team ~= 2 then
 		return false
 	end
-	if findTeamIndex(self, player) then
-		warn("RoundObject:AddPlayer ignored a player who is already in the round")
+	if self.Team1[player] or self.Team2[player] then
 		return false
 	end
-	self.Teams[team][player] = {
+	local info: PlayerInfoObject = {
 		Kills = 0,
 		Deaths = 0,
 		isAlive = true,
 	}
+	if team == 1 then
+		self.Team1[player] = info
+	else
+		self.Team2[player] = info
+	end
 	table.insert(self.RoundUpdated, player)
 	return true
 end
