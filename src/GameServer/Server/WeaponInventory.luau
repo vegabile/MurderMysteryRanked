@@ -8,7 +8,7 @@ export type Slot = "Gun" | "Knife"
 
 type Loadout = { [Slot]: Instance? }
 
-local WEAPONS_SOURCE: Instance? = nil
+local weaponsSource: Instance? = nil
 
 local SLOTS: { Slot } = { "Gun", "Knife" }
 local inventories: { [Player]: Loadout } = {}
@@ -34,14 +34,18 @@ local function getBackpack(player: Player): Instance?
 end
 
 local function getTemplate(slot: Slot): Instance?
-	local source = WEAPONS_SOURCE
+	local source = weaponsSource
 	if source == nil then
-		warn(`WeaponInventory: WEAPONS_SOURCE is not set, cannot give {slot}`)
+		warn(`WeaponInventory: weapon source is not set, cannot give {slot}`)
 		return nil
 	end
 	local template = source:FindFirstChild(slot)
 	if template == nil then
-		warn(`WeaponInventory: no template named "{slot}" in WEAPONS_SOURCE`)
+		warn(`WeaponInventory: no template named "{slot}" in weapon source`)
+		return nil
+	end
+	if not template:IsA("Tool") then
+		warn(`WeaponInventory: template "{slot}" is not a Tool`)
 		return nil
 	end
 	return template
@@ -55,8 +59,16 @@ local function clearSlot(loadout: Loadout, slot: Slot)
 	end
 end
 
+function WeaponInventory.SetSource(source: Instance?)
+	weaponsSource = source
+end
+
 function WeaponInventory.Get(player: Player): Loadout?
-	return inventories[player]
+	local loadout = inventories[player]
+	if loadout == nil then
+		return nil
+	end
+	return table.clone(loadout)
 end
 
 function WeaponInventory.Has(player: Player, slot: Slot): boolean
@@ -71,6 +83,11 @@ function WeaponInventory.Give(player: Player, slot: Slot): boolean
 	end
 	local template = getTemplate(slot)
 	if template == nil then
+		return false
+	end
+	local clone: Instance? = template:Clone()
+	if clone == nil then
+		warn(`WeaponInventory: failed to clone template for {slot}`)
 		return false
 	end
 	local loadout = getLoadout(player)
@@ -90,14 +107,25 @@ function WeaponInventory.GiveAll(player: Player): boolean
 		return false
 	end
 
-	local pending: { { slot: Slot, template: Instance } } = {}
+	local pending: { { slot: Slot, clone: Instance } } = {}
 	for i = 1, #SLOTS do
 		local slot: Slot = SLOTS[i]
 		local template = getTemplate(slot)
 		if template == nil then
+			for _, entry in pending do
+				entry.clone:Destroy()
+			end
 			return false
 		end
-		table.insert(pending, { slot = slot, template = template })
+		local clone: Instance? = template:Clone()
+		if clone == nil then
+			warn(`WeaponInventory: failed to clone template for {slot}`)
+			for _, entry in pending do
+				entry.clone:Destroy()
+			end
+			return false
+		end
+		table.insert(pending, { slot = slot, clone = clone })
 	end
 
 	local loadout = getLoadout(player)
