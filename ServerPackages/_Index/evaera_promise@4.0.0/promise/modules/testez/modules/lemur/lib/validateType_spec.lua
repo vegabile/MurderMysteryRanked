@@ -1,4 +1,4 @@
-local validateType =  import("./validateType")
+local validateType = import("./validateType")
 
 describe("validateType", function()
 	it("should be a function", function()

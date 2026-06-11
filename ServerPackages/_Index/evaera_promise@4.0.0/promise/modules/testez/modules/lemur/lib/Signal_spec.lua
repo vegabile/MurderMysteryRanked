@@ -1,8 +1,8 @@
-local Signal =  import("./Signal")
+local Signal = import("./Signal")
 
 describe("Signal", function()
 	it("should be instantiable", function()
-		local signal =  Signal.new()
+		local signal = Signal.new()
 
 		assert.is_userdata(signal)
 		assert.is_function(signal.Connect)
@@ -13,10 +13,10 @@ describe("Signal", function()
 	end)
 
 	it("should handle connections", function()
-		local signal =  Signal.new()
-		local spy =  spy.new(function() end)
+		local signal = Signal.new()
+		local spy = spy.new(function() end)
 
-		local connection =  signal:Connect(spy)
+		local connection = signal:Connect(spy)
 
 		assert.not_nil(connection)
 
@@ -32,11 +32,11 @@ describe("Signal", function()
 	end)
 
 	it("should preserve other connections on disconnect", function()
-		local signal =  Signal.new()
-		local spyA =  spy.new(function() end)
-		local spyB =  spy.new(function() end)
+		local signal = Signal.new()
+		local spyA = spy.new(function() end)
+		local spyB = spy.new(function() end)
 
-		local connectionA =  signal:Connect(spyA)
+		local connectionA = signal:Connect(spyA)
 		signal:Connect(spyB)
 
 		signal:Fire()
@@ -52,9 +52,9 @@ describe("Signal", function()
 	end)
 
 	it("should set Connected", function()
-		local signal =  Signal.new()
+		local signal = Signal.new()
 
-		local connection =  signal:Connect(function() end)
+		local connection = signal:Connect(function() end)
 		assert.is_true(connection.Connected)
 
 		connection:Disconnect()
@@ -62,13 +62,13 @@ describe("Signal", function()
 	end)
 
 	it("should catch yields", function()
-		local signal =  Signal.new()
+		local signal = Signal.new()
 
 		signal:Connect(function()
 			coroutine.yield()
 		end)
 
-		local co =  coroutine.create(function()
+		local co = coroutine.create(function()
 			signal:Fire()
 		end)
 
@@ -77,7 +77,7 @@ describe("Signal", function()
 	end)
 
 	it("should catch errors", function()
-		local signal =  Signal.new()
+		local signal = Signal.new()
 
 		signal:Connect(function()
 			error("The test failed.")
@@ -88,7 +88,7 @@ describe("Signal", function()
 
 	-- Remove this when the event loop is made
 	it("should error on Wait", function()
-		local signal =  Signal.new()
+		local signal = Signal.new()
 
 		assert.has.errors(function()
 			signal:Wait()

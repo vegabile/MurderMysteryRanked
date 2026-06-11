@@ -1,7 +1,7 @@
-local createEnum =  import("../createEnum")
+local createEnum = import("../createEnum")
 
 return createEnum("HorizontalAlignment", {
-	Center =  0,
-	Left =  1,
-	Right =  2,
+	Center = 0,
+	Left = 1,
+	Right = 2,
 })

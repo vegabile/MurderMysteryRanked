@@ -1,12 +1,12 @@
-local TestEZ =  require(script.Parent.Parent.TestEZ)
+local TestEZ = require(script.Parent.Parent.TestEZ)
 
-local passing =  script.Parent.passing
-local failing =  script.Parent.failing
+local passing = script.Parent.passing
+local failing = script.Parent.failing
 
 local function check(test, pass)
 	TestEZ.run(test, function(results)
 		if pass then
-			assert(#results.errors = = 0,
+			assert(#results.errors==  0,
 				"Expected no errors, got " .. tostring(results.errors[1]) ..
 				" plus " .. tostring(#results.errors - 1) .. " more.")
 		else
@@ -15,14 +15,14 @@ local function check(test, pass)
 	end)
 end
 
-local tests =  {}
+local tests = {}
 for _, child in ipairs(passing:GetChildren()) do
-	tests["Passing tests pass: " .. child.Name] =  function()
+	tests["Passing tests pass: " .. child.Name] = function()
 		check(child, true)
 	end
 end
 for _, child in ipairs(failing:GetChildren()) do
-	tests["Failing tests fail: " .. child.Name] =  function()
+	tests["Failing tests fail: " .. child.Name] = function()
 		check(child, false)
 	end
 end

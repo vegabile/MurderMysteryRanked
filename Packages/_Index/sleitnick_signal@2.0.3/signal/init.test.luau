@@ -1,10 +1,10 @@
-local ServerScriptService =  game:GetService("ServerScriptService")
+local ServerScriptService = game:GetService("ServerScriptService")
 
-local Test =  require(ServerScriptService.TestRunner.Test)
+local Test = require(ServerScriptService.TestRunner.Test)
 
 local function AwaitCondition(predicate: () -> boolean, timeout: number?)
-	local start =  os.clock()
-	timeout =  (timeout or 10)
+	local start = os.clock()
+	timeout = (timeout or 10)
 	while true do
 		if predicate() then
 			return true
@@ -17,17 +17,17 @@ local function AwaitCondition(predicate: () -> boolean, timeout: number?)
 end
 
 return function(ctx: Test.TestContext)
-	local Signal =  require(script.Parent)
+	local Signal = require(script.Parent)
 
 	local signal
 
 	local function NumConns(sig)
-		sig =  sig or signal
+		sig = sig or signal
 		return #sig:GetConnections()
 	end
 
 	ctx:BeforeEach(function()
-		signal =  Signal.new()
+		signal = Signal.new()
 	end)
 
 	ctx:AfterEach(function()
@@ -40,17 +40,17 @@ return function(ctx: Test.TestContext)
 			task.defer(function()
 				signal:Fire(10, 20)
 			end)
-			local n1, n2 =  signal:Wait()
+			local n1, n2 = signal:Wait()
 			ctx:Expect(n1):ToBe(10)
 			ctx:Expect(n2):ToBe(20)
 		end)
 
 		ctx:Test("should create a proxy signal and connect to it", function()
-			local signalWrap =  Signal.Wrap(game:GetService("RunService").Heartbeat)
+			local signalWrap = Signal.Wrap(game:GetService("RunService").Heartbeat)
 			ctx:Expect(Signal.Is(signalWrap)):ToBe(true)
-			local fired =  false
+			local fired = false
 			signalWrap:Connect(function()
-				fired =  true
+				fired = true
 			end)
 			ctx:Expect(AwaitCondition(function()
 				return fired
@@ -61,46 +61,46 @@ return function(ctx: Test.TestContext)
 
 	ctx:Describe("FireDeferred", function()
 		ctx:Test("should be able to fire primitive argument", function()
-			local send =  10
+			local send = 10
 			local value
 			signal:Connect(function(v)
-				value =  v
+				value = v
 			end)
 			signal:FireDeferred(send)
 			ctx:Expect(AwaitCondition(function()
-				return (send = = value)
+				return (send==  value)
 			end, 1)):ToBe(true)
 		end)
 
 		ctx:Test("should be able to fire a reference based argument", function()
-			local send =  { 10, 20 }
+			local send = { 10, 20 }
 			local value
 			signal:Connect(function(v)
-				value =  v
+				value = v
 			end)
 			signal:FireDeferred(send)
 			ctx:Expect(AwaitCondition(function()
-				return (send = = value)
+				return (send==  value)
 			end, 1)):ToBe(true)
 		end)
 	end)
 
 	ctx:Describe("Fire", function()
 		ctx:Test("should be able to fire primitive argument", function()
-			local send =  10
+			local send = 10
 			local value
 			signal:Connect(function(v)
-				value =  v
+				value = v
 			end)
 			signal:Fire(send)
 			ctx:Expect(value):ToBe(send)
 		end)
 
 		ctx:Test("should be able to fire a reference based argument", function()
-			local send =  { 10, 20 }
+			local send = { 10, 20 }
 			local value
 			signal:Connect(function(v)
-				value =  v
+				value = v
 			end)
 			signal:Fire(send)
 			ctx:Expect(value):ToBe(send)
@@ -110,8 +110,8 @@ return function(ctx: Test.TestContext)
 	ctx:Describe("ConnectOnce", function()
 		ctx:Test("should only capture first fire", function()
 			local value
-			local c =  signal:ConnectOnce(function(v)
-				value =  v
+			local c = signal:ConnectOnce(function(v)
+				value = v
 			end)
 			ctx:Expect(c.Connected):ToBe(true)
 			signal:Fire(10)
@@ -126,7 +126,7 @@ return function(ctx: Test.TestContext)
 			task.defer(function()
 				signal:Fire(10, 20, 30)
 			end)
-			local n1, n2, n3 =  signal:Wait()
+			local n1, n2, n3 = signal:Wait()
 			ctx:Expect(n1):ToBe(10)
 			ctx:Expect(n2):ToBe(20)
 			ctx:Expect(n3):ToBe(30)
@@ -145,45 +145,45 @@ return function(ctx: Test.TestContext)
 
 	ctx:Describe("Disconnect", function()
 		ctx:Test("should disconnect connection", function()
-			local con =  signal:Connect(function() end)
+			local con = signal:Connect(function() end)
 			ctx:Expect(NumConns()):ToBe(1)
 			con:Disconnect()
 			ctx:Expect(NumConns()):ToBe(0)
 		end)
 
 		ctx:Test("should still work if connections disconnected while firing", function()
-			local a =  0
+			local a = 0
 			local c
 			signal:Connect(function()
-				a += 1
+				a + = 1
 			end)
-			c =  signal:Connect(function()
+			c = signal:Connect(function()
 				c:Disconnect()
-				a += 1
+				a + = 1
 			end)
 			signal:Connect(function()
-				a += 1
+				a + = 1
 			end)
 			signal:Fire()
 			ctx:Expect(a):ToBe(3)
 		end)
 
 		ctx:Test("should still work if connections disconnected while firing deferred", function()
-			local a =  0
+			local a = 0
 			local c
 			signal:Connect(function()
-				a += 1
+				a + = 1
 			end)
-			c =  signal:Connect(function()
+			c = signal:Connect(function()
 				c:Disconnect()
-				a += 1
+				a + = 1
 			end)
 			signal:Connect(function()
-				a += 1
+				a + = 1
 			end)
 			signal:FireDeferred()
 			ctx:Expect(AwaitCondition(function()
-				return a = = 3
+				return a==  3
 			end)):ToBe(true)
 		end)
 	end)

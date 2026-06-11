@@ -5,27 +5,27 @@
 	executing an event.
 ]]
 
-local typeKey =  import("./typeKey")
+local typeKey = import("./typeKey")
 
 local function immutableAppend(list, ...)
-	local new =  {}
-	local len =  #list
+	local new = {}
+	local len = #list
 
-	for key =  1, len do
-		new[key] =  list[key]
+	for key = 1, len do
+		new[key] = list[key]
 	end
 
-	for i =  1, select("#", ...) do
-		new[len + i] =  select(i, ...)
+	for i = 1, select("#", ...) do
+		new[len + i] = select(i, ...)
 	end
 
 	return new
 end
 
 local function immutableRemoveValue(list, removeValue)
-	local new =  {}
+	local new = {}
 
-	for i =  1, #list do
+	for i = 1, #list do
 		if list[i] ~= removeValue then
 			table.insert(new, list[i])
 		end
@@ -34,34 +34,34 @@ local function immutableRemoveValue(list, removeValue)
 	return new
 end
 
-local Signal =  {}
+local Signal = {}
 
-Signal.__index =  Signal
+Signal.__index = Signal
 
 function Signal.new()
-	local internal =  {
-		listeners =  {},
+	local internal = {
+		listeners = {},
 	}
 
-	local self =  newproxy(true)
-	getmetatable(self).__index =  Signal
-	getmetatable(self).internal =  internal
-	getmetatable(self)[typeKey] =  "RBXScriptSignal"
+	local self = newproxy(true)
+	getmetatable(self).__index = Signal
+	getmetatable(self).internal = internal
+	getmetatable(self)[typeKey] = "RBXScriptSignal"
 
 	return self
 end
 
 function Signal:Connect(callback)
-	local internal =  getmetatable(self).internal
+	local internal = getmetatable(self).internal
 
-	internal.listeners =  immutableAppend(internal.listeners, callback)
+	internal.listeners = immutableAppend(internal.listeners, callback)
 
-	local connection =  {}
-	connection.Connected =  true
+	local connection = {}
+	connection.Connected = true
 
 	function connection.Disconnect()
-		connection.Connected =  false
-		internal.listeners =  immutableRemoveValue(internal.listeners, callback)
+		connection.Connected = false
+		internal.listeners = immutableRemoveValue(internal.listeners, callback)
 	end
 
 	return connection
@@ -71,12 +71,12 @@ function Signal:Fire(...)
 	-- TODO: Move this function somewhere else, since it isn't part of the
 	-- public API that Roblox exposes.
 
-	local internal =  getmetatable(self).internal
+	local internal = getmetatable(self).internal
 
 	for _, listener in ipairs(internal.listeners) do
 		-- Busted uses tables for spies, which angers coroutine.create if we use
 		-- them directly.
-		local co =  coroutine.create(function(...)
+		local co = coroutine.create(function(...)
 			return listener(...)
 		end)
 
@@ -91,9 +91,9 @@ function Signal:Wait()
 end
 
 function Signal:_DisconnectAllListeners()
-	local internal =  getmetatable(self).internal
+	local internal = getmetatable(self).internal
 
-	internal.listeners =  {}
+	internal.listeners = {}
 end
 
 return Signal

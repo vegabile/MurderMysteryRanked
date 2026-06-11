@@ -1,32 +1,32 @@
-local ServerScriptService =  game:GetService("ServerScriptService")
+local ServerScriptService = game:GetService("ServerScriptService")
 
-local ServerPackages =  ServerScriptService:WaitForChild("ServerPackages")
-local Promise =  require(ServerPackages:WaitForChild("Promise"))
+local ServerPackages = ServerScriptService:WaitForChild("ServerPackages")
+local Promise = require(ServerPackages:WaitForChild("Promise"))
 
-local SLOTS =  3
+local SLOTS = 3
 
-local MapVote =  {}
-MapVote.__index =  MapVote
+local MapVote = {}
+MapVote.__index = MapVote
 
-type Fields =  {
+type Fields = {
 	Votes: { [number]: number },
 	Closed: boolean,
 	_winner: number?,
 	_waiters: { (number) -> () },
 }
 
-export type VoteObject =  typeof(setmetatable({} :: Fields, MapVote))
+export type VoteObject = typeof(setmetatable({} :: Fields, MapVote))
 
 local function tally(votes: { [number]: number }): number
-	local counts =  table.create(SLOTS, 0)
+	local counts = table.create(SLOTS, 0)
 	for _, slot in votes do
-		counts[slot] += 1
+		counts[slot] + = 1
 	end
 
-	local winner =  1
-	for slot =  2, SLOTS do
+	local winner = 1
+	for slot = 2, SLOTS do
 		if counts[slot] > counts[winner] then
-			winner =  slot
+			winner = slot
 		end
 	end
 	return winner
@@ -38,16 +38,16 @@ function MapVote.newVoteObject(duration: number): VoteObject?
 		return nil
 	end
 
-	local self =  setmetatable({
-		Votes =  {},
-		Closed =  false,
-		_waiters =  {},
+	local self = setmetatable({
+		Votes = {},
+		Closed = false,
+		_waiters = {},
 	}, MapVote)
 
 	task.delay(duration, function()
-		local winner =  tally(self.Votes)
-		self._winner =  winner
-		self.Closed =  true
+		local winner = tally(self.Votes)
+		self._winner = winner
+		self.Closed = true
 		for _, resolve in self._waiters do
 			resolve(winner)
 		end
@@ -71,7 +71,7 @@ function MapVote:vote(player: Player, slot: number): boolean
 		return false
 	end
 
-	self.Votes[player.UserId] =  slot
+	self.Votes[player.UserId] = slot
 	return true
 end
 

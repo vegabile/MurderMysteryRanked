@@ -3,12 +3,12 @@
 ]]
 
 return function(target, ...)
-	for i =  1, select("#", ...) do
-		local source =  select(i, ...)
+	for i = 1, select("#", ...) do
+		local source = select(i, ...)
 
 		if source ~= nil then
 			for key, value in pairs(source) do
-				target[key] =  value
+				target[key] = value
 			end
 		end
 	end

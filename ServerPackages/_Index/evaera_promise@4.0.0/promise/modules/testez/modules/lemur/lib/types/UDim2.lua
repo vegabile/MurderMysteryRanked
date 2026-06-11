@@ -1,21 +1,21 @@
-local assign =  import("../assign")
-local typeKey =  import("../typeKey")
-local typeof =  import("../functions/typeof")
-local UDim =  import("./UDim")
+local assign = import("../assign")
+local typeKey = import("../typeKey")
+local typeof = import("../functions/typeof")
+local UDim = import("./UDim")
 
 local function lerpNumber(a, b, alpha)
 	return (1 - alpha) * a + b * alpha
 end
 
-local UDim2 =  {}
+local UDim2 = {}
 
 setmetatable(UDim2, {
-	__tostring =  function()
+	__tostring = function()
 		return "UDim2"
 	end,
 })
 
-local prototype =  {}
+local prototype = {}
 
 function prototype:Lerp(goal, alpha)
 	return UDim2.new(
@@ -26,11 +26,11 @@ function prototype:Lerp(goal, alpha)
 	)
 end
 
-local metatable =  {}
-metatable[typeKey] =  "UDim2"
+local metatable = {}
+metatable[typeKey] = "UDim2"
 
 function metatable:__index(key)
-	local internal =  getmetatable(self).internal
+	local internal = getmetatable(self).internal
 
 	if internal[key] ~= nil then
 		return internal[key]
@@ -44,7 +44,7 @@ function metatable:__index(key)
 end
 
 function metatable:__eq(other)
-	return self.X = = other.X and self.Y = = other.Y
+	return self.X==  other.X and self.Y==  other.Y
 end
 
 function metatable:__add(other)
@@ -52,15 +52,15 @@ function metatable:__add(other)
 end
 
 function UDim2.new(...)
-	if select("#", ...) = = 0 then
+	if select("#", ...)==  0 then
 		return UDim2.new(
 			UDim.new(0, 0),
 			UDim.new(0, 0)
 		)
 	end
 
-	if select("#", ...) = = 4 then
-		local xScale, xOffset, yScale, yOffset =  ...
+	if select("#", ...)==  4 then
+		local xScale, xOffset, yScale, yOffset = ...
 		if type(xScale) ~= "number" or type(xOffset) ~= "number" or
 			type(yScale) ~= "number" or type(yOffset) ~= "number" then
 			error("UDim2.new(xScale, xOffset, yScale, yOffset) takes in 4 numbers", 2)
@@ -72,22 +72,22 @@ function UDim2.new(...)
 		)
 	end
 
-	local xDim, yDim =  ...
+	local xDim, yDim = ...
 
 	if typeof(xDim) ~= "UDim" or typeof(yDim) ~= "UDim" then
 		error("UDim2.new(xDim, yDim) takes in 2 UDims", 2)
 	end
 
-	local internalInstance =  {
-		X =  xDim,
-		Y =  yDim,
-		Width =  xDim,
-		Height =  yDim,
+	local internalInstance = {
+		X = xDim,
+		Y = yDim,
+		Width = xDim,
+		Height = yDim,
 	}
-	local instance =  newproxy(true)
+	local instance = newproxy(true)
 
 	assign(getmetatable(instance), metatable)
-	getmetatable(instance).internal =  internalInstance
+	getmetatable(instance).internal = internalInstance
 
 	return instance
 end

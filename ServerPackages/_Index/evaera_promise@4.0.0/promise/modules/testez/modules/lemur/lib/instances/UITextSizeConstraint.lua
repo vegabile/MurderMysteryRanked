@@ -1,12 +1,12 @@
-local BaseInstance =  import("./BaseInstance")
-local InstanceProperty =  import("../InstanceProperty")
+local BaseInstance = import("./BaseInstance")
+local InstanceProperty = import("../InstanceProperty")
 
-local UITextSizeConstraint =  BaseInstance:extend("UITextSizeConstraint", {
-	creatable =  true,
+local UITextSizeConstraint = BaseInstance:extend("UITextSizeConstraint", {
+	creatable = true,
 })
 
-UITextSizeConstraint.properties.MaxTextSize =  InstanceProperty.typed("number", {
-	getDefault =  function()
+UITextSizeConstraint.properties.MaxTextSize = InstanceProperty.typed("number", {
+	getDefault = function()
 		return 100
 	end,
 })

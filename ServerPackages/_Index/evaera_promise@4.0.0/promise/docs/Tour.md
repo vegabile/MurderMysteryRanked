@@ -32,7 +32,7 @@ local myFunction()
 	return Promise.new(function(resolve, reject, onCancel)
 		local connection
 
-		connection =  someEvent:Connect(function(...)
+		connection = someEvent:Connect(function(...)
 			connection:Disconnect()
 			resolve(...)
 		end)
@@ -64,7 +64,7 @@ local function myYieldingFunction(waitTime, text)
 	return text
 end
 
-local myFunction =  Promise.promisify(myYieldingFunction)
+local myFunction = Promise.promisify(myYieldingFunction)
 myFunction(1.2, "Hello world!"):andThen(print):catch(function()
 	warn("Oh no... goodbye world.")
 end)

@@ -1,8 +1,8 @@
-local BaseInstance =  import("./BaseInstance")
-local typeof =  import("../functions/typeof")
-local json =  import("../json")
+local BaseInstance = import("./BaseInstance")
+local typeof = import("../functions/typeof")
+local json = import("../json")
 
-local HttpService =  BaseInstance:extend("HttpService")
+local HttpService = BaseInstance:extend("HttpService")
 
 function HttpService.prototype:JSONEncode(input)
 	return json.encode(input)
@@ -13,7 +13,7 @@ function HttpService.prototype:JSONDecode(input)
 end
 
 function HttpService.prototype:UrlEncode(input)
-	local url =  input:gsub("\n", "\r\n")
+	local url = input:gsub("\n", "\r\n")
 
 	return url:gsub("([^%w])", function(c)
 		return string.format("%%%02X", string.byte(c))
@@ -21,7 +21,7 @@ function HttpService.prototype:UrlEncode(input)
 end
 
 function HttpService.prototype:GenerateGUID(wrapInCurlyBraces)
-	local argType =  typeof(wrapInCurlyBraces)
+	local argType = typeof(wrapInCurlyBraces)
 	if wrapInCurlyBraces ~= nil and argType ~= "boolean" then
 		error(("Unable to cast %s to bool"):format(argType), 2)
 	end
@@ -30,7 +30,7 @@ function HttpService.prototype:GenerateGUID(wrapInCurlyBraces)
 		`GenerateGUID` allows any value type for `wrapInCurlyBraces`, but it
 		only omits the curly braces when `wrapInCurlyBraces` is set to `false`
 	]]
-	if wrapInCurlyBraces = = false then
+	if wrapInCurlyBraces==  false then
 		return "04AEBFEA-87FC-480F-A98B-E5E221007A90"
 	else
 		return "{04AEBFEA-87FC-480F-A98B-E5E221007A90}"

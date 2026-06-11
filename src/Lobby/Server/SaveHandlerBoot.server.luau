@@ -1,5 +1,5 @@
-local ServerScriptService =  game:GetService("ServerScriptService")
+local ServerScriptService = game:GetService("ServerScriptService")
 
-local SaveHandler =  require(ServerScriptService:WaitForChild("SaveHandler"))
+local SaveHandler = require(ServerScriptService:WaitForChild("SaveHandler"))
 
 SaveHandler.Init()

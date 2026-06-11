@@ -1,12 +1,12 @@
-local BaseInstance =  import("./BaseInstance")
-local InstanceProperty =  import("../InstanceProperty")
+local BaseInstance = import("./BaseInstance")
+local InstanceProperty = import("../InstanceProperty")
 
-local ParticleEffect =  BaseInstance:extend("ParticleEffect", {
-	creatable =  true,
+local ParticleEffect = BaseInstance:extend("ParticleEffect", {
+	creatable = true,
 })
 
-ParticleEffect.properties.Enabled =  InstanceProperty.normal({
-	getDefault =  function()
+ParticleEffect.properties.Enabled = InstanceProperty.normal({
+	getDefault = function()
 		return true
 	end,
 })

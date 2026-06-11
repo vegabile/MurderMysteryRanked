@@ -1,4 +1,4 @@
-local names =  {
+local names = {
 	"AnalyticsService",
 	"BindableEvent",
 	"BoolValue",
@@ -53,10 +53,10 @@ local names =  {
 	"Workspace",
 }
 
-local instances =  {}
+local instances = {}
 
 for _, name in ipairs(names) do
-	instances[name] =  import("./" .. name)
+	instances[name] = import("./" .. name)
 end
 
 return instances

@@ -1,7 +1,7 @@
-local createEnum =  import("../createEnum")
+local createEnum = import("../createEnum")
 
 return createEnum("ThumbnailType", {
-	HeadShot =  0,
-	AvatarBust =  1,
-	AvatarThumbnail =  2,
+	HeadShot = 0,
+	AvatarBust = 1,
+	AvatarThumbnail = 2,
 })

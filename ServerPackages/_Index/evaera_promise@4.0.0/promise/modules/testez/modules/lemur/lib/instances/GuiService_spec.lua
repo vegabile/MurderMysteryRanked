@@ -1,9 +1,9 @@
-local GuiService =  import("./GuiService")
-local typeof =  import("../functions/typeof")
+local GuiService = import("./GuiService")
+local typeof = import("../functions/typeof")
 
 describe("instances.GuiService", function()
 	it("should instantiate", function()
-		local instance =  GuiService:new()
+		local instance = GuiService:new()
 
 		assert.not_nil(instance)
 	end)
@@ -40,7 +40,7 @@ describe("instances.GuiService", function()
 
 	describe("BrowserWindowClosed", function()
 		it("should return a signal", function()
-			local instance =  GuiService:new()
+			local instance = GuiService:new()
 
 			assert.equal(typeof(instance.BrowserWindowClosed), "RBXScriptSignal")
 		end)

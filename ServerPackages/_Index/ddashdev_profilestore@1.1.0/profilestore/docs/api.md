@@ -49,7 +49,7 @@ ProfileStore.OnCriticalToggle   [Signal] (is_critical)
 A signal that is called whenever `ProfileStore.IsCriticalState` changes. Example:
 ``` luau
 ProfileStore.OnCriticalToggle:Connect(function(is_critical)
-  if is_critical = = true then
+  if is_critical==  true then
     print(`ProfileStore entered critical state`)
   else
     print(`ProfileStore critical state is over`)
@@ -94,18 +94,18 @@ without having to fork the ProfileStore project.
 
 ### .Mock
 ```lua
-local PlayerStore =  ProfileStore.New("PlayerData", {})
+local PlayerStore = ProfileStore.New("PlayerData", {})
 
 -- This profile would be saved to the DataStore:
-local LiveProfile =  PlayerStore:StartSessionAsync("profile_key")
-LiveProfile.Data.Value =  1
+local LiveProfile = PlayerStore:StartSessionAsync("profile_key")
+LiveProfile.Data.Value = 1
 LiveProfile:EndSession()
 
 -- This profile does not load data from the DataStore
 -- nor save data to the DataStore:
 -- (This data will disappear after the game server shuts down)
-local MockProfile =  PlayerStore.Mock:StartSessionAsync("profile_key")
-MockProfile.Data.Value =  1
+local MockProfile = PlayerStore.Mock:StartSessionAsync("profile_key")
+MockProfile.Data.Value = 1
 MockProfile:EndSession()
 ```
 
@@ -117,10 +117,10 @@ using the same key from `ProfileStore` and `ProfileStore.Mock` will be different
 to [enable Roblox API services](https://create.roblox.com/docs/cloud-services/data-stores#enable-studio-access) in studio,
 but don't want ProfileStore to save to live keys:
 ``` luau
-local RunService =  game:GetService("RunService")
-local PlayerStore =  ProfileStore.New("PlayerData", {})
-if RunService:IsStudio() = = true then
-  PlayerStore =  PlayerStore.Mock
+local RunService = game:GetService("RunService")
+local PlayerStore = ProfileStore.New("PlayerData", {})
+if RunService:IsStudio()==  true then
+  PlayerStore = PlayerStore.Mock
 end
 ```
 
@@ -145,7 +145,7 @@ ProfileStore:StartSessionAsync(profile_key, params?) --> [Profile] or nil
 Starts a session for a profile. If other servers call this method using the same `profile_key`
 they would notify the server that currently owns the session to make a final save before
 letting another server acquire the session. While a session is active you can expect any
-changes to `Profile.Data` to be saved. You can find out whether a session has ended by checking `Profile:IsActive() = = true`
+changes to `Profile.Data` to be saved. You can find out whether a session has ended by checking `Profile:IsActive()==  true`
 or by listening to `Profile.OnSessionEnd`. You must always call `Profile:EndSession()` after
 you're done working with a profile as failing to do so will make the game perform more and more DataStore requests.
 
@@ -157,7 +157,7 @@ The `Cancel` argument would be useful in rare cases where the DataStores are unr
 before a session was started allowing ProfileStore to stop making additional requests to the DataStore.
 Using the `Cancel` argument also disables the default ProfileStore session start timeout as the developer
 would decide when the profile is no longer needed.
-- **`Steal`** - (e.g. `{Steal =  true}`) If set to `true`, doesn't let an active session make final changes to `Profile.Data`
+- **`Steal`** - (e.g. `{Steal = true}`) If set to `true`, doesn't let an active session make final changes to `Profile.Data`
 and immediately starts a session on the server calling `ProfileStore:StartSessionAsync()` with this argument.
 **DO NOT USE THIS ARGUMENT FOR LOADING PLAYER DATA NORMALLY** - The `Steal` argument bypasses session locks which are needed for item "dupe" prevention.
 This argument is only useful for debugging.
@@ -166,10 +166,10 @@ This argument is only useful for debugging.
 
 Example usage:
 ``` luau
-local Players =  game:GetService("Players")
-local profile =  PlayerStore:StartSessionAsync(tostring(player.UserId), {
-  Cancel =  function()
-    return player:IsDescendantOf(Players) = = false
+local Players = game:GetService("Players")
+local profile = PlayerStore:StartSessionAsync(tostring(player.UserId), {
+  Cancel = function()
+    return player:IsDescendantOf(Players)==  false
   end,
 })
 ```
@@ -237,16 +237,16 @@ Date definitions are easier with the [DateTime (Official documentation)](https:/
 -- Get a ProfileStore object with the same arguments you passed to the
 --  ProfileStore that loads player Profiles:
 
-local PlayerStore =  ProfileStore.New("PlayerData", {})
+local PlayerStore = ProfileStore.New("PlayerData", {})
 
 -- If you can't figure out the exact time and timezone the player lost coins
 --  in on the day of August 14th, then your best bet is to try querying
 --  UTC August 13th. If the first entry still doesn't have the coins - 
 --  try a new query of UTC August 12th and etc.
 
-local max_date =  DateTime.fromUniversalTime(2021, 08, 13) -- UTC August 13th, 2021
+local max_date = DateTime.fromUniversalTime(2021, 08, 13) -- UTC August 13th, 2021
 
-local query =  PlayerStore:VersionQuery(
+local query = PlayerStore:VersionQuery(
   "Player_2312310", -- The same profile key that gets passed to :LoadProfileAsync()
   Enum.SortDirection.Descending,
   nil,
@@ -254,7 +254,7 @@ local query =  PlayerStore:VersionQuery(
 )
 
 -- Get the first result in the query:
-local profile =  query:NextAsync()
+local profile = query:NextAsync()
 
 if profile ~= nil then
 
@@ -284,13 +284,13 @@ end
 --  You can then make the game alter your data by giving you
 --  currency, items, experience, etc.
 
-local PlayerStore =  ProfileStore.New("PlayerData", {})
+local PlayerStore = ProfileStore.New("PlayerData", {})
 
 -- UNIX timestamp you saved:
-local min_date =  DateTime.fromUnixTimestamp(1628952101)
-local print_minutes =  60 * 12 -- Print the next 12 hours of history
+local min_date = DateTime.fromUnixTimestamp(1628952101)
+local print_minutes = 60 * 12 -- Print the next 12 hours of history
 
-local query =  PlayerStore:VersionQuery(
+local query = PlayerStore:VersionQuery(
   "Player_2312310",
   Enum.SortDirection.Ascending,
   min_date
@@ -300,21 +300,21 @@ local query =  PlayerStore:VersionQuery(
 --  at an average periodic interval of 60 minutes (Roblox DataStore caching interval)
 --  starting from the time you took the UNIX timestamp!
 
-local finish_update_time =  min_date.UnixTimestampMillis + (print_minutes * 60000)
+local finish_update_time = min_date.UnixTimestampMillis + (print_minutes * 60000)
 
 print(`Fetching {print_minutes} minutes of saves:`)
 
-local entry_count =  0
+local entry_count = 0
 
 while true do
 
-  entry_count +=1
-  local profile =  query:NextAsync()
+  entry_count + = 1
+  local profile = query:NextAsync()
 
   if profile ~= nil then
 
     if profile.KeyInfo.UpdatedTime > finish_update_time then
-      if entry_count = = 1 then
+      if entry_count==  1 then
         print(`No entries found in set time period. (Start timestamp too early)`)
       else
         print(`Time period finished.`)
@@ -327,7 +327,7 @@ while true do
     print(profile.Data) -- Printing table for studio expressive output
 
   else
-    if entry_count = = 1 then
+    if entry_count==  1 then
       print(`No entries found in set time period. (Start timestamp too late)`)
     else
       print(`No more entries in query.`)
@@ -353,10 +353,10 @@ profiles created through `ProfileStore.Mock` after `Profile:EndSession()` and it
 Profile.Data   [table]
 ```
 This is the data that would resemble player progress or other data you wish to save to the [DataStore](https://create.roblox.com/docs/cloud-services/data-stores).
-Changes to `Profile.Data` are guaranteed to save as long as you do so after checking for the condition `Profile:IsActive() = = true` or
+Changes to `Profile.Data` are guaranteed to save as long as you do so after checking for the condition `Profile:IsActive()==  true` or
 before the signal `Profile.OnSessionEnd` is triggered. The result of `Profile:IsActive()` can change at any moment, so critical data should
 be stored to `Profile.Data` immediately after checking without yielding (e.g. `task.wait()`). If needed, you may set `Profile.Data`
-to a new table reference (e.g. `Profile.Data =  {}`). When `Profile:IsActive()` returns `false` changes to `Profile.Data` are no longer
+to a new table reference (e.g. `Profile.Data = {}`). When `Profile:IsActive()` returns `false` changes to `Profile.Data` are no longer
 stored to the DataStore.
 
 ### .LastSavedData
@@ -380,7 +380,7 @@ Amount of times a session has been started for this profile.
 
 ### .Session
 ``` luau
-Profile.Session   [table?] (read-only) -- nil or {PlaceId =  number, JobId =  string}
+Profile.Session   [table?] (read-only) -- nil or {PlaceId = number, JobId = string}
 ```
 This value never changes after a profile object is created. After you start a session for a profile,
 the `Profile.Session` will be equal to a `table` with it's `PlaceId` and `JobId` members set to the server you started
@@ -420,7 +420,7 @@ end)
 ```
 A signal that is fired right before whenever changes to `Profile.Data` are saved to the DataStore. Changes to `Profile.Data`
 are expected to save when done at the moment of `Profile.OnSave` firing, but this guarantee is no longer valid after yielding
-(e.g. using `task.wait()` or `:WaitForChild()`) and the condition `Profile:IsActive() = = true` would have to be used instead.
+(e.g. using `task.wait()` or `:WaitForChild()`) and the condition `Profile:IsActive()==  true` would have to be used instead.
 `Profile.OnSave` will be fired before every auto-save, before a manual save caused by `Profile:Save()` and before a final save
 after a session has been ended.
 
@@ -441,7 +441,7 @@ are expected to save when done at the moment of `Profile.OnLastSave` firing, but
 One of `Profile.OnLastSave` uses is giving "logout penalties" where a player may receive punishment for
 closing the game at the wrong time. Example:
 ``` luau
-local InCombat =  false
+local InCombat = false
 
 Profile.OnLastSave:Connect(function(reason)
   if reason ~= "Shutdown" then
@@ -451,8 +451,8 @@ Profile.OnLastSave:Connect(function(reason)
     -- If you didn't want the player to logout at this particular moment,
     -- this should be where you'd penalize the player. e.g.:
 
-    if InCombat = = true then
-      Profile.Data.Coins -= 100
+    if InCombat==  true then
+      Profile.Data.Coins - = 100
     end
 
   end
@@ -536,11 +536,11 @@ Example:
 ``` luau
 Players.PlayerRemoving:Connect(function(player)
     
-  local profile =  Profiles[player]
+  local profile = Profiles[player]
 	
   if profile ~= nil then
     profile:EndSession()
-    Profiles[player] =  nil
+    Profiles[player] = nil
   end
 	
 end)

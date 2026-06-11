@@ -1,4 +1,4 @@
-local math =  import("./math")
+local math = import("./math")
 
 describe("libs.math", function()
 	describe("clamp", function()

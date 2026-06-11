@@ -7,11 +7,11 @@ use std::{
     path::{Path, PathBuf},
 };
 
-pub type Result<T> =  io::Result<T>;
+pub type Result<T>=   io::Result<T>;
 
 /// A wrapper around std::fs::write.
 pub fn write<P: AsRef<Path>, C: AsRef<[u8]>>(path: P, contents: C) -> Result<()> {
-    let path =  path.as_ref();
+    let path = path.as_ref();
 
     fs::write(path, contents).map_err(|source| Error::new(source, path))
 }
@@ -26,8 +26,8 @@ pub struct File {
 
 impl File {
     pub fn create<P: AsRef<Path>>(path: P) -> Result<Self> {
-        let path =  path.as_ref();
-        let source =  fs::File::create(path).map_err(|source| Error::new(source, path))?;
+        let path = path.as_ref();
+        let source = fs::File::create(path).map_err(|source| Error::new(source, path))?;
 
         Ok(Self {
             source,
@@ -36,8 +36,8 @@ impl File {
     }
 
     pub fn open<P: AsRef<Path>>(path: P) -> Result<Self> {
-        let path =  path.as_ref();
-        let source =  fs::File::open(path).map_err(|source| Error::new(source, path))?;
+        let path = path.as_ref();
+        let source = fs::File::open(path).map_err(|source| Error::new(source, path))?;
 
         Ok(Self {
             source,
@@ -70,7 +70,7 @@ impl Write for File {
 
 /// Wrapper around std::fs::read_dir.
 pub fn read_dir<P: AsRef<Path>>(path: P) -> Result<ReadDir> {
-    let path =  path.as_ref();
+    let path = path.as_ref();
 
     fs::read_dir(path)
         .map(|source| ReadDir {
@@ -87,7 +87,7 @@ pub struct ReadDir {
 }
 
 impl Iterator for ReadDir {
-    type Item =  Result<fs::DirEntry>;
+    type Item = Result<fs::DirEntry>;
 
     fn next(&mut self) -> Option<Self::Item> {
         Some(

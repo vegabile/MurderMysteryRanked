@@ -4,7 +4,7 @@ A simple module and associated TestEZ spec might look like:
 
 `Greeter.lua`
 ```lua
-local Greeter =  {}
+local Greeter = {}
 
 function Greeter:greet(person)
 	return "Hello, " .. person
@@ -16,16 +16,16 @@ return Greeter
 `Greeter.spec.lua`
 ```lua
 return function()
-	local Greeter =  require(script.Parent.Greeter)
+	local Greeter = require(script.Parent.Greeter)
 
 	describe("greet", function()
 		it("should include the customary English greeting", function()
-			local greeting =  Greeter:greet("X")
+			local greeting = Greeter:greet("X")
 			expect(greeting:match("Hello")).to.be.ok()
 		end)
 
 		it("should include the person being greeted", function()
-			local greeting =  Greeter:greet("Joe")
+			local greeting = Greeter:greet("Joe")
 			expect(greeting:match("Joe")).to.be.ok()
 		end)
 	end)

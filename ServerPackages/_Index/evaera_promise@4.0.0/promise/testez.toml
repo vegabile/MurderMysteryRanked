@@ -1,67 +1,67 @@
 # TestEZ
 [[afterAll.args]]
-type =  "function"
+type = "function"
 
 [[afterEach.args]]
-type =  "function"
+type = "function"
 
 [[beforeAll.args]]
-type =  "function"
+type = "function"
 
 [[beforeEach.args]]
-type =  "function"
+type = "function"
 
 [[describe.args]]
-type =  "string"
+type = "string"
 
 [[describe.args]]
-type =  "function"
+type = "function"
 
 [[describeFOCUS.args]]
-type =  "string"
+type = "string"
 
 [[describeFOCUS.args]]
-type =  "function"
+type = "function"
 
 [[describeSKIP.args]]
-type =  "string"
+type = "string"
 
 [[describeSKIP.args]]
-type =  "function"
+type = "function"
 
 [[expect.args]]
-type =  "any"
+type = "any"
 
 [[FIXME.args]]
-type =  "string"
-required =  false
+type = "string"
+required = false
 
 [FOCUS]
-args =  []
+args = []
 
 [[it.args]]
-type =  "string"
+type = "string"
 
 [[it.args]]
-type =  "function"
+type = "function"
 
 [[itFIXME.args]]
-type =  "string"
+type = "string"
 
 [[itFIXME.args]]
-type =  "function"
+type = "function"
 
 [[itFOCUS.args]]
-type =  "string"
+type = "string"
 
 [[itFOCUS.args]]
-type =  "function"
+type = "function"
 
 [[itSKIP.args]]
-type =  "string"
+type = "string"
 
 [[itSKIP.args]]
-type =  "function"
+type = "function"
 
 [SKIP]
-args =  []
+args = []

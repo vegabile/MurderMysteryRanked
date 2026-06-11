@@ -1,4 +1,4 @@
-local BaseInstance =  import("./BaseInstance")
-local ServerStorage =  BaseInstance:extend("ServerStorage")
+local BaseInstance = import("./BaseInstance")
+local ServerStorage = BaseInstance:extend("ServerStorage")
 
 return ServerStorage

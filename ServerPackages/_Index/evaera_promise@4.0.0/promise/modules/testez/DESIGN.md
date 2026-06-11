@@ -21,12 +21,12 @@ A test suite for addition might look like this:
 return function()
 	describe("Addition", function()
 		it("should be commutative", function()
-			local a, b, c =  5, 8, 11
+			local a, b, c = 5, 8, 11
 			expect(a + b + c).to.equal(c + b + a)
 		end)
 
 		it("should be associative", function()
-			local a, b, c =  7, 4, 9
+			local a, b, c = 7, 4, 9
 			expect((a + b) + c).to.equal(a + (b + c))
 		end)
 	end)

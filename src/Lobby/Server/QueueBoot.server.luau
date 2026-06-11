@@ -1,5 +1,5 @@
-local ServerScriptService =  game:GetService("ServerScriptService")
+local ServerScriptService = game:GetService("ServerScriptService")
 
-local QueueService =  require(ServerScriptService:WaitForChild("QueueSystem"):WaitForChild("QueueService"))
+local QueueService = require(ServerScriptService:WaitForChild("QueueSystem"):WaitForChild("QueueService"))
 
 QueueService.Init()

@@ -26,7 +26,7 @@ jobs:
       run: |
         luarocks install luafilesystem
         luarocks install luacov
-        luarocks install luacov-coveralls --server=http://rocks.moonscript.org/dev
+        luarocks install luacov-coveralls --server = http://rocks.moonscript.org/dev
         luarocks install luacheck
 
     - name: Test
@@ -77,4 +77,4 @@ jobs:
       run: |
         cargo fmt -- --check
         cargo clippy
-      if: matrix.rust_version = = 'stable'
+      if: matrix.rust_version==  'stable'

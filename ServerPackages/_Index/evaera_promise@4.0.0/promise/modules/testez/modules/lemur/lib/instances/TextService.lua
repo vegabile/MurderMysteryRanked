@@ -1,9 +1,9 @@
-local BaseInstance =  import("./BaseInstance")
-local Font =  import("../Enum/Font")
-local typeof =  import("../functions/typeof")
-local Vector2 =  import("../types/Vector2")
+local BaseInstance = import("./BaseInstance")
+local Font = import("../Enum/Font")
+local typeof = import("../functions/typeof")
+local Vector2 = import("../types/Vector2")
 
-local TextService =  BaseInstance:extend("TextService")
+local TextService = BaseInstance:extend("TextService")
 
 -- right now this is just a lazy [fontSize * len(text), fontSize] clipped by frameSize
 function TextService.prototype:GetTextSize(text, fontSize, font, frameSize)
@@ -17,7 +17,7 @@ function TextService.prototype:GetTextSize(text, fontSize, font, frameSize)
 		error("frameSize must be a Vector2", 2)
 	end
 
-	local width =  text:len() * fontSize
+	local width = text:len() * fontSize
 
 	return Vector2.new(math.min(width, frameSize.X), math.min(fontSize, frameSize.Y))
 end

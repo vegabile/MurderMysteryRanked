@@ -1,14 +1,14 @@
-<h1 align="center">Lemur</h1>
-<div align="center">
-	<a href="https://travis-ci.org/LPGhatguy/lemur">
-		<img src="https://api.travis-ci.org/LPGhatguy/lemur.svg?branch=master" />
+<h1 align = "center">Lemur</h1>
+<div align = "center">
+	<a href = "https://travis-ci.org/LPGhatguy/lemur">
+		<img src = "https://api.travis-ci.org/LPGhatguy/lemur.svg?branch = master" />
 	</a>
-	<a href="https://coveralls.io/github/LPGhatguy/lemur?branch=master">
-		<img src="https://coveralls.io/repos/github/LPGhatguy/lemur/badge.svg?branch=master" />
+	<a href = "https://coveralls.io/github/LPGhatguy/lemur?branch = master">
+		<img src = "https://coveralls.io/repos/github/LPGhatguy/lemur/badge.svg?branch = master" />
 	</a>
 </div>
 
-<div align="center">
+<div align = "center">
 	<strong>L</strong>ua <strong>Emu</strong>lation of <strong>R</strong>oblox APIs
 </div>
 
@@ -43,18 +43,18 @@ Clone the Git repository wherever, then call `require` on it.
 To use Lemur, create a _Habitat_ and load pieces of the filesystem into the tree:
 
 ```lua
-local lemur =  require("lemur")
+local lemur = require("lemur")
 
 -- Create a Habitat
-local habitat =  lemur.Habitat.new()
-local ReplicatedStorage =  habitat.game:GetService("ReplicatedStorage")
+local habitat = lemur.Habitat.new()
+local ReplicatedStorage = habitat.game:GetService("ReplicatedStorage")
 
 -- Load `src/roblox` as a Folder containing some ModuleScripts:
-local root =  habitat:loadFromFs("src/roblox")
-root.Parent =  ReplicatedStorage
+local root = habitat:loadFromFs("src/roblox")
+root.Parent = ReplicatedStorage
 
 -- Locate src/roblox/CoolModule.lua from inside the habitat and load it!
-local CoolModule =  habitat:require(root.CoolModule)
+local CoolModule = habitat:require(root.CoolModule)
 
 -- Invoke a method on our Roblox module!
 CoolModule.doSomething()

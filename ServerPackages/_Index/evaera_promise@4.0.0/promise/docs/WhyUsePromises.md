@@ -45,10 +45,10 @@ Promises also have built-in error handling. In addition to resolving, a Promise 
 Let's take a look at this in action. We will make a function which wraps `HttpService:GetAsync` and instead of yielding, it will return a Promise.
 
 ```lua
-local HttpService =  game:GetService("HttpService")
+local HttpService = game:GetService("HttpService")
 local function httpGet(url)
 	return Promise.new(function(resolve, reject)
-		local ok, result =  pcall(HttpService.GetAsync, HttpService, url)
+		local ok, result = pcall(HttpService.GetAsync, HttpService, url)
 
 		if ok then
 			resolve(result)
@@ -64,7 +64,7 @@ Let's break this down. The `Promise.new` function accepts a function, called an 
 Let's use the value now:
 
 ```lua
-local promise =  httpGet("https://google.com")
+local promise = httpGet("https://google.com")
 
 promise:andThen(function(body)
 	print("Here's the Google homepage:", body)
@@ -151,7 +151,7 @@ We can call functions that return Promises from inside a Promise and safely yiel
 ```lua
 local function async1()
 	return Promise.new(function(resolve, reject)
-		local ok, value =  async2():await()
+		local ok, value = async2():await()
 		if not ok then
 			return reject(value)
 		end
@@ -172,7 +172,7 @@ There is a third parameter sent to Promise executors, in addition to `resolve` a
 ```lua
 local function tween(obj, tweenInfo, props)
 	return Promise.new(function(resolve, reject, onCancel)
-		local tween =  TweenService:Create(obj, tweenInfo, props)
+		local tween = TweenService:Create(obj, tweenInfo, props)
 			
 		-- Register a callback to be called if the Promise is cancelled.
 		onCancel(function()
@@ -185,7 +185,7 @@ local function tween(obj, tweenInfo, props)
 end
 
 -- Begin tweening immediately
-local promise =  tween(workspace.Part, TweenInfo.new(2), { Transparency =  0.5 }):andThen(function()
+local promise = tween(workspace.Part, TweenInfo.new(2), { Transparency = 0.5 }):andThen(function()
 	print("This is never printed.")
 end):catch(function()
 	print("This is never printed.")
@@ -205,7 +205,7 @@ For times when we need to do something no matter the fate of the Promise, whethe
 Cancelling a Promise will propagate upwards and cancel the entire chain of Promises. So to revisit our sequence example:
 
 ```lua
-local promise =  async1()
+local promise = async1()
 	:andThen(async2)
 	:andThen(async3)
 	:andThen(async4)
@@ -229,7 +229,7 @@ You can easily turn a yielding function into a Promise-returning one by calling 
 
 ```lua
 -- Assuming myFunctionAsync is a function that yields.
-local myFunction =  Promise.promisify(myFunctionAsync)
+local myFunction = Promise.promisify(myFunctionAsync)
 
 myFunction("some", "arguments"):andThen(print):catch(warn)
 ```

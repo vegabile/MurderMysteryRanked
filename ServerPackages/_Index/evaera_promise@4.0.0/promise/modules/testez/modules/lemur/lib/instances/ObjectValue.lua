@@ -1,14 +1,14 @@
-local BaseInstance =  import("./BaseInstance")
-local InstanceProperty =  import("../InstanceProperty")
+local BaseInstance = import("./BaseInstance")
+local InstanceProperty = import("../InstanceProperty")
 
-local ObjectValue =  BaseInstance:extend("ObjectValue", {
-	creatable =  true,
+local ObjectValue = BaseInstance:extend("ObjectValue", {
+	creatable = true,
 })
 
-ObjectValue.properties.Value =  InstanceProperty.normal({})
+ObjectValue.properties.Value = InstanceProperty.normal({})
 
 function ObjectValue:init(instance)
-	instance.Name =  "Value"
+	instance.Name = "Value"
 end
 
 return ObjectValue

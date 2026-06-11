@@ -18,10 +18,10 @@ pub struct SourceInfo {
 
 impl SourceInfo {
     pub fn detect<P: AsRef<Path>>(project_path: P) -> SourceInfo {
-        let project_path =  project_path.as_ref();
+        let project_path = project_path.as_ref();
 
-        let has_rojo_project =  project_path.join("default.project.json").is_file();
-        let has_src_dir =  project_path.join("src").is_dir();
+        let has_rojo_project = project_path.join("default.project.json").is_file();
+        let has_src_dir = project_path.join("src").is_dir();
 
         Self {
             has_rojo_project,

@@ -1,22 +1,22 @@
-local assign =  import("../assign")
-local typeKey =  import("../typeKey")
-local typeof =  import("../functions/typeof")
+local assign = import("../assign")
+local typeKey = import("../typeKey")
+local typeof = import("../functions/typeof")
 
-local Vector2 =  {}
+local Vector2 = {}
 
 setmetatable(Vector2, {
-	__tostring =  function()
+	__tostring = function()
 		return "Vector2"
 	end,
 })
 
-local prototype =  {}
+local prototype = {}
 
-local metatable =  {}
-metatable[typeKey] =  "Vector2"
+local metatable = {}
+metatable[typeKey] = "Vector2"
 
 function metatable:__index(key)
-	local internal =  getmetatable(self).internal
+	local internal = getmetatable(self).internal
 
 	if internal[key] ~= nil then
 		return internal[key]
@@ -38,11 +38,11 @@ function metatable:__sub(other)
 end
 
 function metatable:__mul(other)
-	if typeof(self) = = "Vector2" and typeof(other) = = "Vector2" then
+	if typeof(self)==  "Vector2" and typeof(other)==  "Vector2" then
 		return Vector2.new(self.X * other.X, self.Y * other.Y)
-	elseif typeof(self) = = "Vector2" and typeof(other) = = "number" then
+	elseif typeof(self)==  "Vector2" and typeof(other)==  "number" then
 		return Vector2.new(self.X * other, self.Y * other)
-	elseif typeof(self) = = "number" and typeof(other) = = "Vector2" then
+	elseif typeof(self)==  "number" and typeof(other)==  "Vector2" then
 		return Vector2.new(other.X * self, other.Y * self)
 	else
 		error("attempt to multiply a Vector2 with an incompatible value type or nil")
@@ -50,11 +50,11 @@ function metatable:__mul(other)
 end
 
 function metatable:__div(other)
-	if typeof(self) = = "Vector2" and typeof(other) = = "Vector2" then
+	if typeof(self)==  "Vector2" and typeof(other)==  "Vector2" then
 		return Vector2.new(self.X / other.X, self.Y / other.Y)
-	elseif typeof(self) = = "Vector2" and typeof(other) = = "number" then
+	elseif typeof(self)==  "Vector2" and typeof(other)==  "number" then
 		return Vector2.new(self.X / other, self.Y / other)
-	elseif typeof(self) = = "number" and typeof(other) = = "Vector2" then
+	elseif typeof(self)==  "number" and typeof(other)==  "Vector2" then
 		return Vector2.new(other.X / self, other.Y / self)
 	else
 		error("attempt to divide a Vector2 with an incompatible value type or nil")
@@ -62,28 +62,28 @@ function metatable:__div(other)
 end
 
 function metatable:__eq(other)
-	return self.X = = other.X and self.Y = = other.Y
+	return self.X==  other.X and self.Y==  other.Y
 end
 
 function Vector2.new(...)
-	if select("#", ...) = = 0 then
+	if select("#", ...)==  0 then
 		return Vector2.new(0, 0)
 	end
 
-	local X, Y =  ...
+	local X, Y = ...
 	if type(X) ~= "number" or type(Y) ~= "number" then
 		error("Vector2.new takes in 2 numbers", 2)
 	end
 
-	local internalInstance =  {
-		X =  X,
-		Y =  Y,
+	local internalInstance = {
+		X = X,
+		Y = Y,
 	}
 
-	local instance =  newproxy(true)
+	local instance = newproxy(true)
 
 	assign(getmetatable(instance), metatable)
-	getmetatable(instance).internal =  internalInstance
+	getmetatable(instance).internal = internalInstance
 
 	return instance
 end

@@ -25,7 +25,7 @@ pub enum Subcommand {
 #[derive(Debug, StructOpt)]
 pub struct RunSubcommand {
     /// Path to the root of the project to test.
-    #[structopt(default_value =  "")]
+    #[structopt(default_value = "")]
     pub path: PathBuf,
 
     /// What target to run tests in.
@@ -37,7 +37,7 @@ pub struct RunSubcommand {
     pub target: Target,
 
     /// Whether to run tests at core script security.
-    #[structopt(long =  "as-core-script")]
+    #[structopt(long = "as-core-script")]
     pub core_script_security: bool,
 }
 
@@ -48,13 +48,13 @@ pub enum Target {
 }
 
 impl FromStr for Target {
-    type Err =  TargetConvertError;
+    type Err = TargetConvertError;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
-            "roblox-cli" = > Ok(Self::RobloxCli),
-            "lemur" = > Ok(Self::Lemur),
-            _ = > Err(TargetConvertError(value.to_owned())),
+            "roblox-cli" =  > Ok(Self::RobloxCli),
+            "lemur" =  > Ok(Self::Lemur),
+            _ =  > Err(TargetConvertError(value.to_owned())),
         }
     }
 }

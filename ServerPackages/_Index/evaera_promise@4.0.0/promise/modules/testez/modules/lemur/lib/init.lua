@@ -1,9 +1,9 @@
-local baste =  require((...) .. ".baste")
+local baste = require((...) .. ".baste")
 
-local Habitat =  baste.import("./Habitat")
-local Instance =  baste.import("./Instance")
+local Habitat = baste.import("./Habitat")
+local Instance = baste.import("./Instance")
 
 return {
-	Habitat =  Habitat,
-	Instance =  Instance,
+	Habitat = Habitat,
+	Instance = Instance,
 }

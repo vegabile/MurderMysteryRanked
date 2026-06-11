@@ -3,9 +3,9 @@
 
 	Uses a TestPlanBuilder to keep track of the state of the tree being built.
 ]]
-local TestPlan =  require(script.Parent.TestPlan)
+local TestPlan = require(script.Parent.TestPlan)
 
-local TestPlanner =  {}
+local TestPlanner = {}
 
 --[[
 	Create a new TestPlan from a list of specification functions.
@@ -24,7 +24,7 @@ local TestPlanner =  {}
 							function during execution
 ]]
 function TestPlanner.createPlan(modulesList, testNamePattern, extraEnvironment)
-	local plan =  TestPlan.new(testNamePattern, extraEnvironment)
+	local plan = TestPlan.new(testNamePattern, extraEnvironment)
 
 	table.sort(modulesList, function(a, b)
 		return a.pathStringForSorting < b.pathStringForSorting

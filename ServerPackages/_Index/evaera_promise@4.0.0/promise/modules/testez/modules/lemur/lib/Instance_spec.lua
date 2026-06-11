@@ -1,8 +1,8 @@
-local Instance =  import("./Instance")
+local Instance = import("./Instance")
 
 describe("Instance", function()
 	it("should create instances of objects", function()
-		local new =  Instance.new("Folder")
+		local new = Instance.new("Folder")
 
 		assert.not_nil(new)
 	end)
@@ -15,16 +15,16 @@ describe("Instance", function()
 
 	describe("Parent", function()
 		it("should be set to nil by default", function()
-			local instance =  Instance.new("Folder")
+			local instance = Instance.new("Folder")
 
 			assert.equal(instance.Parent, nil)
 		end)
 
 		it("should be set to the given value if available", function()
-			local parent =  Instance.new("Folder")
+			local parent = Instance.new("Folder")
 
-			local child =  Instance.new("Folder", parent)
-			child.Name =  "foo"
+			local child = Instance.new("Folder", parent)
+			child.Name = "foo"
 
 			assert.equal(child.Parent, parent)
 			assert.equal(parent:FindFirstChild("foo"), child)

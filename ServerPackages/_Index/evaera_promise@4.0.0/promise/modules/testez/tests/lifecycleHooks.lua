@@ -1,4 +1,4 @@
-local TestEZ =  require(script.Parent.Parent.TestEZ)
+local TestEZ = require(script.Parent.Parent.TestEZ)
 
 local function expectShallowEquals(array1, array2)
 	local function shallowEquals()
@@ -27,35 +27,35 @@ local function expectShallowEquals(array1, array2)
 end
 
 local function expectNoFailures(results)
-	assert(results.failureCount = = 0, "Some lifecycleHook test failed!")
+	assert(results.failureCount==  0, "Some lifecycleHook test failed!")
 end
 
 local function runTestPlan(testPlan)
-	local lifecycleOrder =  {}
+	local lifecycleOrder = {}
 	local function insertLifecycleEvent(lifecycleString)
 		table.insert(lifecycleOrder, lifecycleString)
 	end
 
-	local plan =  TestEZ.TestPlanner.createPlan({
+	local plan = TestEZ.TestPlanner.createPlan({
 		{
-			method =  function()
+			method = function()
 				-- This function environment hack is needed because the testPlan
 				-- function is not defined or required from within a test. This
 				-- shouldn't come up in real tests.
 				setfenv(testPlan, getfenv())
 				testPlan(insertLifecycleEvent)
 			end,
-			path =  {'lifecycleHooksTest'}
+			path = {'lifecycleHooksTest'}
 		}
 	})
 
-	local results =  TestEZ.TestRunner.runPlan(plan)
+	local results = TestEZ.TestRunner.runPlan(plan)
 	return results, lifecycleOrder
 end
 
 return {
-	["should run lifecycle methods in single-level"] =  function()
-		local results, lifecycleOrder =  runTestPlan(function(insertLifecycleEvent)
+	["should run lifecycle methods in single-level"] = function()
+		local results, lifecycleOrder = runTestPlan(function(insertLifecycleEvent)
 			beforeAll(function()
 				insertLifecycleEvent("1 - beforeAll")
 			end)
@@ -94,9 +94,9 @@ return {
 
 		expectNoFailures(results)
 	end,
-	["should run lifecycle methods in order in nested trees"] =  function()
+	["should run lifecycle methods in order in nested trees"] = function()
 		-- follows spec from jest https://jestjs.io/docs/en/setup-teardown#scoping
-		local results, lifecycleOrder =  runTestPlan(function(insertLifecycleEvent)
+		local results, lifecycleOrder = runTestPlan(function(insertLifecycleEvent)
 			beforeAll(function()
 				insertLifecycleEvent("1 - beforeAll")
 			end)
@@ -175,8 +175,8 @@ return {
 		})
 		expectNoFailures(results)
 	end,
-	["beforeAll should only run once per describe block"] =  function()
-		local results, lifecycleOrder =  runTestPlan(function(insertLifecycleEvent)
+	["beforeAll should only run once per describe block"] = function()
+		local results, lifecycleOrder = runTestPlan(function(insertLifecycleEvent)
 			beforeAll(function()
 				insertLifecycleEvent("1 - beforeAll")
 			end)
@@ -209,45 +209,45 @@ return {
 		})
 		expectNoFailures(results)
 	end,
-	["lifecycle failures should fail test node"] =  function()
+	["lifecycle failures should fail test node"] = function()
 		local function failLifecycleCase(hookType)
-			local itWasRun =  false
-			local results =  runTestPlan(function(insertLifecycleEvent)
+			local itWasRun = false
+			local results = runTestPlan(function(insertLifecycleEvent)
 
-				if hookType = = "beforeAll" then
+				if hookType==  "beforeAll" then
 					beforeAll(function()
 						error("this is an error")
 					end)
 				end
 
-				if hookType = = "beforeEach" then
+				if hookType==  "beforeEach" then
 					beforeEach(function()
 						error("this is an error")
 					end)
 				end
 
-				if hookType = = "afterEach" then
+				if hookType==  "afterEach" then
 					afterEach(function()
 						error("this is an error")
 					end)
 				end
 
-				if hookType = = "afterAll" then
+				if hookType==  "afterAll" then
 					afterAll(function()
 						error("this is an error")
 					end)
 				end
 
 				it("runs root", function()
-					itWasRun =  true
+					itWasRun = true
 				end)
 			end)
 
-			assert(results.failureCount = = 1, string.format("Expected %s failure to fail test run", hookType))
+			assert(results.failureCount==  1, string.format("Expected %s failure to fail test run", hookType))
 
 			if hookType:find("before") then
 				-- if before* hooks fail, our test node should not run
-				assert(itWasRun = = false, "it node was ran despite failure on run: " .. hookType)
+				assert(itWasRun==  false, "it node was ran despite failure on run: " .. hookType)
 			end
 		end
 

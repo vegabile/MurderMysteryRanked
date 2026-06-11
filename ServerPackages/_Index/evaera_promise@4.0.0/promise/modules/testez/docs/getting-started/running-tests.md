@@ -1,7 +1,7 @@
 TestEZ provides a convenient method to run tests in a single pass:
 
 ```lua
-local TestEZ =  require(<path to TestEZ>)
+local TestEZ = require(<path to TestEZ>)
 
 TestEZ.TestBootstrap:run({ MY_TESTS })
 ```

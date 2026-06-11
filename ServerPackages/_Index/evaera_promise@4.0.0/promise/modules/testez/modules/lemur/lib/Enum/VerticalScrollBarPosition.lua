@@ -1,6 +1,6 @@
-local createEnum =  import("../createEnum")
+local createEnum = import("../createEnum")
 
 return createEnum("VerticalScrollBarPosition", {
-	Left =  1,
-	Right =  0,
+	Left = 1,
+	Right = 0,
 })

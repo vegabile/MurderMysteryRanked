@@ -5,13 +5,13 @@
 if [ ! -z ${LOCALAPPDATA+x} ]; then
 	# Probably Windows, look for any Roblox installation in the default path.
 
-	VERSIONS_FOLDER="$LOCALAPPDATA/Roblox/Versions"
-	INSTALL=`find "$VERSIONS_FOLDER" -maxdepth 1 -name version-* | head -1`
-	CONTENT="$INSTALL/content"
+	VERSIONS_FOLDER = "$LOCALAPPDATA/Roblox/Versions"
+	INSTALL = `find "$VERSIONS_FOLDER" -maxdepth 1 -name version-* | head -1`
+	CONTENT = "$INSTALL/content"
 else
 	# Probably macOS, look for Roblox Studio in its default path.
 
-	CONTENT="/Applications/RobloxStudio.App/Contents/Resources/content"
+	CONTENT = "/Applications/RobloxStudio.App/Contents/Resources/content"
 fi
 
 rojo build test-place.project.json -o TestPlace.rbxlx

@@ -1,6 +1,6 @@
-local exists, dkjson =  pcall(require, "dkjson")
+local exists, dkjson = pcall(require, "dkjson")
 
-local json =  {}
+local json = {}
 
 function json.encode(input)
 	error("Please install `dkjson` to use JSON features.", 2)
@@ -11,8 +11,8 @@ function json.decode(input)
 end
 
 if exists then
-	json.encode =  dkjson.encode
-	json.decode =  dkjson.decode
+	json.encode = dkjson.encode
+	json.decode = dkjson.decode
 end
 
 return json

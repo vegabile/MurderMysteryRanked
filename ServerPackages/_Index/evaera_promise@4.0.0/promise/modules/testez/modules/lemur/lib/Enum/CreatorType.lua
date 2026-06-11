@@ -1,6 +1,6 @@
-local createEnum =  import("../createEnum")
+local createEnum = import("../createEnum")
 
 return createEnum("CreatorType", {
-	User =  0,
-	Group =  1,
+	User = 0,
+	Group = 1,
 })

@@ -1,13 +1,13 @@
-local Signal =  import("../Signal")
-local BaseInstance =  import("./BaseInstance")
-local InstanceProperty =  import("../InstanceProperty")
+local Signal = import("../Signal")
+local BaseInstance = import("./BaseInstance")
+local InstanceProperty = import("../InstanceProperty")
 
-local BindableEvent =  BaseInstance:extend("BindableEvent", {
-	creatable =  true,
+local BindableEvent = BaseInstance:extend("BindableEvent", {
+	creatable = true,
 })
 
-BindableEvent.properties.Event =  InstanceProperty.readOnly({
-	getDefault =  Signal.new,
+BindableEvent.properties.Event = InstanceProperty.readOnly({
+	getDefault = Signal.new,
 })
 
 function BindableEvent.prototype:Fire(...)
