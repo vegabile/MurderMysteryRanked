@@ -171,3 +171,5 @@ t.describe("RoundObject match scoring", function()
 		t.expect(round:AwardPoint(3)).toBeFalsy()
 	end)
 end)
+
+return nil
