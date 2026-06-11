@@ -1,7 +1,8 @@
 local framework = require("./framework")
 
 require("./glicko2.spec")
+require("./roundobject.spec")
 
 if not framework.run() then
-	error("Glicko2 test suite failed", 0)
+	error("Test suite failed", 0)
 end
