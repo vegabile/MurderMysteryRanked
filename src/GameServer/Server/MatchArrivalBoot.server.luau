@@ -4,6 +4,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
+local Config = require(Shared:WaitForChild("Config"))
 local MatchData = require(Shared:WaitForChild("MatchData"))
 local RoundObject = require(Shared:WaitForChild("RoundSystem"):WaitForChild("RoundObject"))
 
@@ -15,7 +16,13 @@ local function seatPlayer(player: Player)
 		return
 	end
 
-	local teleportData = player:GetJoinData().TeleportData
+	local joinData = player:GetJoinData()
+	if joinData.SourcePlaceId ~= Config.LobbyPlaceId then
+		warn(`MatchArrival: {player.Name} did not arrive from the lobby`)
+		return
+	end
+
+	local teleportData = joinData.TeleportData
 	if not MatchData.isValid(teleportData) then
 		warn(`MatchArrival: {player.Name} arrived without valid match data`)
 		return
