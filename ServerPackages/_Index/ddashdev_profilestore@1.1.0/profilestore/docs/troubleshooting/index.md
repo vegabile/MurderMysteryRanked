@@ -11,12 +11,12 @@ By default, data saved with ProfileStore on Roblox Studio will not persist. This
 ProfileStore does not check `Profile.Data` for data that cannot be serialized - be aware
 that the DataStore can only save save data when your tables are devoid of:
 
-- `NaN` values - you can check if a number is `NaN` by comparing it with itself - `print(NaN == NaN) --> false` (e.g., `Profile.Data = {Experience = 0/0}`). `NaN` values are a result of division by zero and edge cases of some math operations (`math.acos(2)` is `-NaN`).
-- Table keys that are neither strings nor numbers (e.g., `Profile.Data[game.Workspace] = true`).
-- Mixing string keys with number keys within the same table (e.g., `Profile.Data = {Coins = 100, [5] = "yes"}`).
-- Storing tables with non-sequential indexes (e.g., `Profile.Data = {[1] = "Apple", [2] = "Banana", [3546] = "Peanut"}`). If you really have to store non-sequential numbers as indexes, you will have to turn those numbers into `string` indexes: `Profile.Data.Friends[tostring(user_id)] = {GoodFriend = true}`.
-- Storing cyclic tables (e.g., `Profile.Data = {Self = Profile.Data}`).
-- Storing any `userdata` including `Instance`, `Vector3`, `CFrame`, `Udim2`, etc. Check whether your value is a `userdata` by running `print(type(value) == "userdata")` (e.g., `Profile.Data = {LastPosition = Vector3.new(0, 0, 0)}`) - For storage, you will have to manually convert your `userdata` to tables, numbers and strings for storage (e.g., `Profile.Data = {LastPosition = {position.X, position.Y, position.Z} }`).
+- `NaN` values - you can check if a number is `NaN` by comparing it with itself - `print(NaN = = NaN) --> false` (e.g., `Profile.Data =  {Experience =  0/0}`). `NaN` values are a result of division by zero and edge cases of some math operations (`math.acos(2)` is `-NaN`).
+- Table keys that are neither strings nor numbers (e.g., `Profile.Data[game.Workspace] =  true`).
+- Mixing string keys with number keys within the same table (e.g., `Profile.Data =  {Coins =  100, [5] =  "yes"}`).
+- Storing tables with non-sequential indexes (e.g., `Profile.Data =  {[1] =  "Apple", [2] =  "Banana", [3546] =  "Peanut"}`). If you really have to store non-sequential numbers as indexes, you will have to turn those numbers into `string` indexes: `Profile.Data.Friends[tostring(user_id)] =  {GoodFriend =  true}`.
+- Storing cyclic tables (e.g., `Profile.Data =  {Self =  Profile.Data}`).
+- Storing any `userdata` including `Instance`, `Vector3`, `CFrame`, `Udim2`, etc. Check whether your value is a `userdata` by running `print(type(value) = = "userdata")` (e.g., `Profile.Data =  {LastPosition =  Vector3.new(0, 0, 0)}`) - For storage, you will have to manually convert your `userdata` to tables, numbers and strings for storage (e.g., `Profile.Data =  {LastPosition =  {position.X, position.Y, position.Z} }`).
 
 This is a limitation of the DataStore API - the service ProfileStore is based on.
 

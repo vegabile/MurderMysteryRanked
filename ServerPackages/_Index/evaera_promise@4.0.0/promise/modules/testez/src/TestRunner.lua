@@ -6,15 +6,15 @@
 	state is contained inside a TestSession object.
 ]]
 
-local Expectation = require(script.Parent.Expectation)
-local TestEnum = require(script.Parent.TestEnum)
-local TestSession = require(script.Parent.TestSession)
-local LifecycleHooks = require(script.Parent.LifecycleHooks)
+local Expectation =  require(script.Parent.Expectation)
+local TestEnum =  require(script.Parent.TestEnum)
+local TestSession =  require(script.Parent.TestSession)
+local LifecycleHooks =  require(script.Parent.LifecycleHooks)
 
-local RUNNING_GLOBAL = "__TESTEZ_RUNNING_TEST__"
+local RUNNING_GLOBAL =  "__TESTEZ_RUNNING_TEST__"
 
-local TestRunner = {
-	environment = {}
+local TestRunner =  {
+	environment =  {}
 }
 
 function TestRunner.environment.expect(...)
@@ -26,14 +26,14 @@ end
 	results of the run.
 ]]
 function TestRunner.runPlan(plan)
-	local session = TestSession.new(plan)
-	local lifecycleHooks = LifecycleHooks.new()
+	local session =  TestSession.new(plan)
+	local lifecycleHooks =  LifecycleHooks.new()
 
-	local exclusiveNodes = plan:findNodes(function(node)
-		return node.modifier == TestEnum.NodeModifier.Focus
+	local exclusiveNodes =  plan:findNodes(function(node)
+		return node.modifier = = TestEnum.NodeModifier.Focus
 	end)
 
-	session.hasFocusNodes = #exclusiveNodes > 0
+	session.hasFocusNodes =  #exclusiveNodes > 0
 
 	TestRunner.runPlanNode(session, plan, lifecycleHooks)
 
@@ -46,33 +46,33 @@ end
 ]]
 function TestRunner.runPlanNode(session, planNode, lifecycleHooks)
 	local function runCallback(callback, messagePrefix)
-		local success = true
+		local success =  true
 		local errorMessage
 		-- Any code can check RUNNING_GLOBAL to fork behavior based on
 		-- whether a test is running. We use this to avoid accessing
 		-- protected APIs; it's a workaround that will go away someday.
-		_G[RUNNING_GLOBAL] = true
+		_G[RUNNING_GLOBAL] =  true
 
-		messagePrefix = messagePrefix or ""
+		messagePrefix =  messagePrefix or ""
 
-		local testEnvironment = getfenv(callback)
+		local testEnvironment =  getfenv(callback)
 
 		for key, value in pairs(TestRunner.environment) do
-			testEnvironment[key] = value
+			testEnvironment[key] =  value
 		end
 
-		testEnvironment.fail = function(message)
-			if message == nil then
-				message = "fail() was called."
+		testEnvironment.fail =  function(message)
+			if message = = nil then
+				message =  "fail() was called."
 			end
 
-			success = false
-			errorMessage = messagePrefix .. message .. "\n" .. debug.traceback()
+			success =  false
+			errorMessage =  messagePrefix .. message .. "\n" .. debug.traceback()
 		end
 
-		local context = session:getContext()
+		local context =  session:getContext()
 
-		local nodeSuccess, nodeResult = xpcall(
+		local nodeSuccess, nodeResult =  xpcall(
 			function()
 				callback(context)
 			end,
@@ -84,11 +84,11 @@ function TestRunner.runPlanNode(session, planNode, lifecycleHooks)
 		-- If a node threw an error, we prefer to use that message over
 		-- one created by fail() if it was set.
 		if not nodeSuccess then
-			success = false
-			errorMessage = nodeResult
+			success =  false
+			errorMessage =  nodeResult
 		end
 
-		_G[RUNNING_GLOBAL] = nil
+		_G[RUNNING_GLOBAL] =  nil
 
 		return success, errorMessage
 	end
@@ -98,21 +98,21 @@ function TestRunner.runPlanNode(session, planNode, lifecycleHooks)
 		-- by a test calling fail([message]).
 
 		for _, hook in ipairs(lifecycleHooks:getBeforeEachHooks()) do
-			local success, errorMessage = runCallback(hook, "beforeEach hook: ")
+			local success, errorMessage =  runCallback(hook, "beforeEach hook: ")
 			if not success then
 				return false, errorMessage
 			end
 		end
 
 		do
-			local success, errorMessage = runCallback(childPlanNode.callback)
+			local success, errorMessage =  runCallback(childPlanNode.callback)
 			if not success then
 				return false, errorMessage
 			end
 		end
 
 		for _, hook in ipairs(lifecycleHooks:getAfterEachHooks()) do
-			local success, errorMessage = runCallback(hook, "afterEach hook: ")
+			local success, errorMessage =  runCallback(hook, "afterEach hook: ")
 			if not success then
 				return false, errorMessage
 			end
@@ -123,12 +123,12 @@ function TestRunner.runPlanNode(session, planNode, lifecycleHooks)
 
 	lifecycleHooks:pushHooksFrom(planNode)
 
-	local halt = false
+	local halt =  false
 	for _, hook in ipairs(lifecycleHooks:getBeforeAllHooks()) do
-		local success, errorMessage = runCallback(hook, "beforeAll hook: ")
+		local success, errorMessage =  runCallback(hook, "beforeAll hook: ")
 		if not success then
 			session:addDummyError("beforeAll", errorMessage)
-			halt = true
+			halt =  true
 		end
 	end
 
@@ -136,11 +136,11 @@ function TestRunner.runPlanNode(session, planNode, lifecycleHooks)
 		for _, childPlanNode in ipairs(planNode.children) do
 			session:pushNode(childPlanNode)
 
-			if childPlanNode.type == TestEnum.NodeType.It then
+			if childPlanNode.type = = TestEnum.NodeType.It then
 				if session:shouldSkip() then
 					session:setSkipped()
 				else
-					local success, errorMessage = runNode(childPlanNode)
+					local success, errorMessage =  runNode(childPlanNode)
 
 					if success then
 						session:setSuccess()
@@ -148,12 +148,12 @@ function TestRunner.runPlanNode(session, planNode, lifecycleHooks)
 						session:setError(errorMessage)
 					end
 				end
-			elseif childPlanNode.type == TestEnum.NodeType.Describe then
+			elseif childPlanNode.type = = TestEnum.NodeType.Describe then
 				TestRunner.runPlanNode(session, childPlanNode, lifecycleHooks)
 
 				-- Did we have an error trying build a test plan?
 				if childPlanNode.loadError then
-					local message = "Error during planning: " .. childPlanNode.loadError
+					local message =  "Error during planning: " .. childPlanNode.loadError
 					session:setError(message)
 				else
 					session:setStatusFromChildren()
@@ -165,7 +165,7 @@ function TestRunner.runPlanNode(session, planNode, lifecycleHooks)
 	end
 
 	for _, hook in ipairs(lifecycleHooks:getAfterAllHooks()) do
-		local success, errorMessage = runCallback(hook, "afterAll hook: ")
+		local success, errorMessage =  runCallback(hook, "afterAll hook: ")
 		if not success then
 			session:addDummyError("afterAll", errorMessage)
 		end

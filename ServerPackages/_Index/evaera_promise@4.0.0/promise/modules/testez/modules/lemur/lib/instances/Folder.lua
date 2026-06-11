@@ -1,5 +1,5 @@
-local BaseInstance = import("./BaseInstance")
+local BaseInstance =  import("./BaseInstance")
 
 return BaseInstance:extend("Folder", {
-	creatable = true,
+	creatable =  true,
 })

@@ -8,7 +8,7 @@ The recommended way to install TestEZ CLI is with [Foreman](https://github.com/r
 
 ```toml
 [tools]
-testez = { source = "Roblox/testez", version = "0.2.0" }
+testez =  { source =  "Roblox/testez", version =  "0.2.0" }
 ```
 
 It can also be compiled from source in this repository. Building from source requires [Rust](https://rust-lang.org) 1.40.0 or newer and [Rojo](https://github.com/rojo-rbx/rojo) 0.5.4 or newer.

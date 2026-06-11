@@ -1,6 +1,6 @@
-local BaseInstance = import("./BaseInstance")
-local InstanceProperty = import("../InstanceProperty")
-local Player = BaseInstance:extend("Player")
+local BaseInstance =  import("./BaseInstance")
+local InstanceProperty =  import("../InstanceProperty")
+local Player =  BaseInstance:extend("Player")
 
 function Player:init(instance, userId)
 	if userId ~= nil then
@@ -8,12 +8,12 @@ function Player:init(instance, userId)
 			error("userId must be an int64", 2)
 		end
 
-		getmetatable(instance).instance.properties.UserId = userId
+		getmetatable(instance).instance.properties.UserId =  userId
 	end
 end
 
-Player.properties.UserId = InstanceProperty.readOnly({
-	getDefault = function()
+Player.properties.UserId =  InstanceProperty.readOnly({
+	getDefault =  function()
 		return 0
 	end,
 })

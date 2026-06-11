@@ -1,6 +1,6 @@
-local createEnumGroup = import("../createEnumGroup")
+local createEnumGroup =  import("../createEnumGroup")
 
-local names = {
+local names =  {
 	"ConnectionState",
 	"CreatorType",
 	"DataStoreRequestType",
@@ -32,10 +32,10 @@ local names = {
 	"ZIndexBehavior",
 }
 
-local enums = {}
+local enums =  {}
 
 for _, name in ipairs(names) do
-	enums[name] = import("./" .. name)
+	enums[name] =  import("./" .. name)
 end
 
 return createEnumGroup(enums)

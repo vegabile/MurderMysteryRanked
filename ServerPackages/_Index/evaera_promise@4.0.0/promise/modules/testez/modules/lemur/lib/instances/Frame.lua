@@ -1,5 +1,5 @@
-local GuiObject = import("./GuiObject")
+local GuiObject =  import("./GuiObject")
 
 return GuiObject:extend("Frame", {
-	creatable = true,
+	creatable =  true,
 })

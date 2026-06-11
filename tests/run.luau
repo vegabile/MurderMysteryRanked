@@ -1,4 +1,4 @@
-local framework = require("./framework")
+local framework =  require("./framework")
 
 require("./glicko2.spec")
 require("./queue.spec")

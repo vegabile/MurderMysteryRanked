@@ -20,7 +20,7 @@ A match is **N teams**, each holding one or more players:
 A match is a sequence of **rounds**. Each round everyone spawns; players die until only
 one team has anyone left alive; that team is awarded one point; the round resets and the
 next one begins. The first team to reach `WinningScore` points wins the match
-(`DefaultWinningScore = 5`).
+(`DefaultWinningScore =  5`).
 
 The mode is never stored — it is derived from the team shape via `ClassifyMode`. The team
 rosters come from the matchmaking/teleport payload, so the round object just receives the
@@ -46,11 +46,11 @@ signal. At runtime the round runner connects each character's `Humanoid.Died` to
 `round:MarkDead(player)`. `MarkDead` is the **only** writer of alive state and death
 ordering:
 
-- `MarkDead(player)` sets `isAlive = false` and records the death against the player's team
+- `MarkDead(player)` sets `isAlive =  false` and records the death against the player's team
   with a strictly increasing counter, so each team remembers the order of its most recent
   death. It refuses (with a `warn`) to mark a player who is not in the round or who is
   already dead, so the counter never double-counts.
-- `ResetRound()` re-arms everyone for the next round: `isAlive = true`, the per-team death
+- `ResetRound()` re-arms everyone for the next round: `isAlive =  true`, the per-team death
   records are cleared, and the death counter is reset to zero.
 - `LogPlayerInfo` accepts only `{ Kills, Deaths }` and writes only those; alive state has
   no way in through it.
@@ -65,8 +65,8 @@ Because alive state is derived from one signal and never duplicated, it cannot d
   is the single definition of a dead team; everything else builds on it.
 - `GetLivingTeams(): { number }` — indices of teams with at least one living member.
 - `GetRoundOutcome(): RoundOutcome` — a pure read (no mutation). It returns
-  `{ Status = "Ongoing" }` while two or more teams are alive, `{ Status = "Awarded",
-  TeamIndex = i }` when exactly one team remains, and on a double knockout (zero teams
+  `{ Status =  "Ongoing" }` while two or more teams are alive, `{ Status =  "Awarded",
+  TeamIndex =  i }` when exactly one team remains, and on a double knockout (zero teams
   alive) awards the team that died **last** by each team's recorded last-death order. If
   no team is alive and no deaths were recorded (e.g. an empty round) it stays `Ongoing`
   rather than awarding anyone.
@@ -80,13 +80,13 @@ death) without committing a point. The runner commits the point itself:
 - `IsOver(): boolean`
 
 A typical runner loop: on each death, only resolve while the round is still in `GAME`
-(`GetState() == "GAME"`); call `GetRoundOutcome`, and if `Status == "Awarded"` call
+(`GetState() = = "GAME"`); call `GetRoundOutcome`, and if `Status = = "Awarded"` call
 `AwardPoint`, then leave `GAME` — `Transition("POST_GAME")` when `IsOver`, otherwise
 `Transition("IN_BETWEEN")` and `ResetRound`. Starting the next round
 (`Transition("GAME")`) must be deferred to a later tick (e.g. `task.defer`), never run
 inside the same death callback that resolved the round.
 
-Gating on `GetState() == "GAME"` makes a same-tick double knockout safe only while the round
+Gating on `GetState() = = "GAME"` makes a same-tick double knockout safe only while the round
 stays out of `GAME` until that next tick. Two deaths from one exchange arrive as two separate
 `Humanoid.Died` callbacks; the first resolves the round and moves it to `IN_BETWEEN`, so the
 second — even if it runs after `ResetRound` — sees a round no longer in `GAME` and is ignored
@@ -111,8 +111,8 @@ and orders do tie, the lowest team index is awarded and a `warn` is emitted.
 is loaded or a timeout elapses". It is wired but disabled by default:
 
 ```lua
-RoundObject.MapLoadGateEnabled = false
-RoundObject.DefaultMapLoadTimeout = 10
+RoundObject.MapLoadGateEnabled =  false
+RoundObject.DefaultMapLoadTimeout =  10
 round:BeginGame(loadMap: (() -> boolean)?, timeout: number?): boolean
 ```
 
@@ -148,7 +148,7 @@ teams, and `nil` (with a `warn`) for any other shape.
 
 - Connecting `Humanoid.Died` to `MarkDead` and running the round loop.
 - Removing HP healing (disable the default Humanoid regen).
-- Making knife/gun hits reliably kill (set `Humanoid.Health = 0` on a confirmed hit).
+- Making knife/gun hits reliably kill (set `Humanoid.Health =  0` on a confirmed hit).
 - Building a real `loadMap` from the vote winner and enabling `MapLoadGateEnabled`.
 
 ## Testing

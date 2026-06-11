@@ -1,8 +1,8 @@
-stds.roblox = {
-	globals = {
+stds.roblox =  {
+	globals =  {
 		"game"
 	},
-	read_globals = {
+	read_globals =  {
 		-- Roblox globals
 		"script",
 
@@ -12,18 +12,18 @@ stds.roblox = {
 	}
 }
 
-stds.testez = {
-	read_globals = {
+stds.testez =  {
+	read_globals =  {
 		"it", "describe", "beforeAll", "beforeEach", "afterAll", "afterEach",
 	},
 }
 
-std = "lua51+roblox"
+std =  "lua51+roblox"
 
-ignore = {
+ignore =  {
 	"212", -- Unused argument, which triggers on unused 'self' too
 }
 
-files["tests/lifecycleHooks.lua"] = {
-	std = "+testez",
+files["tests/lifecycleHooks.lua"] =  {
+	std =  "+testez",
 }

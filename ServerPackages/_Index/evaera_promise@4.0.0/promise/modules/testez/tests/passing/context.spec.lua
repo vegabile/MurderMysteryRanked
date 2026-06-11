@@ -3,11 +3,11 @@
 return function()
 	describe("context is passed between lifecycle hooks and it blocks", function()
 		beforeAll(function(context)
-			context.a = 1
+			context.a =  1
 		end)
 
 		beforeEach(function(context)
-			context.b = 1
+			context.b =  1
 		end)
 
 		it("before hooks should run", function(context)

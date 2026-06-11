@@ -36,7 +36,7 @@ This function demonstrates convert a Roblox API that uses events into a function
 local function tween(obj, tweenInfo, props)
 	return function()
 		return Promise.new(function(resolve, reject, onCancel)
-			local tween = TweenService:Create(obj, tweenInfo, props)
+			local tween =  TweenService:Create(obj, tweenInfo, props)
 			
 			if onCancel(function()
 				tween:Cancel()
@@ -55,20 +55,20 @@ The following is an example of an animation sequence which is composable and can
 We take advantage of Promise chaining by returning Promises from the `finally` handler functions. Because of this behavior, cancelling the final Promise in the chain will propagate up to the very top and cancel every single Promise you see here.
 
 ```lua
-local Promise = require(game.ReplicatedStorage.Promise)
-local TweenService = game:GetService("TweenService")
+local Promise =  require(game.ReplicatedStorage.Promise)
+local TweenService =  game:GetService("TweenService")
 
-local sleep = Promise.promisify(wait)
+local sleep =  Promise.promisify(wait)
 
 local function apply(obj, props)
 	for key, value in pairs(props) do
-		obj[key] = value
+		obj[key] =  value
 	end
 end
 
 local function runTween(obj, props)
 	return Promise.new(function(resolve, reject, onCancel)
-		local tween = TweenService:Create(obj, TweenInfo.new(0.5), props)
+		local tween =  TweenService:Create(obj, TweenInfo.new(0.5), props)
 		
 		if onCancel(function()
 			tween:Cancel()
@@ -84,18 +84,18 @@ local function runAnimation(part, intensity)
 	return Promise.resolve()
 		:finallyCall(sleep, 1)
 		:finallyCall(runTween, part, {
-			Reflectance = 1 * intensity
+			Reflectance =  1 * intensity
 		}):finallyCall(runTween, part, {
-			CFrame = CFrame.new(part.Position) *
+			CFrame =  CFrame.new(part.Position) *
 				CFrame.Angles(0, math.rad(90 * intensity), 0)
 		}):finallyCall(runTween, part, {
-			Size = (
+			Size =  (
 				Vector3.new(10, 10, 10) * intensity
 			) + Vector3.new(1, 1, 1)
 		})
 end
 
-local animation = Promise.resolve() -- Begin Promise chain
+local animation =  Promise.resolve() -- Begin Promise chain
 	:finallyCall(runAnimation, workspace.Part, 1)
 	:finallyCall(sleep, 1)
 	:finallyCall(runAnimation, workspace.Part, 0)

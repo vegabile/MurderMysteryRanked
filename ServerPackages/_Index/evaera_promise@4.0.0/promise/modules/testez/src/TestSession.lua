@@ -7,13 +7,13 @@
 	track of a stack of nodes that represent the current path through the tree.
 ]]
 
-local TestEnum = require(script.Parent.TestEnum)
-local TestResults = require(script.Parent.TestResults)
-local Context = require(script.Parent.Context)
+local TestEnum =  require(script.Parent.TestEnum)
+local TestResults =  require(script.Parent.TestResults)
+local Context =  require(script.Parent.Context)
 
-local TestSession = {}
+local TestSession =  {}
 
-TestSession.__index = TestSession
+TestSession.__index =  TestSession
 
 --[[
 	Create a TestSession related to the given TestPlan.
@@ -21,11 +21,11 @@ TestSession.__index = TestSession
 	The resulting TestResults object will be linked to this TestPlan.
 ]]
 function TestSession.new(plan)
-	local self = {
-		results = TestResults.new(plan),
-		nodeStack = {},
-		contextStack = {},
-		hasFocusNodes = false
+	local self =  {
+		results =  TestResults.new(plan),
+		nodeStack =  {},
+		contextStack =  {},
+		hasFocusNodes =  false
 	}
 
 	setmetatable(self, TestSession)
@@ -38,23 +38,23 @@ end
 	current point in the execution.
 ]]
 function TestSession:calculateTotals()
-	local results = self.results
+	local results =  self.results
 
-	results.successCount = 0
-	results.failureCount = 0
-	results.skippedCount = 0
+	results.successCount =  0
+	results.failureCount =  0
+	results.skippedCount =  0
 
 	results:visitAllNodes(function(node)
-		local status = node.status
-		local nodeType = node.planNode.type
+		local status =  node.status
+		local nodeType =  node.planNode.type
 
-		if nodeType == TestEnum.NodeType.It then
-			if status == TestEnum.TestStatus.Success then
-				results.successCount = results.successCount + 1
-			elseif status == TestEnum.TestStatus.Failure then
-				results.failureCount = results.failureCount + 1
-			elseif status == TestEnum.TestStatus.Skipped then
-				results.skippedCount = results.skippedCount + 1
+		if nodeType = = TestEnum.NodeType.It then
+			if status = = TestEnum.TestStatus.Success then
+				results.successCount =  results.successCount + 1
+			elseif status = = TestEnum.TestStatus.Failure then
+				results.failureCount =  results.failureCount + 1
+			elseif status = = TestEnum.TestStatus.Skipped then
+				results.skippedCount =  results.skippedCount + 1
 			end
 		end
 	end)
@@ -65,9 +65,9 @@ end
 	of the TestResults object.
 ]]
 function TestSession:gatherErrors()
-	local results = self.results
+	local results =  self.results
 
-	results.errors = {}
+	results.errors =  {}
 
 	results:visitAllNodes(function(node)
 		if #node.errors > 0 then
@@ -96,10 +96,10 @@ end
 	Create a new test result node and push it onto the navigation stack.
 ]]
 function TestSession:pushNode(planNode)
-	local node = TestResults.createNode(planNode)
-	local lastNode = self.nodeStack[#self.nodeStack] or self.results
-	local lastContext = self.contextStack[#self.contextStack]
-	local context = Context.new(lastContext)
+	local node =  TestResults.createNode(planNode)
+	local lastNode =  self.nodeStack[#self.nodeStack] or self.results
+	local lastContext =  self.contextStack[#self.contextStack]
+	local context =  Context.new(lastContext)
 
 	table.insert(lastNode.children, node)
 	table.insert(self.nodeStack, node)
@@ -129,26 +129,26 @@ end
 function TestSession:shouldSkip()
 	-- If our test tree had any exclusive tests, then normal tests are skipped!
 	if self.hasFocusNodes then
-		for i = #self.nodeStack, 1, -1 do
-			local node = self.nodeStack[i]
+		for i =  #self.nodeStack, 1, -1 do
+			local node =  self.nodeStack[i]
 
 			-- Skipped tests are still skipped
-			if node.planNode.modifier == TestEnum.NodeModifier.Skip then
+			if node.planNode.modifier = = TestEnum.NodeModifier.Skip then
 				return true
 			end
 
 			-- Focused tests are the only ones that aren't skipped
-			if node.planNode.modifier == TestEnum.NodeModifier.Focus then
+			if node.planNode.modifier = = TestEnum.NodeModifier.Focus then
 				return false
 			end
 		end
 
 		return true
 	else
-		for i = #self.nodeStack, 1, -1 do
-			local node = self.nodeStack[i]
+		for i =  #self.nodeStack, 1, -1 do
+			local node =  self.nodeStack[i]
 
-			if node.planNode.modifier == TestEnum.NodeModifier.Skip then
+			if node.planNode.modifier = = TestEnum.NodeModifier.Skip then
 				return true
 			end
 		end
@@ -162,7 +162,7 @@ end
 ]]
 function TestSession:setSuccess()
 	assert(#self.nodeStack > 0, "Attempting to set success status on empty stack")
-	self.nodeStack[#self.nodeStack].status = TestEnum.TestStatus.Success
+	self.nodeStack[#self.nodeStack].status =  TestEnum.TestStatus.Success
 end
 
 --[[
@@ -170,7 +170,7 @@ end
 ]]
 function TestSession:setSkipped()
 	assert(#self.nodeStack > 0, "Attempting to set skipped status on empty stack")
-	self.nodeStack[#self.nodeStack].status = TestEnum.TestStatus.Skipped
+	self.nodeStack[#self.nodeStack].status =  TestEnum.TestStatus.Skipped
 end
 
 --[[
@@ -179,8 +179,8 @@ end
 ]]
 function TestSession:setError(message)
 	assert(#self.nodeStack > 0, "Attempting to set error status on empty stack")
-	local last = self.nodeStack[#self.nodeStack]
-	last.status = TestEnum.TestStatus.Failure
+	local last =  self.nodeStack[#self.nodeStack]
+	last.status =  TestEnum.TestStatus.Failure
 	table.insert(last.errors, message)
 end
 
@@ -190,10 +190,10 @@ end
 	way.
 ]]
 function TestSession:addDummyError(phrase, message)
-	self:pushNode({type = TestEnum.NodeType.It, phrase = phrase})
+	self:pushNode({type =  TestEnum.NodeType.It, phrase =  phrase})
 	self:setError(message)
 	self:popNode()
-	self.nodeStack[#self.nodeStack].status = TestEnum.TestStatus.Failure
+	self.nodeStack[#self.nodeStack].status =  TestEnum.TestStatus.Failure
 end
 
 --[[
@@ -204,27 +204,27 @@ end
 function TestSession:setStatusFromChildren()
 	assert(#self.nodeStack > 0, "Attempting to set status from children on empty stack")
 
-	local last = self.nodeStack[#self.nodeStack]
-	local status = TestEnum.TestStatus.Success
-	local skipped = true
+	local last =  self.nodeStack[#self.nodeStack]
+	local status =  TestEnum.TestStatus.Success
+	local skipped =  true
 
 	-- If all children were skipped, then we were skipped
 	-- If any child failed, then we failed!
 	for _, child in ipairs(last.children) do
 		if child.status ~= TestEnum.TestStatus.Skipped then
-			skipped = false
+			skipped =  false
 
-			if child.status == TestEnum.TestStatus.Failure then
-				status = TestEnum.TestStatus.Failure
+			if child.status = = TestEnum.TestStatus.Failure then
+				status =  TestEnum.TestStatus.Failure
 			end
 		end
 	end
 
 	if skipped then
-		status = TestEnum.TestStatus.Skipped
+		status =  TestEnum.TestStatus.Skipped
 	end
 
-	last.status = status
+	last.status =  status
 end
 
 return TestSession

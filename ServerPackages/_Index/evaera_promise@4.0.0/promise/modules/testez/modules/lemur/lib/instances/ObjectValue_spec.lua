@@ -1,8 +1,8 @@
-local Instance = import("../Instance")
+local Instance =  import("../Instance")
 
 describe("instances.ObjectValue", function()
 	it("should instantiate", function()
-		local instance = Instance.new("ObjectValue")
+		local instance =  Instance.new("ObjectValue")
 
 		assert.not_nil(instance)
 		assert.equal("Value", instance.Name)
@@ -10,9 +10,9 @@ describe("instances.ObjectValue", function()
 	end)
 
 	it("should set values", function()
-		local instance = Instance.new("ObjectValue")
+		local instance =  Instance.new("ObjectValue")
 
-		instance.Value = instance
+		instance.Value =  instance
 
 		assert.equal(instance.Value, instance)
 	end)

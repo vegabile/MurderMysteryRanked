@@ -1,15 +1,15 @@
-local Player = import("./Player")
+local Player =  import("./Player")
 
 describe("instances.Player", function()
 	it("should instantiate", function()
-		local instance = Player:new()
+		local instance =  Player:new()
 
 		assert.not_nil(instance)
 		assert.equals(instance.UserId, 0)
 	end)
 
 	it("should take a userId", function()
-		local instance = Player:new(1234)
+		local instance =  Player:new(1234)
 
 		assert.equals(instance.UserId, 1234)
 	end)

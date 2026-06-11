@@ -1,4 +1,4 @@
-local names = {
+local names =  {
 	"Color3",
 	"Rect",
 	"UDim",
@@ -7,10 +7,10 @@ local names = {
 	"Vector3",
 }
 
-local types = {}
+local types =  {}
 
 for _, name in ipairs(names) do
-	types[name] = import("./" .. name)
+	types[name] =  import("./" .. name)
 end
 
 return types

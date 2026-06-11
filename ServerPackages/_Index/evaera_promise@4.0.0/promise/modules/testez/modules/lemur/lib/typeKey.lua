@@ -6,9 +6,9 @@
 	is returned by typeof.
 ]]
 
-local typeKey = newproxy(true)
+local typeKey =  newproxy(true)
 
-getmetatable(typeKey).__tostring = function()
+getmetatable(typeKey).__tostring =  function()
 	return "<Lemur Type Identifier>"
 end
 

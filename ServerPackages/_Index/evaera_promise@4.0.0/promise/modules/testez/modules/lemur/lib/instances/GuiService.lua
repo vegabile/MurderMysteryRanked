@@ -1,9 +1,9 @@
-local BaseInstance = import("./BaseInstance")
-local InstanceProperty = import("../InstanceProperty")
-local Signal = import("../Signal")
-local validateType = import("../validateType")
+local BaseInstance =  import("./BaseInstance")
+local InstanceProperty =  import("../InstanceProperty")
+local Signal =  import("../Signal")
+local validateType =  import("../validateType")
 
-local GuiService = BaseInstance:extend("GuiService")
+local GuiService =  BaseInstance:extend("GuiService")
 
 function GuiService.prototype:BroadcastNotification(data, notification)
 	validateType("data", data, "string")
@@ -12,7 +12,7 @@ end
 
 function GuiService.prototype:GetNotificationTypeList()
 	return {
-		ACTION_LOG_OUT = "ACTION_LOG_OUT",
+		ACTION_LOG_OUT =  "ACTION_LOG_OUT",
 	}
 end
 
@@ -30,8 +30,8 @@ function GuiService.prototype:IsTenFootInterface()
 	return false
 end
 
-GuiService.properties.BrowserWindowClosed = InstanceProperty.readOnly({
-	getDefault = function()
+GuiService.properties.BrowserWindowClosed =  InstanceProperty.readOnly({
+	getDefault =  function()
 		return Signal.new()
 	end,
 })

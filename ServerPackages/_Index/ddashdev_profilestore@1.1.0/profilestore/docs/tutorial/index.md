@@ -26,25 +26,25 @@ You can find explanations for every method and property of `ProfileStore` and `P
 This code is a standard implementation of ProfileStore:
 
 ``` luau
-local ProfileStore = require(game.ServerScriptService.ProfileStore)
+local ProfileStore =  require(game.ServerScriptService.ProfileStore)
 
 -- The PROFILE_TEMPLATE table is what new profile "Profile.Data" will default to:
-local PROFILE_TEMPLATE = {
-   Cash = 0,
-   Items = {},
+local PROFILE_TEMPLATE =  {
+   Cash =  0,
+   Items =  {},
 }
 
-local Players = game:GetService("Players")
+local Players =  game:GetService("Players")
 
-local PlayerStore = ProfileStore.New("PlayerStore", PROFILE_TEMPLATE)
-local Profiles: {[Player]: typeof(PlayerStore:StartSessionAsync())} = {}
+local PlayerStore =  ProfileStore.New("PlayerStore", PROFILE_TEMPLATE)
+local Profiles: {[Player]: typeof(PlayerStore:StartSessionAsync())} =  {}
 
 local function PlayerAdded(player)
 
    -- Start a profile session for this player's data:
 
-   local profile = PlayerStore:StartSessionAsync(`{player.UserId}`, {
-      Cancel = function()
+   local profile =  PlayerStore:StartSessionAsync(`{player.UserId}`, {
+      Cancel =  function()
          return player.Parent ~= Players
       end,
    })
@@ -57,12 +57,12 @@ local function PlayerAdded(player)
       profile:Reconcile() -- Fill in missing variables from PROFILE_TEMPLATE (optional)
 
       profile.OnSessionEnd:Connect(function()
-         Profiles[player] = nil
+         Profiles[player] =  nil
          player:Kick(`Profile session end - Please rejoin`)
       end)
 
-      if player.Parent == Players then
-         Profiles[player] = profile
+      if player.Parent = = Players then
+         Profiles[player] =  profile
          print(`Profile loaded for {player.DisplayName}!`)
          -- EXAMPLE: Grant the player 100 coins for joining:
          profile.Data.Cash += 100
@@ -88,7 +88,7 @@ end
 Players.PlayerAdded:Connect(PlayerAdded)
 
 Players.PlayerRemoving:Connect(function(player)
-   local profile = Profiles[player]
+   local profile =  Profiles[player]
    if profile ~= nil then
       profile:EndSession()
    end

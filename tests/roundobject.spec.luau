@@ -1,8 +1,8 @@
-local t = require("./framework")
-local RoundObject = require("../src/Shared/RoundSystem/RoundObject")
+local t =  require("./framework")
+local RoundObject =  require("../src/Shared/RoundSystem/RoundObject")
 
 local function state(eliminated: boolean, order: number?)
-	return { Eliminated = eliminated, EliminationOrder = order }
+	return { Eliminated =  eliminated, EliminationOrder =  order }
 end
 
 t.describe("RoundObject.ClassifyMode", function()
@@ -45,45 +45,45 @@ end)
 
 t.describe("RoundObject.DecideOutcome", function()
 	t.it("is Ongoing while two teams are alive", function()
-		local outcome = RoundObject.DecideOutcome({ state(false), state(false) })
+		local outcome =  RoundObject.DecideOutcome({ state(false), state(false) })
 		t.expect(outcome.Status).toBe("Ongoing")
 	end)
 
 	t.it("awards the sole surviving team", function()
-		local outcome = RoundObject.DecideOutcome({ state(false), state(true, 2) })
+		local outcome =  RoundObject.DecideOutcome({ state(false), state(true, 2) })
 		t.expect(outcome.Status).toBe("Awarded")
 		t.expect(outcome.TeamIndex).toBe(1)
 	end)
 
 	t.it("awards the team that died last on a double knockout", function()
-		local outcome = RoundObject.DecideOutcome({ state(true, 3), state(true, 5) })
+		local outcome =  RoundObject.DecideOutcome({ state(true, 3), state(true, 5) })
 		t.expect(outcome.Status).toBe("Awarded")
 		t.expect(outcome.TeamIndex).toBe(2)
 	end)
 
 	t.it("awards team one when it died last on a double knockout", function()
-		local outcome = RoundObject.DecideOutcome({ state(true, 6), state(true, 4) })
+		local outcome =  RoundObject.DecideOutcome({ state(true, 6), state(true, 4) })
 		t.expect(outcome.TeamIndex).toBe(1)
 	end)
 
 	t.it("awards the lowest index when elimination ordering ties", function()
-		local outcome = RoundObject.DecideOutcome({ state(true, 5), state(true, 5) })
+		local outcome =  RoundObject.DecideOutcome({ state(true, 5), state(true, 5) })
 		t.expect(outcome.TeamIndex).toBe(1)
 	end)
 
 	t.it("is Ongoing in FFA while two of three are alive", function()
-		local outcome = RoundObject.DecideOutcome({ state(false), state(false), state(true, 1) })
+		local outcome =  RoundObject.DecideOutcome({ state(false), state(false), state(true, 1) })
 		t.expect(outcome.Status).toBe("Ongoing")
 	end)
 
 	t.it("awards the FFA survivor when only one is alive", function()
-		local outcome = RoundObject.DecideOutcome({ state(true, 1), state(false), state(true, 2) })
+		local outcome =  RoundObject.DecideOutcome({ state(true, 1), state(false), state(true, 2) })
 		t.expect(outcome.Status).toBe("Awarded")
 		t.expect(outcome.TeamIndex).toBe(2)
 	end)
 
 	t.it("stays Ongoing when all teams are eliminated with no recorded deaths", function()
-		local outcome = RoundObject.DecideOutcome({ state(true, nil), state(true, nil) })
+		local outcome =  RoundObject.DecideOutcome({ state(true, nil), state(true, nil) })
 		t.expect(outcome.Status).toBe("Ongoing")
 	end)
 end)
@@ -112,13 +112,13 @@ end)
 
 t.describe("RoundObject.BeginGame", function()
 	t.it("starts the game from PRE_GAME", function()
-		local round = RoundObject.new()
+		local round =  RoundObject.new()
 		t.expect(round:BeginGame()).toBeTruthy()
 		t.expect(round:GetState()).toBe("GAME")
 	end)
 
 	t.it("refuses to start the game from IN_BETWEEN", function()
-		local round = RoundObject.new()
+		local round =  RoundObject.new()
 		round:Transition("GAME")
 		round:Transition("IN_BETWEEN")
 		t.expect(round:BeginGame()).toBeFalsy()
@@ -140,13 +140,13 @@ t.describe("RoundObject match scoring", function()
 	end)
 
 	t.it("starts every team on zero points", function()
-		local round = RoundObject.new(2)
+		local round =  RoundObject.new(2)
 		t.expect(round:GetPoints(1)).toBe(0)
 		t.expect(round:GetPoints(2)).toBe(0)
 	end)
 
 	t.it("awards points and detects the winner at the winning score", function()
-		local round = RoundObject.new(2, 3)
+		local round =  RoundObject.new(2, 3)
 		t.expect(round:IsOver()).toBeFalsy()
 		round:AwardPoint(1)
 		round:AwardPoint(1)
@@ -157,8 +157,8 @@ t.describe("RoundObject match scoring", function()
 	end)
 
 	t.it("falls back to the default winning score for an invalid score", function()
-		local round = RoundObject.new(2, 0)
-		for _ = 1, RoundObject.DefaultWinningScore - 1 do
+		local round =  RoundObject.new(2, 0)
+		for _ =  1, RoundObject.DefaultWinningScore - 1 do
 			round:AwardPoint(2)
 		end
 		t.expect(round:GetWinner()).toBeFalsy()
@@ -167,7 +167,7 @@ t.describe("RoundObject match scoring", function()
 	end)
 
 	t.it("rejects awarding points to a team outside the range", function()
-		local round = RoundObject.new(2)
+		local round =  RoundObject.new(2)
 		t.expect(round:AwardPoint(3)).toBeFalsy()
 	end)
 end)

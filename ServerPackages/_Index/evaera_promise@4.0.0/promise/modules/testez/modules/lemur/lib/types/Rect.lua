@@ -1,23 +1,23 @@
-local assign = import("../assign")
-local typeKey = import("../typeKey")
-local typeof = import("../functions/typeof")
-local Vector2 = import("./Vector2")
+local assign =  import("../assign")
+local typeKey =  import("../typeKey")
+local typeof =  import("../functions/typeof")
+local Vector2 =  import("./Vector2")
 
-local Rect = {}
+local Rect =  {}
 
 setmetatable(Rect, {
-	__tostring = function()
+	__tostring =  function()
 		return "Rect"
 	end,
 })
 
-local prototype = {}
+local prototype =  {}
 
-local metatable = {}
-metatable[typeKey] = "Rect"
+local metatable =  {}
+metatable[typeKey] =  "Rect"
 
 function metatable:__index(key)
-	local internal = getmetatable(self).internal
+	local internal =  getmetatable(self).internal
 
 	if internal[key] ~= nil then
 		return internal[key]
@@ -31,12 +31,12 @@ function metatable:__index(key)
 end
 
 function metatable:__eq(other)
-	return self.Min == other.Min and self.Max == other.Max
+	return self.Min = = other.Min and self.Max = = other.Max
 end
 
 function Rect.new(...)
-	if select("#", ...) == 4 then
-		local minX, minY, maxX, maxY = ...
+	if select("#", ...) = = 4 then
+		local minX, minY, maxX, maxY =  ...
 		if type(minX) ~= "number" or type(minY) ~= "number" or
 			type(maxX) ~= "number" or type(maxY) ~= "number" then
 			error("Rect.new(minX, minY, maxX, maxY) takes in 4 numbers", 2)
@@ -48,22 +48,22 @@ function Rect.new(...)
 		)
 	end
 
-	local min, max = ...
+	local min, max =  ...
 
 	if typeof(min) ~= "Vector2" or typeof(max) ~= "Vector2" then
 		error("Rect.new(min, max) takes in 2 Vector2s", 2)
 	end
 
-	local internalInstance = {
-		Min = min,
-		Max = max,
-		Width = max.X - min.X,
-		Height = max.Y - min.Y,
+	local internalInstance =  {
+		Min =  min,
+		Max =  max,
+		Width =  max.X - min.X,
+		Height =  max.Y - min.Y,
 	}
-	local instance = newproxy(true)
+	local instance =  newproxy(true)
 
 	assign(getmetatable(instance), metatable)
-	getmetatable(instance).internal = internalInstance
+	getmetatable(instance).internal =  internalInstance
 
 	return instance
 end

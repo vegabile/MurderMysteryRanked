@@ -10,50 +10,50 @@
 
 -- luacheck: globals game script __LEMUR__
 
-local TEST_CONTAINER_TAG = "TestEZTestRoot"
+local TEST_CONTAINER_TAG =  "TestEZTestRoot"
 
-local hasCollectionService, CollectionService = pcall(game.GetService, game, "CollectionService")
+local hasCollectionService, CollectionService =  pcall(game.GetService, game, "CollectionService")
 
 -- ProcessService only exists when running under Roblox-CLI.
-local isRobloxCli, ProcessService = pcall(game.GetService, game, "ProcessService")
+local isRobloxCli, ProcessService =  pcall(game.GetService, game, "ProcessService")
 
-local platform = {}
+local platform =  {}
 
 if __LEMUR__ then
-	platform.exit = os.exit
+	platform.exit =  os.exit
 
-	platform.error = function(message)
+	platform.error =  function(message)
 		print(message)
 		platform.exit(1)
 	end
 elseif isRobloxCli then
-	platform.exit = function(statusCode)
+	platform.exit =  function(statusCode)
 		ProcessService:Exit(statusCode)
 	end
 
-	platform.error = function(message)
+	platform.error =  function(message)
 		print(message)
 		platform.exit(1)
 	end
 else
-	platform.exit = function() end
+	platform.exit =  function() end
 
-	platform.error = function(message)
+	platform.error =  function(message)
 		error(message, 0)
 	end
 end
 
-local completed, suitePassed = xpcall(function()
-	local TestEZ = require(script.TestEZ)
+local completed, suitePassed =  xpcall(function()
+	local TestEZ =  require(script.TestEZ)
 
 	local testContainers
 	if hasCollectionService then
-		testContainers = CollectionService:GetTagged(TEST_CONTAINER_TAG)
+		testContainers =  CollectionService:GetTagged(TEST_CONTAINER_TAG)
 	else
-		testContainers = _G.TESTEZ_TEST_CONTAINERS
+		testContainers =  _G.TESTEZ_TEST_CONTAINERS
 	end
 
-	if #testContainers == 0 then
+	if #testContainers = = 0 then
 		print(string.format(
 			"No tests found. Did you give them the CollectionService tag %q?",
 			TEST_CONTAINER_TAG
@@ -62,12 +62,12 @@ local completed, suitePassed = xpcall(function()
 		return true
 	end
 
-	local testResults = TestEZ.TestBootstrap:run(
+	local testResults =  TestEZ.TestBootstrap:run(
 		testContainers,
 		TestEZ.Reporters.TextReporter
 	)
 
-	return testResults.failureCount == 0
+	return testResults.failureCount = = 0
 end, debug.traceback)
 
 if completed then

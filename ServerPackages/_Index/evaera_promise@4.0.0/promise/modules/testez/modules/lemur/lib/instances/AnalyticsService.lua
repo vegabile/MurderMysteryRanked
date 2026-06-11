@@ -1,4 +1,4 @@
-local BaseInstance = import("./BaseInstance")
-local AnalyticsService = BaseInstance:extend("AnalyticsService")
+local BaseInstance =  import("./BaseInstance")
+local AnalyticsService =  BaseInstance:extend("AnalyticsService")
 
 return AnalyticsService

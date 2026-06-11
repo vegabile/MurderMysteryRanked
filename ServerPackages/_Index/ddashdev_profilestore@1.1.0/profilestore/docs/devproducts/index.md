@@ -12,15 +12,15 @@ observations on how [Roblox MarketplaceService API](https://create.roblox.com/do
 *(This is a Roblox official code example with alterations integrating ProfileStore)*
 
 ``` luau
-local Profiles: {[player]: typeof(PlayerStore:StartSessionAsync())} = {} -- See Tutorial > Basic Usage
+local Profiles: {[player]: typeof(PlayerStore:StartSessionAsync())} =  {} -- See Tutorial > Basic Usage
 
-local MarketplaceService = game:GetService("MarketplaceService")
-local Players = game:GetService("Players")
+local MarketplaceService =  game:GetService("MarketplaceService")
+local Players =  game:GetService("Players")
 
-local productFunctions = {}
+local productFunctions =  {}
 
 -- Example: product ID 456456 awards 100 cash to the user
-productFunctions[456456] = function(receipt, player, profile)
+productFunctions[456456] =  function(receipt, player, profile)
     profile.Data.Cash += 100
     -- We made changes to the player profile - perform an instant
     -- save to secure a player purchase against server crashes:
@@ -28,38 +28,38 @@ productFunctions[456456] = function(receipt, player, profile)
 end
 
 -- Example: product ID 123123 brings the user back to full health
-productFunctions[123123] = function(receipt, player, profile)
-	local character = player.Character
-	local humanoid = character and character:FindFirstChildWhichIsA("Humanoid")
+productFunctions[123123] =  function(receipt, player, profile)
+	local character =  player.Character
+	local humanoid =  character and character:FindFirstChildWhichIsA("Humanoid")
 
 	if humanoid then
-		humanoid.Health = humanoid.MaxHealth
+		humanoid.Health =  humanoid.MaxHealth
 		-- Indicates a successful purchase
 		return true
 	end
 end
 
 local function processReceipt(receiptInfo)
-	local userId = receiptInfo.PlayerId
-	local productId = receiptInfo.ProductId
+	local userId =  receiptInfo.PlayerId
+	local productId =  receiptInfo.ProductId
 
-	local player = Players:GetPlayerByUserId(userId)
+	local player =  Players:GetPlayerByUserId(userId)
 	if player then
 
-        local profile = Profiles[player]
+        local profile =  Profiles[player]
 
-        while profile == nil and player.Parent == Players do
-            profile = Profiles[player]
+        while profile = = nil and player.Parent = = Players do
+            profile =  Profiles[player]
             if profile ~= nil then
                 break
             end
             task.wait()
         end
 
-        if profile ~= nil and profile:IsActive() == true then
+        if profile ~= nil and profile:IsActive() = = true then
             -- Gets the handler function associated with the developer product ID and attempts to run it
-            local handler = productFunctions[productId]
-            local success, result = pcall(handler, receiptInfo, player, profile)
+            local handler =  productFunctions[productId]
+            local success, result =  pcall(handler, receiptInfo, player, profile)
             if success then
                 -- The user has received their items
                 -- Returns "PurchaseGranted" to confirm the transaction
@@ -78,7 +78,7 @@ end
 
 -- Sets the callback
 -- This can only be done once by one server-side script
-MarketplaceService.ProcessReceipt = processReceipt
+MarketplaceService.ProcessReceipt =  processReceipt
 
 ```
 
@@ -110,16 +110,16 @@ for the `MarketplaceService.ProcessReceipt` callback.
 This is how you could do it:
 
 ``` luau
-local Profiles: {[player]: typeof(PlayerStore:StartSessionAsync())} = {} -- See Tutorial > Basic Usage
+local Profiles: {[player]: typeof(PlayerStore:StartSessionAsync())} =  {} -- See Tutorial > Basic Usage
 
-local PURCHASE_ID_CACHE_SIZE = 100
+local PURCHASE_ID_CACHE_SIZE =  100
 
-local MarketplaceService = game:GetService("MarketplaceService")
-local Players = game:GetService("Players")
+local MarketplaceService =  game:GetService("MarketplaceService")
+local Players =  game:GetService("Players")
 
-local ProductFunctions = {}
+local ProductFunctions =  {}
 
-ProductFunctions[456456] = function(receipt, player, profile)
+ProductFunctions[456456] =  function(receipt, player, profile)
     profile.Data.Cash += 100
     -- No Profile:Save() is needed in here compared to the previous example
 end
@@ -127,20 +127,20 @@ end
 function PurchaseIdCheckAsync(profile, purchase_id, grant_product): Enum.ProductPurchaseDecision
     -- Waits until purchase_id is confirmed to be saved to the DataStore or the profile session has ended
 
-    if profile:IsActive() == true then
+    if profile:IsActive() = = true then
 
-        local purchase_id_cache = profile.Data.PurchaseIdCache
+        local purchase_id_cache =  profile.Data.PurchaseIdCache
 
-        if purchase_id_cache == nil then
-            purchase_id_cache = {}
-            profile.Data.PurchaseIdCache = purchase_id_cache
+        if purchase_id_cache = = nil then
+            purchase_id_cache =  {}
+            profile.Data.PurchaseIdCache =  purchase_id_cache
         end
 
         -- Granting product if not received:
 
-        if table.find(purchase_id_cache, purchase_id) == nil then
+        if table.find(purchase_id_cache, purchase_id) = = nil then
 
-            local success, result = pcall(grant_product)
+            local success, result =  pcall(grant_product)
             if success ~= true then
                 warn(`Failed to process receipt:`, profile.Key, purchase_id, result)
                 return Enum.ProductPurchaseDecision.NotProcessedYet
@@ -157,29 +157,29 @@ function PurchaseIdCheckAsync(profile, purchase_id, grant_product): Enum.Product
         -- Waiting until the purchase is confirmed to be saved to the DataStore:
 
         local function is_purchase_saved()
-            local saved_cache = profile.LastSavedData.PurchaseIdCache
+            local saved_cache =  profile.LastSavedData.PurchaseIdCache
             return if saved_cache ~= nil then table.find(saved_cache, purchase_id) ~= nil else false
         end
 
-        if is_purchase_saved() == true then
+        if is_purchase_saved() = = true then
             return Enum.ProductPurchaseDecision.PurchaseGranted
         end
 
-        while profile:IsActive() == true do
+        while profile:IsActive() = = true do
 
-            local last_saved_data = profile.LastSavedData
+            local last_saved_data =  profile.LastSavedData
 
             profile:Save()
 
-            if profile.LastSavedData == last_saved_data then
+            if profile.LastSavedData = = last_saved_data then
                 profile.OnAfterSave:Wait()
             end
 
-            if is_purchase_saved() == true then
+            if is_purchase_saved() = = true then
                 return Enum.ProductPurchaseDecision.PurchaseGranted
             end
 
-            if profile:IsActive() == true then
+            if profile:IsActive() = = true then
                 task.wait(10)
             end
 
@@ -193,14 +193,14 @@ end
 
 local function ProcessReceipt(receipt_info)
 
-    local player = Players:GetPlayerByUserId(receipt_info.PlayerId)
+    local player =  Players:GetPlayerByUserId(receipt_info.PlayerId)
 
     if player ~= nil then
 
-        local profile = Profiles[player]
+        local profile =  Profiles[player]
 
-        while profile == nil and player.Parent == Players do
-            profile = Profiles[player]
+        while profile = = nil and player.Parent = = Players do
+            profile =  Profiles[player]
             if profile ~= nil then
                 break
             end
@@ -209,7 +209,7 @@ local function ProcessReceipt(receipt_info)
 
         if profile ~= nil then
 
-            if ProductFunctions[receipt_info.ProductId] == nil then
+            if ProductFunctions[receipt_info.ProductId] = = nil then
                 warn(`No product function defined for ProductId {receipt_info.ProductId}; Player: {player.Name}`)
                 return Enum.ProductPurchaseDecision.NotProcessedYet
             end
@@ -230,6 +230,6 @@ local function ProcessReceipt(receipt_info)
 
 end
 
-MarketplaceService.ProcessReceipt = ProcessReceipt
+MarketplaceService.ProcessReceipt =  ProcessReceipt
 
 ```

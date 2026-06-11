@@ -3,12 +3,12 @@
 return function()
 	describe("setting context here", function()
 		beforeAll(function(context)
-			context.a = 1
+			context.a =  1
 		end)
 
 		describe("should apply here", function()
 			beforeAll(function(context)
-				context.b = context.a + 1
+				context.b =  context.a + 1
 			end)
 
 			it("should see a and b", function(context)

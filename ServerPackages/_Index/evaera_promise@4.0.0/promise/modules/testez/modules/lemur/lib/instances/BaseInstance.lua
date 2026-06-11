@@ -7,68 +7,68 @@
 	* init, called by the class's constructor
 ]]
 
-local assign = import("../assign")
-local InstanceProperty = import("../InstanceProperty")
-local Signal = import("../Signal")
-local typeKey = import("../typeKey")
+local assign =  import("../assign")
+local InstanceProperty =  import("../InstanceProperty")
+local Signal =  import("../Signal")
+local typeKey =  import("../typeKey")
 
 local function isInstance(value)
-	local metatable = getmetatable(value)
+	local metatable =  getmetatable(value)
 
 	return metatable and metatable.instance ~= nil
 end
 
-local BaseInstance = {}
+local BaseInstance =  {}
 
-BaseInstance.options = {
-	creatable = false,
+BaseInstance.options =  {
+	creatable =  false,
 }
 
-BaseInstance.name = "Instance"
+BaseInstance.name =  "Instance"
 
-BaseInstance.properties = {}
+BaseInstance.properties =  {}
 
-BaseInstance.properties.Name = InstanceProperty.normal({
-	getDefault = function(self)
+BaseInstance.properties.Name =  InstanceProperty.normal({
+	getDefault =  function(self)
 		return getmetatable(self).class.name
 	end,
 })
 
-BaseInstance.properties.ClassName = InstanceProperty.readOnly({
-	getDefault = function(self)
+BaseInstance.properties.ClassName =  InstanceProperty.readOnly({
+	getDefault =  function(self)
 		return getmetatable(self).class.name
 	end,
 })
 
-BaseInstance.properties.AncestryChanged = InstanceProperty.readOnly({
-	getDefault = function()
+BaseInstance.properties.AncestryChanged =  InstanceProperty.readOnly({
+	getDefault =  function()
 		return Signal.new()
 	end,
 })
 
-BaseInstance.properties.Changed = InstanceProperty.readOnly({
-	getDefault = function()
+BaseInstance.properties.Changed =  InstanceProperty.readOnly({
+	getDefault =  function()
 		return Signal.new()
 	end,
 })
 
-BaseInstance.properties.ChildAdded = InstanceProperty.readOnly({
-	getDefault = Signal.new
+BaseInstance.properties.ChildAdded =  InstanceProperty.readOnly({
+	getDefault =  Signal.new
 })
 
-BaseInstance.properties.ChildRemoved = InstanceProperty.readOnly({
-	getDefault = Signal.new
+BaseInstance.properties.ChildRemoved =  InstanceProperty.readOnly({
+	getDefault =  Signal.new
 })
 
-BaseInstance.properties.Parent = InstanceProperty.normal({
-	set = function(self, key, value)
-		local instance = getmetatable(self).instance
+BaseInstance.properties.Parent =  InstanceProperty.normal({
+	set =  function(self, key, value)
+		local instance =  getmetatable(self).instance
 
 		if instance.destroyed then
 			error("Attempt to set parent after being destroyed!")
 		end
 
-		if instance.properties.Parent == value then
+		if instance.properties.Parent = = value then
 			return
 		end
 
@@ -77,14 +77,14 @@ BaseInstance.properties.Parent = InstanceProperty.normal({
 		end
 
 		if instance.properties.Parent ~= nil then
-			getmetatable(instance.properties.Parent).instance.children[self] = nil
+			getmetatable(instance.properties.Parent).instance.children[self] =  nil
 			instance.properties.Parent.ChildRemoved:Fire(self)
 		end
 
-		instance.properties.Parent = value
+		instance.properties.Parent =  value
 
 		if value ~= nil then
-			getmetatable(value).instance.children[self] = true
+			getmetatable(value).instance.children[self] =  true
 			value.ChildAdded:Fire(self)
 		end
 
@@ -92,10 +92,10 @@ BaseInstance.properties.Parent = InstanceProperty.normal({
 	end,
 })
 
-BaseInstance.prototype = {}
+BaseInstance.prototype =  {}
 
 function BaseInstance.prototype:ClearAllChildren()
-	local children = getmetatable(self).instance.children
+	local children =  getmetatable(self).instance.children
 
 	for child in pairs(children) do
 		child:Destroy()
@@ -103,48 +103,48 @@ function BaseInstance.prototype:ClearAllChildren()
 end
 
 function BaseInstance.prototype:FindFirstAncestor(name)
-	local level = self.Parent
+	local level =  self.Parent
 
 	while level do
-		if level.Name == name then
+		if level.Name = = name then
 			return level
 		end
 
-		level = level.Parent
+		level =  level.Parent
 	end
 end
 
 function BaseInstance.prototype:FindFirstAncestorOfClass(name)
-	local level = self.Parent
+	local level =  self.Parent
 
 	while level do
-		if level.ClassName == name then
+		if level.ClassName = = name then
 			return level
 		end
 
-		level = level.Parent
+		level =  level.Parent
 	end
 end
 
 function BaseInstance.prototype:FindFirstAncestorWhichIsA(className)
-	local level = self.Parent
+	local level =  self.Parent
 
 	while level do
 		if level:IsA(className) then
 			return level
 		end
 
-		level = level.Parent
+		level =  level.Parent
 	end
 end
 
 function BaseInstance.prototype:FindFirstChild(name)
-	local children = getmetatable(self).instance.children
+	local children =  getmetatable(self).instance.children
 
 	-- Search for existing children
 	-- This is a set stored by child instead of by name, since names are not unique.
 	for child in pairs(children) do
-		if child.Name == name then
+		if child.Name = = name then
 			return child
 		end
 	end
@@ -153,12 +153,12 @@ function BaseInstance.prototype:FindFirstChild(name)
 end
 
 function BaseInstance.prototype:FindFirstChildOfClass(className)
-	local children = getmetatable(self).instance.children
+	local children =  getmetatable(self).instance.children
 
 	-- Search for existing children
 	-- This is a set stored by child instead of by name, since names are not unique.
 	for child in pairs(children) do
-		if child.ClassName == className then
+		if child.ClassName = = className then
 			return child
 		end
 	end
@@ -167,7 +167,7 @@ function BaseInstance.prototype:FindFirstChildOfClass(className)
 end
 
 function BaseInstance.prototype:FindFirstChildWhichIsA(className)
-	local children = getmetatable(self).instance.children
+	local children =  getmetatable(self).instance.children
 
 	-- Search for existing children
 	-- This is a set stored by child instead of by name, since names are not unique.
@@ -181,8 +181,8 @@ function BaseInstance.prototype:FindFirstChildWhichIsA(className)
 end
 
 function BaseInstance.prototype:GetChildren()
-	local children = getmetatable(self).instance.children
-	local result = {}
+	local children =  getmetatable(self).instance.children
+	local result =  {}
 
 	for child in pairs(children) do
 		table.insert(result, child)
@@ -192,84 +192,84 @@ function BaseInstance.prototype:GetChildren()
 end
 
 function BaseInstance.prototype:GetDescendants()
-	local stack = {}
-	local descendants = {}
-	local current = self
+	local stack =  {}
+	local descendants =  {}
+	local current =  self
 
 	while current do
-		local children = current:GetChildren()
+		local children =  current:GetChildren()
 
 		for _, child in pairs(children) do
-			descendants[#descendants + 1] = child
-			stack[#stack + 1] = child
+			descendants[#descendants + 1] =  child
+			stack[#stack + 1] =  child
 		end
 
-		current = stack[#stack]
-		stack[#stack] = nil
+		current =  stack[#stack]
+		stack[#stack] =  nil
 	end
 
 	return descendants
 end
 
 function BaseInstance.prototype:IsA(className)
-	local currentClass = getmetatable(self).class
+	local currentClass =  getmetatable(self).class
 
 	while currentClass ~= nil do
-		if currentClass.name == className then
+		if currentClass.name = = className then
 			return true
 		end
 
-		currentClass = currentClass.super
+		currentClass =  currentClass.super
 	end
 
 	return false
 end
 
 function BaseInstance.prototype:IsDescendantOf(object)
-	local parent = self
+	local parent =  self
 
 	repeat
-		parent = parent.Parent
-	until parent == nil or parent == object
+		parent =  parent.Parent
+	until parent = = nil or parent = = object
 
-	return parent == object
+	return parent = = object
 end
 
 function BaseInstance.prototype:Destroy()
 	self:ClearAllChildren()
 
 	if self.Parent ~= nil then
-		self.Parent = nil
+		self.Parent =  nil
 	end
 
 	self:_DisconnectAllChangedListeners()
 
-	getmetatable(self).instance.destroyed = true
+	getmetatable(self).instance.destroyed =  true
 end
 
 function BaseInstance.prototype:GetPropertyChangedSignal(key)
-	local properties = getmetatable(self).class.properties
-	local propertySignals = getmetatable(self).instance.propertySignals
+	local properties =  getmetatable(self).class.properties
+	local propertySignals =  getmetatable(self).instance.propertySignals
 
-	local listener = propertySignals[key]
+	local listener =  propertySignals[key]
 
 	if not listener then
 		assert(properties[key], key .. " is not a valid property name.")
 
-		listener = Signal.new()
-		propertySignals[key] = listener
+		listener =  Signal.new()
+		propertySignals[key] =  listener
 	end
 
 	return listener
 end
 
 function BaseInstance.prototype:GetFullName()
-	local name = self.Name
-	local level = self.Parent
+	local name =  self.Name
+	local level =  self.Parent
 
 	while level and getmetatable(level).class.name ~= "DataModel" do
-		name = level.Name .. "." .. name
-		level = level.Parent
+		name =  level.Name .. "." .. name
+		level =  level.Parent
 	end
 
 	return name
@@ -280,7 +280,7 @@ function BaseInstance.prototype:WaitForChild(name, delay)
 end
 
 function BaseInstance.prototype:_DisconnectAllChangedListeners()
-	local propertySignals = getmetatable(self).instance.propertySignals
+	local propertySignals =  getmetatable(self).instance.propertySignals
 
 	for _, signal in pairs(propertySignals) do
 		signal:_DisconnectAllListeners()
@@ -292,18 +292,18 @@ end
 function BaseInstance.prototype:_PropagateAncestryChanged(instance, parent)
 	self.AncestryChanged:Fire(instance, parent)
 
-	local children = getmetatable(self).instance.children
+	local children =  getmetatable(self).instance.children
 
 	for child in pairs(children) do
 		child:_PropagateAncestryChanged(instance, parent)
 	end
 end
 
-BaseInstance.metatable = {}
-BaseInstance.metatable[typeKey] = "Instance"
+BaseInstance.metatable =  {}
+BaseInstance.metatable[typeKey] =  "Instance"
 
 function BaseInstance.metatable.__index(self, key)
-	local class = getmetatable(self).class
+	local class =  getmetatable(self).class
 
 	if class.properties[key] then
 		return class.properties[key].get(self, key)
@@ -313,7 +313,7 @@ function BaseInstance.metatable.__index(self, key)
 		return class.prototype[key]
 	end
 
-	local object = self:FindFirstChild(key)
+	local object =  self:FindFirstChild(key)
 	if object then
 		return object
 	end
@@ -322,14 +322,14 @@ function BaseInstance.metatable.__index(self, key)
 end
 
 function BaseInstance.metatable.__newindex(self, key, value)
-	local class = getmetatable(self).class
+	local class =  getmetatable(self).class
 
 	if class.properties[key] then
 		class.properties[key].set(self, key, value)
 
 		self.Changed:Fire(key)
 
-		local propertyChangedSignal = getmetatable(self).instance.propertySignals[key]
+		local propertyChangedSignal =  getmetatable(self).instance.propertySignals[key]
 
 		if propertyChangedSignal then
 			propertyChangedSignal:Fire()
@@ -346,22 +346,22 @@ function BaseInstance.metatable:__tostring()
 end
 
 function BaseInstance:new(...)
-	local internalInstance = {
-		destroyed = false,
-		properties = {},
-		propertySignals = {},
-		children = {},
+	local internalInstance =  {
+		destroyed =  false,
+		properties =  {},
+		propertySignals =  {},
+		children =  {},
 	}
 
-	local instance = newproxy(true)
+	local instance =  newproxy(true)
 
 	-- Because userdata have a fixed metatable, merge values onto it.
 	assign(getmetatable(instance), self.metatable)
-	getmetatable(instance).instance = internalInstance
-	getmetatable(instance).class = self
+	getmetatable(instance).instance =  internalInstance
+	getmetatable(instance).class =  self
 
 	for key, property in pairs(self.properties) do
-		internalInstance.properties[key] = property.getDefault(instance)
+		internalInstance.properties[key] =  property.getDefault(instance)
 	end
 
 	self:init(instance, ...)
@@ -376,18 +376,18 @@ end
 	Create a new instance class with the given name.
 ]]
 function BaseInstance:extend(name, options)
-	assert(type(name) == "string", "Expected string 'name' as argument #1.")
-	assert(type(options) == "table" or options == nil, "Expected optional table 'options' as argument #2.")
+	assert(type(name) = = "string", "Expected string 'name' as argument #1.")
+	assert(type(options) = = "table" or options = = nil, "Expected optional table 'options' as argument #2.")
 
-	local newClass = assign({}, self)
+	local newClass =  assign({}, self)
 
-	newClass.name = name
-	newClass.super = self
+	newClass.name =  name
+	newClass.super =  self
 
-	newClass.properties = assign({}, self.properties)
-	newClass.prototype = assign({}, self.prototype)
-	newClass.metatable = assign({}, self.metatable)
-	newClass.options = assign({}, self.options, options or {})
+	newClass.properties =  assign({}, self.properties)
+	newClass.prototype =  assign({}, self.prototype)
+	newClass.metatable =  assign({}, self.metatable)
+	newClass.options =  assign({}, self.options, options or {})
 
 	return newClass
 end

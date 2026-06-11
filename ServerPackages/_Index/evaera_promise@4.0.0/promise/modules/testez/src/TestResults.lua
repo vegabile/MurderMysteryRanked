@@ -7,29 +7,29 @@
 	TestResults objects are produced by TestRunner using TestSession as state.
 ]]
 
-local TestEnum = require(script.Parent.TestEnum)
+local TestEnum =  require(script.Parent.TestEnum)
 
-local STATUS_SYMBOLS = {
-	[TestEnum.TestStatus.Success] = "+",
-	[TestEnum.TestStatus.Failure] = "-",
-	[TestEnum.TestStatus.Skipped] = "~"
+local STATUS_SYMBOLS =  {
+	[TestEnum.TestStatus.Success] =  "+",
+	[TestEnum.TestStatus.Failure] =  "-",
+	[TestEnum.TestStatus.Skipped] =  "~"
 }
 
-local TestResults = {}
+local TestResults =  {}
 
-TestResults.__index = TestResults
+TestResults.__index =  TestResults
 
 --[[
 	Create a new TestResults tree that's linked to the given TestPlan.
 ]]
 function TestResults.new(plan)
-	local self = {
-		successCount = 0,
-		failureCount = 0,
-		skippedCount = 0,
-		planNode = plan,
-		children = {},
-		errors = {}
+	local self =  {
+		successCount =  0,
+		failureCount =  0,
+		skippedCount =  0,
+		planNode =  plan,
+		children =  {},
+		errors =  {}
 	}
 
 	setmetatable(self, TestResults)
@@ -41,11 +41,11 @@ end
 	Create a new result node that can be inserted into a TestResult tree.
 ]]
 function TestResults.createNode(planNode)
-	local node = {
-		planNode = planNode,
-		children = {},
-		errors = {},
-		status = nil
+	local node =  {
+		planNode =  planNode,
+		children =  {},
+		errors =  {},
+		status =  nil
 	}
 
 	return node
@@ -55,7 +55,7 @@ end
 	Visit all test result nodes, depth-first.
 ]]
 function TestResults:visitAllNodes(callback, root)
-	root = root or self
+	root =  root or self
 
 	for _, child in ipairs(root.children) do
 		callback(child)
@@ -68,39 +68,39 @@ end
 	Creates a debug visualization of the test results.
 ]]
 function TestResults:visualize(root, level)
-	root = root or self
-	level = level or 0
+	root =  root or self
+	level =  level or 0
 
-	local buffer = {}
+	local buffer =  {}
 
 	for _, child in ipairs(root.children) do
-		if child.planNode.type == TestEnum.NodeType.It then
-			local symbol = STATUS_SYMBOLS[child.status] or "?"
-			local str = ("%s[%s] %s"):format(
+		if child.planNode.type = = TestEnum.NodeType.It then
+			local symbol =  STATUS_SYMBOLS[child.status] or "?"
+			local str =  ("%s[%s] %s"):format(
 				(" "):rep(3 * level),
 				symbol,
 				child.planNode.phrase
 			)
 
 			if child.messages and #child.messages > 0 then
-				str = str .. "\n " .. (" "):rep(3 * level) .. table.concat(child.messages, "\n " .. (" "):rep(3 * level))
+				str =  str .. "\n " .. (" "):rep(3 * level) .. table.concat(child.messages, "\n " .. (" "):rep(3 * level))
 			end
 
 			table.insert(buffer, str)
 		else
-			local str = ("%s%s"):format(
+			local str =  ("%s%s"):format(
 				(" "):rep(3 * level),
 				child.planNode.phrase or ""
 			)
 
 			if child.status then
-				str = str .. (" (%s)"):format(child.status)
+				str =  str .. (" (%s)"):format(child.status)
 			end
 
 			table.insert(buffer, str)
 
 			if #child.children > 0 then
-				local text = self:visualize(child, level + 1)
+				local text =  self:visualize(child, level + 1)
 				table.insert(buffer, text)
 			end
 		end

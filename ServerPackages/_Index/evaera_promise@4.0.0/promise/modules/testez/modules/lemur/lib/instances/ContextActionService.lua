@@ -1,6 +1,6 @@
-local BaseInstance = import("./BaseInstance")
-local validateType = import("../validateType")
-local ContextActionService = BaseInstance:extend("ContextActionService")
+local BaseInstance =  import("./BaseInstance")
+local validateType =  import("../validateType")
+local ContextActionService =  BaseInstance:extend("ContextActionService")
 
 --[[
 	These action binding and unbinding functions mimic Roblox's validation

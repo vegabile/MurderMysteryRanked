@@ -1,5 +1,5 @@
-local typeKey = import("./typeKey")
-local typeof = import("./functions/typeof")
+local typeKey =  import("./typeKey")
+local typeof =  import("./functions/typeof")
 
 local function createEnumGroup(enums)
 	for enumName, enum in pairs(enums) do
@@ -8,18 +8,18 @@ local function createEnumGroup(enums)
 		end
 	end
 
-	local enumGroup = newproxy(true)
+	local enumGroup =  newproxy(true)
 
-	getmetatable(enumGroup)[typeKey] = "Enums"
+	getmetatable(enumGroup)[typeKey] =  "Enums"
 
-	getmetatable(enumGroup).__tostring = function()
+	getmetatable(enumGroup).__tostring =  function()
 		return "Enums"
 	end
 
-	getmetatable(enumGroup).__index = function(self, key)
-		local enum = enums[key]
+	getmetatable(enumGroup).__index =  function(self, key)
+		local enum =  enums[key]
 
-		if enum == nil then
+		if enum = = nil then
 			-- Roblox mistakenly says that we tried to access an EnumItem; this
 			-- message is corrected.
 			error(("%s is not a valid Enum"):format(tostring(key)), 2)

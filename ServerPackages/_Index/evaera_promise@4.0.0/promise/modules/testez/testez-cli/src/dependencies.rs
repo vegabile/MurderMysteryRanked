@@ -20,14 +20,14 @@ pub enum DependencyStyle {
 
 impl DependencyStyle {
     pub fn detect<P: AsRef<Path>>(project_path: P) -> io::Result<DependencyStyle> {
-        let project_path = project_path.as_ref();
+        let project_path =  project_path.as_ref();
 
-        let packages_path = project_path.join("Packages");
+        let packages_path =  project_path.join("Packages");
         if packages_path.is_dir() {
             return Ok(DependencyStyle::Rotriever);
         }
 
-        let modules_path = project_path.join("modules");
+        let modules_path =  project_path.join("modules");
         if modules_path.is_dir() {
             return Ok(DependencyStyle::GitSubmodules);
         }

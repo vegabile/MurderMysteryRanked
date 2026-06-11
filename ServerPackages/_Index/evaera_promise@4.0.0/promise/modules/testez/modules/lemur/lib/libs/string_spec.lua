@@ -1,4 +1,4 @@
-local string = import("./string")
+local string =  import("./string")
 
 describe("libs.string", function()
 	describe("split", function()
@@ -63,8 +63,8 @@ describe("libs.string", function()
 
 		it("should match Roblox's internal tests", function()
 			-- Provided by tiffany352 at https://github.com/LPGhatguy/lemur/pull/190
-			local char = string.char
-			local ZWJ = char(0xe2, 0x80, 0x8d)
+			local char =  string.char
+			local ZWJ =  char(0xe2, 0x80, 0x8d)
 			assert.are.same({ "" }, string.split("", ","))
 			assert.are.same({ "foo", "", "bar" }, string.split("foo,,bar", ","))
 			assert.are.same({ "", "foo" }, string.split(",foo", ","))

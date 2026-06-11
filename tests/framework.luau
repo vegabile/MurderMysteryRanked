@@ -1,12 +1,12 @@
-local framework = {}
+local framework =  {}
 
-type TestEntry = {
+type TestEntry =  {
 	name: string,
 	fn: () -> (),
 }
 
-local tests: { TestEntry } = {}
-local stack: { string } = {}
+local tests: { TestEntry } =  {}
+local stack: { string } =  {}
 
 local function describe(name: string, body: () -> ())
 	table.insert(stack, name)
@@ -15,24 +15,24 @@ local function describe(name: string, body: () -> ())
 end
 
 local function it(name: string, body: () -> ())
-	local prefix = if #stack > 0 then table.concat(stack, " > ") .. " > " else ""
-	table.insert(tests, { name = prefix .. name, fn = body })
+	local prefix =  if #stack > 0 then table.concat(stack, " > ") .. " > " else ""
+	table.insert(tests, { name =  prefix .. name, fn =  body })
 end
 
 local function isFiniteNumber(value: any): boolean
-	return type(value) == "number" and value == value and value ~= math.huge and value ~= -math.huge
+	return type(value) = = "number" and value = = value and value ~= math.huge and value ~= -math.huge
 end
 
 local function expect(value: any)
-	local matcher = {}
+	local matcher =  {}
 
-	matcher.toBe = function(expected)
+	matcher.toBe =  function(expected)
 		if value ~= expected then
 			error(string.format("expected %s to be %s", tostring(value), tostring(expected)), 0)
 		end
 	end
 
-	matcher.toBeCloseTo = function(expected, tolerance)
+	matcher.toBeCloseTo =  function(expected, tolerance)
 		if not isFiniteNumber(value) then
 			error(string.format("expected a finite number near %s, got %s", tostring(expected), tostring(value)), 0)
 		end
@@ -49,37 +49,37 @@ local function expect(value: any)
 		end
 	end
 
-	matcher.toBeGreaterThan = function(other)
+	matcher.toBeGreaterThan =  function(other)
 		if not (value > other) then
 			error(string.format("expected %s to be greater than %s", tostring(value), tostring(other)), 0)
 		end
 	end
 
-	matcher.toBeLessThan = function(other)
+	matcher.toBeLessThan =  function(other)
 		if not (value < other) then
 			error(string.format("expected %s to be less than %s", tostring(value), tostring(other)), 0)
 		end
 	end
 
-	matcher.toBeGreaterThanOrEqual = function(other)
+	matcher.toBeGreaterThanOrEqual =  function(other)
 		if not (value >= other) then
 			error(string.format("expected %s to be greater than or equal to %s", tostring(value), tostring(other)), 0)
 		end
 	end
 
-	matcher.toBeLessThanOrEqual = function(other)
+	matcher.toBeLessThanOrEqual =  function(other)
 		if not (value <= other) then
 			error(string.format("expected %s to be less than or equal to %s", tostring(value), tostring(other)), 0)
 		end
 	end
 
-	matcher.toBeTruthy = function()
+	matcher.toBeTruthy =  function()
 		if not value then
 			error(string.format("expected %s to be truthy", tostring(value)), 0)
 		end
 	end
 
-	matcher.toBeFalsy = function()
+	matcher.toBeFalsy =  function()
 		if value then
 			error(string.format("expected %s to be falsy", tostring(value)), 0)
 		end
@@ -89,10 +89,10 @@ local function expect(value: any)
 end
 
 local function run(): boolean
-	local passed = 0
-	local failed = 0
+	local passed =  0
+	local failed =  0
 	for _, entry in ipairs(tests) do
-		local ok, err = pcall(entry.fn)
+		local ok, err =  pcall(entry.fn)
 		if ok then
 			passed += 1
 			print(string.format("PASS  %s", entry.name))
@@ -103,12 +103,12 @@ local function run(): boolean
 		end
 	end
 	print(string.format("%d passed, %d failed, %d total", passed, failed, #tests))
-	return failed == 0
+	return failed = = 0
 end
 
-framework.describe = describe
-framework.it = it
-framework.expect = expect
-framework.run = run
+framework.describe =  describe
+framework.it =  it
+framework.expect =  expect
+framework.run =  run
 
 return framework

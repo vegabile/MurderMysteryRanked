@@ -1,21 +1,21 @@
-local assign = import("../../assign")
-local typeKey = import("../../typeKey")
+local assign =  import("../../assign")
+local typeKey =  import("../../typeKey")
 
-local RenderSettings = {}
+local RenderSettings =  {}
 
 setmetatable(RenderSettings, {
-	__tostring = function()
+	__tostring =  function()
 		return "RenderSettings"
 	end,
 })
 
-local prototype = {}
+local prototype =  {}
 
-local metatable = {}
-metatable[typeKey] = "RenderSettings"
+local metatable =  {}
+metatable[typeKey] =  "RenderSettings"
 
 function metatable:__index(key)
-	local internal = getmetatable(self).internal
+	local internal =  getmetatable(self).internal
 
 	if internal[key] ~= nil then
 		return internal[key]
@@ -29,10 +29,10 @@ function metatable:__index(key)
 end
 
 function metatable:__newindex(key, value)
-	local internal = getmetatable(self).internal
+	local internal =  getmetatable(self).internal
 
 	if internal[key] ~= nil then
-		internal[key] = value
+		internal[key] =  value
 		return
 	end
 
@@ -41,14 +41,14 @@ end
 
 
 function RenderSettings.new()
-	local internalInstance = {
-		QualityLevel = 0,
+	local internalInstance =  {
+		QualityLevel =  0,
 	}
 
-	local instance = newproxy(true)
+	local instance =  newproxy(true)
 
 	assign(getmetatable(instance), metatable)
-	getmetatable(instance).internal = internalInstance
+	getmetatable(instance).internal =  internalInstance
 
 	return instance
 end

@@ -5,11 +5,11 @@
 	TestPlan objects are produced by TestPlanner.
 ]]
 
-local TestEnum = require(script.Parent.TestEnum)
-local Expectation = require(script.Parent.Expectation)
+local TestEnum =  require(script.Parent.TestEnum)
+local Expectation =  require(script.Parent.Expectation)
 
 local function newEnvironment(currentNode, extraEnvironment)
-	local env = {}
+	local env =  {}
 
 	if extraEnvironment then
 		if type(extraEnvironment) ~= "table" then
@@ -18,14 +18,14 @@ local function newEnvironment(currentNode, extraEnvironment)
 		end
 
 		for key, value in pairs(extraEnvironment) do
-			env[key] = value
+			env[key] =  value
 		end
 	end
 
 	local function addChild(phrase, callback, nodeType, nodeModifier)
-		local node = currentNode:addChild(phrase, nodeType, nodeModifier)
-		node.callback = callback
-		if nodeType == TestEnum.NodeType.Describe then
+		local node =  currentNode:addChild(phrase, nodeType, nodeModifier)
+		node.callback =  callback
+		if nodeType = = TestEnum.NodeType.Describe then
 			node:expand()
 		end
 		return node
@@ -52,7 +52,7 @@ local function newEnvironment(currentNode, extraEnvironment)
 	end
 
 	function env.itFIXME(phrase, callback)
-		local node = addChild(phrase, callback, TestEnum.NodeType.It, TestEnum.NodeModifier.Skip)
+		local node =  addChild(phrase, callback, TestEnum.NodeType.It, TestEnum.NodeModifier.Skip)
 		warn("FIXME: broken test", node:getFullName())
 	end
 
@@ -61,34 +61,34 @@ local function newEnvironment(currentNode, extraEnvironment)
 	end
 
 	-- Incrementing counter used to ensure that beforeAll, afterAll, beforeEach, afterEach have unique phrases
-	local lifecyclePhaseId = 0
+	local lifecyclePhaseId =  0
 
-	local lifecycleHooks = {
-		[TestEnum.NodeType.BeforeAll] = "beforeAll",
-		[TestEnum.NodeType.AfterAll] = "afterAll",
-		[TestEnum.NodeType.BeforeEach] = "beforeEach",
-		[TestEnum.NodeType.AfterEach] = "afterEach"
+	local lifecycleHooks =  {
+		[TestEnum.NodeType.BeforeAll] =  "beforeAll",
+		[TestEnum.NodeType.AfterAll] =  "afterAll",
+		[TestEnum.NodeType.BeforeEach] =  "beforeEach",
+		[TestEnum.NodeType.AfterEach] =  "afterEach"
 	}
 
 	for nodeType, name in pairs(lifecycleHooks) do
-		env[name] = function(callback)
+		env[name] =  function(callback)
 			addChild(name .. "_" .. tostring(lifecyclePhaseId), callback, nodeType, TestEnum.NodeModifier.None)
-			lifecyclePhaseId = lifecyclePhaseId + 1
+			lifecyclePhaseId =  lifecyclePhaseId + 1
 		end
 	end
 
 	function env.FIXME(optionalMessage)
 		warn("FIXME: broken test", currentNode:getFullName(), optionalMessage or "")
 
-		currentNode.modifier = TestEnum.NodeModifier.Skip
+		currentNode.modifier =  TestEnum.NodeModifier.Skip
 	end
 
 	function env.FOCUS()
-		currentNode.modifier = TestEnum.NodeModifier.Focus
+		currentNode.modifier =  TestEnum.NodeModifier.Focus
 	end
 
 	function env.SKIP()
-		currentNode.modifier = TestEnum.NodeModifier.Skip
+		currentNode.modifier =  TestEnum.NodeModifier.Skip
 	end
 
 	--[[
@@ -100,18 +100,18 @@ local function newEnvironment(currentNode, extraEnvironment)
 			"xpcall, so this is no longer necessary. It can be safely deleted.")
 	end
 
-	env.fit = env.itFOCUS
-	env.xit = env.itSKIP
-	env.fdescribe = env.describeFOCUS
-	env.xdescribe = env.describeSKIP
+	env.fit =  env.itFOCUS
+	env.xit =  env.itSKIP
+	env.fdescribe =  env.describeFOCUS
+	env.xdescribe =  env.describeSKIP
 
-	env.expect = Expectation.new
+	env.expect =  Expectation.new
 
 	return env
 end
 
-local TestNode = {}
-TestNode.__index = TestNode
+local TestNode =  {}
+TestNode.__index =  TestNode
 
 --[[
 	Create a new test node. A pointer to the test plan, a phrase to describe it
@@ -119,24 +119,24 @@ TestNode.__index = TestNode
 	be None if left blank.
 ]]
 function TestNode.new(plan, phrase, nodeType, nodeModifier)
-	nodeModifier = nodeModifier or TestEnum.NodeModifier.None
+	nodeModifier =  nodeModifier or TestEnum.NodeModifier.None
 
-	local node = {
-		plan = plan,
-		phrase = phrase,
-		type = nodeType,
-		modifier = nodeModifier,
-		children = {},
-		callback = nil,
-		parent = nil,
+	local node =  {
+		plan =  plan,
+		phrase =  phrase,
+		type =  nodeType,
+		modifier =  nodeModifier,
+		children =  {},
+		callback =  nil,
+		parent =  nil,
 	}
 
-	node.environment = newEnvironment(node, plan.extraEnvironment)
+	node.environment =  newEnvironment(node, plan.extraEnvironment)
 	return setmetatable(node, TestNode)
 end
 
 local function getModifier(name, pattern, modifier)
-	if pattern and (modifier == nil or modifier == TestEnum.NodeModifier.None) then
+	if pattern and (modifier = = nil or modifier = = TestEnum.NodeModifier.None) then
 		if name:match(pattern) then
 			return TestEnum.NodeModifier.Focus
 		else
@@ -147,18 +147,18 @@ local function getModifier(name, pattern, modifier)
 end
 
 function TestNode:addChild(phrase, nodeType, nodeModifier)
-	if nodeType == TestEnum.NodeType.It then
+	if nodeType = = TestEnum.NodeType.It then
 		for _, child in pairs(self.children) do
-			if child.phrase == phrase then
+			if child.phrase = = phrase then
 				error("Duplicate it block found: " .. child:getFullName())
 			end
 		end
 	end
 
-	local childName = self:getFullName() .. " " .. phrase
-	nodeModifier = getModifier(childName, self.plan.testNamePattern, nodeModifier)
-	local child = TestNode.new(self.plan, phrase, nodeType, nodeModifier)
-	child.parent = self
+	local childName =  self:getFullName() .. " " .. phrase
+	nodeModifier =  getModifier(childName, self.plan.testNamePattern, nodeModifier)
+	local child =  TestNode.new(self.plan, phrase, nodeType, nodeModifier)
+	child.parent =  self
 	table.insert(self.children, child)
 	return child
 end
@@ -168,7 +168,7 @@ end
 ]]
 function TestNode:getFullName()
 	if self.parent then
-		local parentPhrase = self.parent:getFullName()
+		local parentPhrase =  self.parent:getFullName()
 		if parentPhrase then
 			return parentPhrase .. " " .. self.phrase
 		end
@@ -181,31 +181,31 @@ end
 	further it and describe calls within the callback will be added to the tree.
 ]]
 function TestNode:expand()
-	local originalEnv = getfenv(self.callback)
-	local callbackEnv = setmetatable({}, { __index = originalEnv })
+	local originalEnv =  getfenv(self.callback)
+	local callbackEnv =  setmetatable({}, { __index =  originalEnv })
 	for key, value in pairs(self.environment) do
-		callbackEnv[key] = value
+		callbackEnv[key] =  value
 	end
 	setfenv(self.callback, callbackEnv)
 
-	local success, result = xpcall(self.callback, debug.traceback)
+	local success, result =  xpcall(self.callback, debug.traceback)
 
 	if not success then
-		self.loadError = result
+		self.loadError =  result
 	end
 end
 
-local TestPlan = {}
-TestPlan.__index = TestPlan
+local TestPlan =  {}
+TestPlan.__index =  TestPlan
 
 --[[
 	Create a new, empty TestPlan.
 ]]
 function TestPlan.new(testNamePattern, extraEnvironment)
-	local plan = {
-		children = {},
-		testNamePattern = testNamePattern,
-		extraEnvironment = extraEnvironment,
+	local plan =  {
+		children =  {},
+		testNamePattern =  testNamePattern,
+		extraEnvironment =  extraEnvironment,
 	}
 
 	return setmetatable(plan, TestPlan)
@@ -215,8 +215,8 @@ end
 	Add a new child under the test plan's root node.
 ]]
 function TestPlan:addChild(phrase, nodeType, nodeModifier)
-	nodeModifier = getModifier(phrase, self.testNamePattern, nodeModifier)
-	local child = TestNode.new(self, phrase, nodeType, nodeModifier)
+	nodeModifier =  getModifier(phrase, self.testNamePattern, nodeModifier)
+	local child =  TestNode.new(self, phrase, nodeType, nodeModifier)
 	table.insert(self.children, child)
 	return child
 end
@@ -226,25 +226,25 @@ end
 	reuses all the describe nodes along the path.
 ]]
 function TestPlan:addRoot(path, method)
-	local curNode = self
-	for i = #path, 1, -1 do
-		local nextNode = nil
+	local curNode =  self
+	for i =  #path, 1, -1 do
+		local nextNode =  nil
 
 		for _, child in ipairs(curNode.children) do
-			if child.phrase == path[i] then
-				nextNode = child
+			if child.phrase = = path[i] then
+				nextNode =  child
 				break
 			end
 		end
 
-		if nextNode == nil then
-			nextNode = curNode:addChild(path[i], TestEnum.NodeType.Describe)
+		if nextNode = = nil then
+			nextNode =  curNode:addChild(path[i], TestEnum.NodeType.Describe)
 		end
 
-		curNode = nextNode
+		curNode =  nextNode
 	end
 
-	curNode.callback = method
+	curNode.callback =  method
 	curNode:expand()
 end
 
@@ -252,8 +252,8 @@ end
 	Calls the given callback on all nodes in the tree, traversed depth-first.
 ]]
 function TestPlan:visitAllNodes(callback, root, level)
-	root = root or self
-	level = level or 0
+	root =  root or self
+	level =  level or 0
 
 	for _, child in ipairs(root.children) do
 		callback(child, level)
@@ -267,7 +267,7 @@ end
 	plan's structure.
 ]]
 function TestPlan:visualize()
-	local buffer = {}
+	local buffer =  {}
 	self:visitAllNodes(function(node, level)
 		table.insert(buffer, (" "):rep(3 * level) .. node.phrase)
 	end)
@@ -279,7 +279,7 @@ end
 	true.
 ]]
 function TestPlan:findNodes(callback)
-	local results = {}
+	local results =  {}
 	self:visitAllNodes(function(node)
 		if callback(node) then
 			table.insert(results, node)

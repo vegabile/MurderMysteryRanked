@@ -7,10 +7,10 @@
 
 -- luacheck: globals __LEMUR__
 
-local isRobloxCli, ProcessService = pcall(game.GetService, game, "ProcessService")
+local isRobloxCli, ProcessService =  pcall(game.GetService, game, "ProcessService")
 
 local function findUnitTests(container, foundTests)
-	foundTests = foundTests or {}
+	foundTests =  foundTests or {}
 
 	for _, child in ipairs(container:GetChildren()) do
 		if child:IsA("ModuleScript") then
@@ -21,33 +21,33 @@ local function findUnitTests(container, foundTests)
 	return foundTests
 end
 
-local completed, result = xpcall(function()
-	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local completed, result =  xpcall(function()
+	local ReplicatedStorage =  game:GetService("ReplicatedStorage")
 
-	local testModules = findUnitTests(ReplicatedStorage.TestEZTests)
+	local testModules =  findUnitTests(ReplicatedStorage.TestEZTests)
 
-	local totalCount = 0
-	local failureCount = 0
-	local successCount = 0
-	local errorMessages = {}
+	local totalCount =  0
+	local failureCount =  0
+	local successCount =  0
+	local errorMessages =  {}
 
 	for _, testModule in ipairs(testModules) do
-		local tests = require(testModule)
+		local tests =  require(testModule)
 
 		print(string.format("%s", testModule.Name))
 
 		for testName, testFunction in pairs(tests) do
-			local success, message = pcall(testFunction)
-			totalCount = totalCount + 1
+			local success, message =  pcall(testFunction)
+			totalCount =  totalCount + 1
 
 			if success then
 				print(string.format("  [PASS] %s", testName))
-				successCount = successCount + 1
+				successCount =  successCount + 1
 			else
 				print(string.format("  [FAIL] %s", testName))
-				failureCount = failureCount + 1
+				failureCount =  failureCount + 1
 
-				local logMessage = string.format("Test: %s\nError: %s", testName, message)
+				local logMessage =  string.format("Test: %s\nError: %s", testName, message)
 				table.insert(errorMessages, logMessage)
 			end
 		end
@@ -61,16 +61,16 @@ local completed, result = xpcall(function()
 		print(table.concat(errorMessages, "\n\n"))
 	end
 
-	return failureCount == 0 and 0 or 1
+	return failureCount = = 0 and 0 or 1
 end, debug.traceback)
 
 local statusCode
-local errorMessage = nil
+local errorMessage =  nil
 if completed then
-	statusCode = result
+	statusCode =  result
 else
-	statusCode = 1
-	errorMessage = result
+	statusCode =  1
+	errorMessage =  result
 end
 
 if __LEMUR__ then

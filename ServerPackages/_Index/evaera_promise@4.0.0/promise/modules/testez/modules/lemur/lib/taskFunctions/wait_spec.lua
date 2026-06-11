@@ -1,23 +1,23 @@
-local createWait = import("./wait")
-local TaskScheduler = import("../TaskScheduler")
+local createWait =  import("./wait")
+local TaskScheduler =  import("../TaskScheduler")
 
 describe("taskFunctions.wait", function()
 	it("should reschedule self after the specified time", function()
-		local scheduler = TaskScheduler.new()
-		local wait = createWait(scheduler)
+		local scheduler =  TaskScheduler.new()
+		local wait =  createWait(scheduler)
 
-		local aCount = 0
-		local bCount = 0
-		local cCount = 0
+		local aCount =  0
+		local bCount =  0
+		local cCount =  0
 
-		local co = coroutine.create(function()
-			aCount = aCount + 1
+		local co =  coroutine.create(function()
+			aCount =  aCount + 1
 			wait(1)
 
-			bCount = bCount + 1
+			bCount =  bCount + 1
 			wait(1)
 
-			cCount = cCount + 1
+			cCount =  cCount + 1
 		end)
 
 		assert(coroutine.resume(co))
@@ -42,16 +42,16 @@ describe("taskFunctions.wait", function()
 	end)
 
 	it("should reschedule after a small amount of time with no argument", function()
-		local scheduler = TaskScheduler.new()
-		local wait = createWait(scheduler)
+		local scheduler =  TaskScheduler.new()
+		local wait =  createWait(scheduler)
 
-		local aCount = 0
-		local bCount = 0
+		local aCount =  0
+		local bCount =  0
 
-		local co = coroutine.create(function()
-			aCount = aCount + 1
+		local co =  coroutine.create(function()
+			aCount =  aCount + 1
 			wait()
-			bCount = bCount + 1
+			bCount =  bCount + 1
 		end)
 
 		assert(coroutine.resume(co))
@@ -68,16 +68,16 @@ describe("taskFunctions.wait", function()
 	end)
 
 	it("should reschedule after a small amount of time with a zero argument", function()
-		local scheduler = TaskScheduler.new()
-		local wait = createWait(scheduler)
+		local scheduler =  TaskScheduler.new()
+		local wait =  createWait(scheduler)
 
-		local aCount = 0
-		local bCount = 0
+		local aCount =  0
+		local bCount =  0
 
-		local co = coroutine.create(function()
-			aCount = aCount + 1
+		local co =  coroutine.create(function()
+			aCount =  aCount + 1
 			wait(0)
-			bCount = bCount + 1
+			bCount =  bCount + 1
 		end)
 
 		assert(coroutine.resume(co))

@@ -1,3 +1,3 @@
-local BaseInstance = import("./BaseInstance")
+local BaseInstance =  import("./BaseInstance")
 
 return BaseInstance:extend("TweenService")

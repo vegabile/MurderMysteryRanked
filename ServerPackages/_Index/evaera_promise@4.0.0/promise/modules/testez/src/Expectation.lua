@@ -15,33 +15,33 @@
 	Expectations throw errors when their conditions are not met.
 ]]
 
-local Expectation = {}
+local Expectation =  {}
 
 --[[
 	These keys don't do anything except make expectations read more cleanly
 ]]
-local SELF_KEYS = {
-	to = true,
-	be = true,
-	been = true,
-	have = true,
-	was = true,
-	at = true,
+local SELF_KEYS =  {
+	to =  true,
+	be =  true,
+	been =  true,
+	have =  true,
+	was =  true,
+	at =  true,
 }
 
 --[[
 	These keys invert the condition expressed by the Expectation.
 ]]
-local NEGATION_KEYS = {
-	never = true,
+local NEGATION_KEYS =  {
+	never =  true,
 }
 
 --[[
 	Extension of Lua's 'assert' that lets you specify an error level.
 ]]
 local function assertLevel(condition, message, level)
-	message = message or "Assertion failed!"
-	level = level or 1
+	message =  message or "Assertion failed!"
+	level =  level or 1
 
 	if not condition then
 		error(message, level + 1)
@@ -53,7 +53,7 @@ end
 ]]
 local function bindSelf(self, method)
 	return function(firstArg, ...)
-		if firstArg == self then
+		if firstArg = = self then
 			return method(self, ...)
 		else
 			return method(self, firstArg, ...)
@@ -73,20 +73,20 @@ end
 	Create a new expectation
 ]]
 function Expectation.new(value)
-	local self = {
-		value = value,
-		successCondition = true,
-		condition = false
+	local self =  {
+		value =  value,
+		successCondition =  true,
+		condition =  false
 	}
 
 	setmetatable(self, Expectation)
 
-	self.a = bindSelf(self, self.a)
-	self.an = self.a
-	self.ok = bindSelf(self, self.ok)
-	self.equal = bindSelf(self, self.equal)
-	self.throw = bindSelf(self, self.throw)
-	self.near = bindSelf(self, self.near)
+	self.a =  bindSelf(self, self.a)
+	self.an =  self.a
+	self.ok =  bindSelf(self, self.ok)
+	self.equal =  bindSelf(self, self.equal)
+	self.throw =  bindSelf(self, self.throw)
+	self.near =  bindSelf(self, self.near)
 
 	return self
 end
@@ -99,8 +99,8 @@ function Expectation.__index(self, key)
 
 	-- Invert your assertion
 	if NEGATION_KEYS[key] then
-		local newExpectation = Expectation.new(self.value)
-		newExpectation.successCondition = not self.successCondition
+		local newExpectation =  Expectation.new(self.value)
+		newExpectation.successCondition =  not self.successCondition
 
 		return newExpectation
 	end
@@ -121,7 +121,7 @@ end
 	Work as expected.
 ]]
 function Expectation:_resetModifiers()
-	self.successCondition = true
+	self.successCondition =  true
 end
 
 --[[
@@ -130,9 +130,9 @@ end
 	expect(5).to.be.a("number")
 ]]
 function Expectation:a(typeName)
-	local result = (type(self.value) == typeName) == self.successCondition
+	local result =  (type(self.value) = = typeName) = = self.successCondition
 
-	local message = formatMessage(self.successCondition,
+	local message =  formatMessage(self.successCondition,
 		("Expected value of type %q, got value %q of type %s"):format(
 			typeName,
 			tostring(self.value),
@@ -155,9 +155,9 @@ end
 	Assert that our expectation value is truthy
 ]]
 function Expectation:ok()
-	local result = (self.value ~= nil) == self.successCondition
+	local result =  (self.value ~= nil) = = self.successCondition
 
-	local message = formatMessage(self.successCondition,
+	local message =  formatMessage(self.successCondition,
 		("Expected value %q to be non-nil"):format(
 			tostring(self.value)
 		),
@@ -176,9 +176,9 @@ end
 	Assert that our expectation value is equal to another value
 ]]
 function Expectation:equal(otherValue)
-	local result = (self.value == otherValue) == self.successCondition
+	local result =  (self.value = = otherValue) = = self.successCondition
 
-	local message = formatMessage(self.successCondition,
+	local message =  formatMessage(self.successCondition,
 		("Expected value %q (%s), got %q (%s) instead"):format(
 			tostring(otherValue),
 			type(otherValue),
@@ -202,15 +202,15 @@ end
 	inclusive limit.
 ]]
 function Expectation:near(otherValue, limit)
-	assert(type(self.value) == "number", "Expectation value must be a number to use 'near'")
-	assert(type(otherValue) == "number", "otherValue must be a number")
-	assert(type(limit) == "number" or limit == nil, "limit must be a number or nil")
+	assert(type(self.value) = = "number", "Expectation value must be a number to use 'near'")
+	assert(type(otherValue) = = "number", "otherValue must be a number")
+	assert(type(limit) = = "number" or limit = = nil, "limit must be a number or nil")
 
-	limit = limit or 1e-7
+	limit =  limit or 1e-7
 
-	local result = (math.abs(self.value - otherValue) <= limit) == self.successCondition
+	local result =  (math.abs(self.value - otherValue) <= limit) = = self.successCondition
 
-	local message = formatMessage(self.successCondition,
+	local message =  formatMessage(self.successCondition,
 		("Expected value to be near %f (within %f) but got %f instead"):format(
 			otherValue,
 			limit,
@@ -233,10 +233,10 @@ end
 	Assert that our functoid expectation value throws an error when called
 ]]
 function Expectation:throw()
-	local ok, err = pcall(self.value)
-	local result = ok ~= self.successCondition
+	local ok, err =  pcall(self.value)
+	local result =  ok ~= self.successCondition
 
-	local message = formatMessage(self.successCondition,
+	local message =  formatMessage(self.successCondition,
 		"Expected function to throw an error, but it did not.",
 		("Expected function to succeed, but it threw an error: %s"):format(
 			tostring(err)

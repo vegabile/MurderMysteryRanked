@@ -1,11 +1,11 @@
-local TestEnum = require(script.Parent.TestEnum)
+local TestEnum =  require(script.Parent.TestEnum)
 
-local LifecycleHooks = {}
-LifecycleHooks.__index = LifecycleHooks
+local LifecycleHooks =  {}
+LifecycleHooks.__index =  LifecycleHooks
 
 function LifecycleHooks.new()
-	local self = {
-		_stack = {},
+	local self =  {
+		_stack =  {},
 	}
 	return setmetatable(self, LifecycleHooks)
 end
@@ -14,8 +14,8 @@ end
 	Returns an array of `beforeEach` hooks in FIFO order
 ]]
 function LifecycleHooks:getBeforeEachHooks()
-	local key = TestEnum.NodeType.BeforeEach
-	local hooks = {}
+	local key =  TestEnum.NodeType.BeforeEach
+	local hooks =  {}
 
 	for _, level in ipairs(self._stack) do
 		for _, hook in ipairs(level[key]) do
@@ -30,8 +30,8 @@ end
 	Returns an array of `afterEach` hooks in FILO order
 ]]
 function LifecycleHooks:getAfterEachHooks()
-	local key = TestEnum.NodeType.AfterEach
-	local hooks = {}
+	local key =  TestEnum.NodeType.AfterEach
+	local hooks =  {}
 
 	for _, level in ipairs(self._stack) do
 		for _, hook in ipairs(level[key]) do
@@ -53,10 +53,10 @@ function LifecycleHooks:pushHooksFrom(planNode)
 	assert(planNode ~= nil)
 
 	table.insert(self._stack, {
-		[TestEnum.NodeType.BeforeAll] = self:_getHooksOfType(planNode.children, TestEnum.NodeType.BeforeAll),
-		[TestEnum.NodeType.AfterAll] = self:_getHooksOfType(planNode.children, TestEnum.NodeType.AfterAll),
-		[TestEnum.NodeType.BeforeEach] = self:_getHooksOfType(planNode.children, TestEnum.NodeType.BeforeEach),
-		[TestEnum.NodeType.AfterEach] = self:_getHooksOfType(planNode.children, TestEnum.NodeType.AfterEach),
+		[TestEnum.NodeType.BeforeAll] =  self:_getHooksOfType(planNode.children, TestEnum.NodeType.BeforeAll),
+		[TestEnum.NodeType.AfterAll] =  self:_getHooksOfType(planNode.children, TestEnum.NodeType.AfterAll),
+		[TestEnum.NodeType.BeforeEach] =  self:_getHooksOfType(planNode.children, TestEnum.NodeType.BeforeEach),
+		[TestEnum.NodeType.AfterEach] =  self:_getHooksOfType(planNode.children, TestEnum.NodeType.AfterEach),
 	})
 end
 
@@ -75,10 +75,10 @@ function LifecycleHooks:getAfterAllHooks()
 end
 
 function LifecycleHooks:_getHooksOfType(nodes, key)
-	local hooks = {}
+	local hooks =  {}
 
 	for _, node in ipairs(nodes) do
-		if node.type == key then
+		if node.type = = key then
 			table.insert(hooks, node.callback)
 		end
 	end

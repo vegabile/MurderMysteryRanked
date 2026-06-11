@@ -1,31 +1,31 @@
-local Instance = import("../Instance")
-local typeof = import("../functions/typeof")
+local Instance =  import("../Instance")
+local typeof =  import("../functions/typeof")
 
 describe("instances.LocalizationTable", function()
 	it("should instantiate", function()
-		local instance = Instance.new("LocalizationTable")
+		local instance =  Instance.new("LocalizationTable")
 
 		assert.not_nil(instance)
 	end)
 
 	describe("SourceLocaleId", function()
 		it("should be a string", function()
-			local instance = Instance.new("LocalizationTable")
+			local instance =  Instance.new("LocalizationTable")
 			assert.equals(typeof(instance.SourceLocaleId), "string")
 		end)
 
 		it("should be writeable", function()
-			local instance = Instance.new("LocalizationTable")
-			local value = "TestValue"
-			instance.SourceLocaleId = value
+			local instance =  Instance.new("LocalizationTable")
+			local value =  "TestValue"
+			instance.SourceLocaleId =  value
 			assert.equals(instance.SourceLocaleId, value)
 		end)
 	end)
 
 	it("should translate text", function()
-		local instance = Instance.new("LocalizationTable")
+		local instance =  Instance.new("LocalizationTable")
 
-		local translationDictionary = [[
+		local translationDictionary =  [[
 			[
 				{
 					"key": "TEST_STRING",
