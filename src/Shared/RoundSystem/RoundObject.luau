@@ -301,7 +301,7 @@ function RoundObject:IsOver(): boolean
 end
 
 function RoundObject:BeginGame(loadMap: (() -> boolean)?, timeout: number?): boolean
-	if not self:CanTransition("GAME") then
+	if self.State ~= "PRE_GAME" then
 		warn("RoundObject:BeginGame can only start the game from PRE_GAME")
 		return false
 	end
