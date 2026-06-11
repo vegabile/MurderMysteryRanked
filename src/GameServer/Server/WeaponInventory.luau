@@ -44,6 +44,10 @@ local function getTemplate(slot: Slot): Instance?
 		warn(`WeaponInventory: no template named "{slot}" in weapon source`)
 		return nil
 	end
+	if not template:IsA("Tool") then
+		warn(`WeaponInventory: template "{slot}" is not a Tool`)
+		return nil
+	end
 	return template
 end
 
