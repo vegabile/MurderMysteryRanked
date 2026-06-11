@@ -2,6 +2,7 @@ local framework = require("./framework")
 
 require("./glicko2.spec")
 require("./queue.spec")
+require("./roundobject.spec")
 
 if not framework.run() then
 	error("Test suite failed", 0)
