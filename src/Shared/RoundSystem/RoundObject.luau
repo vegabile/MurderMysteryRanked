@@ -163,12 +163,17 @@ function RoundObject:RemovePlayer(player: Player): boolean
 		warn("RoundObject:RemovePlayer ignored a player who is not in the round")
 		return false
 	end
+	local wasAlive = self.Teams[index][player].isAlive
 	self.Teams[index][player] = nil
 	for rosterIndex, rosterPlayer in self.RoundUpdated do
 		if rosterPlayer == player then
 			table.remove(self.RoundUpdated, rosterIndex)
 			break
 		end
+	end
+	if wasAlive and self:IsTeamEliminated(index) then
+		self.DeathCounter += 1
+		self.LastDeathOrder[index] = self.DeathCounter
 	end
 	return true
 end
