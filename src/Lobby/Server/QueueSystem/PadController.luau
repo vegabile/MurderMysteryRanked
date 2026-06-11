@@ -256,11 +256,10 @@ function PadController._renderSide(self: PadController, holder: Instance, side: 
 	for index = 1, self._perSide do
 		local slot = holder:FindFirstChild(`Team{side}P{index}`)
 		if slot and slot:IsA("ImageLabel") then
+			slot.Image = ""
 			local player = players[index]
 			if player then
 				self:_loadSlotImage(side, index, player)
-			else
-				slot.Image = ""
 			end
 		end
 	end
