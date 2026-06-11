@@ -10,9 +10,24 @@ local MatchData = require(Shared:WaitForChild("MatchData"))
 
 local MatchTeleport = {}
 
-TeleportService.TeleportInitFailed:Connect(function(player, result, message)
-	warn(`MatchTeleport: teleport init failed for {player.Name} ({result.Name}): {message}`)
-end)
+local RETRYABLE_RESULTS: { [Enum.TeleportResult]: boolean } = {
+	[Enum.TeleportResult.Failure] = true,
+	[Enum.TeleportResult.Flooded] = true,
+}
+
+type Pending = {
+	options: TeleportOptions,
+	attempts: number,
+}
+
+local pending: { [Player]: Pending } = {}
+
+local function sendToReserved(players: { Player }, options: TeleportOptions): (boolean, string?)
+	local ok, err = pcall(function()
+		TeleportService:TeleportAsync(Config.GameServerPlaceId, players, options)
+	end)
+	return ok, err
+end
 
 local function presentPlayers(snapshot: MatchData.Snapshot): { Player }
 	local players: { Player } = {}
@@ -28,6 +43,35 @@ local function presentPlayers(snapshot: MatchData.Snapshot): { Player }
 	end
 	return players
 end
+
+TeleportService.TeleportInitFailed:Connect(function(player, result, message)
+	local entry = pending[player]
+	if entry == nil then
+		return
+	end
+
+	if not RETRYABLE_RESULTS[result] or entry.attempts >= Config.MaxTeleportAttempts then
+		pending[player] = nil
+		warn(`MatchTeleport: giving up teleport for {player.Name} ({result.Name}): {message}`)
+		return
+	end
+
+	entry.attempts += 1
+	task.wait(Config.TeleportRetryBackoff)
+	if pending[player] ~= entry or player.Parent ~= Players then
+		return
+	end
+
+	local ok, err = sendToReserved({ player }, entry.options)
+	if not ok then
+		pending[player] = nil
+		warn(`MatchTeleport: retry teleport failed for {player.Name}: {err}`)
+	end
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+	pending[player] = nil
+end)
 
 function MatchTeleport.teleportMatch(snapshot: MatchData.Snapshot, mode: string, perSide: number): boolean
 	local players = presentPlayers(snapshot)
@@ -48,10 +92,15 @@ function MatchTeleport.teleportMatch(snapshot: MatchData.Snapshot, mode: string,
 	options.ReservedServerAccessCode = accessCode
 	options:SetTeleportData(MatchData.build(snapshot, mode))
 
-	local sent, err = pcall(function()
-		TeleportService:TeleportAsync(Config.GameServerPlaceId, players, options)
-	end)
+	for _, player in players do
+		pending[player] = { options = options, attempts = 0 }
+	end
+
+	local sent, err = sendToReserved(players, options)
 	if not sent then
+		for _, player in players do
+			pending[player] = nil
+		end
 		warn(`MatchTeleport: TeleportAsync failed for {mode}: {err}`)
 		return false
 	end
