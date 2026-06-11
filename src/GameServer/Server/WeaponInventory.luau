@@ -8,7 +8,7 @@ export type Slot = "Gun" | "Knife"
 
 type Loadout = { [Slot]: Instance? }
 
-local WEAPONS_SOURCE: Instance? = nil
+local weaponsSource: Instance? = nil
 
 local SLOTS: { Slot } = { "Gun", "Knife" }
 local inventories: { [Player]: Loadout } = {}
@@ -34,14 +34,14 @@ local function getBackpack(player: Player): Instance?
 end
 
 local function getTemplate(slot: Slot): Instance?
-	local source = WEAPONS_SOURCE
+	local source = weaponsSource
 	if source == nil then
-		warn(`WeaponInventory: WEAPONS_SOURCE is not set, cannot give {slot}`)
+		warn(`WeaponInventory: weapon source is not set, cannot give {slot}`)
 		return nil
 	end
 	local template = source:FindFirstChild(slot)
 	if template == nil then
-		warn(`WeaponInventory: no template named "{slot}" in WEAPONS_SOURCE`)
+		warn(`WeaponInventory: no template named "{slot}" in weapon source`)
 		return nil
 	end
 	return template
@@ -53,6 +53,10 @@ local function clearSlot(loadout: Loadout, slot: Slot)
 		loadout[slot] = nil
 		existing:Destroy()
 	end
+end
+
+function WeaponInventory.SetSource(source: Instance?)
+	weaponsSource = source
 end
 
 function WeaponInventory.Get(player: Player): Loadout?
